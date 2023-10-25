@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String          @id @default(uuid())
+  username          String
+  email             String
+  profile           String
+  // Other user details
+  userLists         List[]
+  comments          Comment[]
+  userProblemStatus ProblemStatus[]
+}
+
+model Problem {
+  id                Int              @id @default(autoincrement())
+  title             String
+  titleSlug         String
+  frontEndId        String
+  description       String?
+  difficulty        String
+  platform          String           @default("leetcode")
+  platformPath      String           @default("https://leetcode.com/problems/")
+  // Other problem details
+  tags              Tag[]            @relation("ProblemTags")
+  lists             List[]
+  userProblemStatus ProblemStatus[]
+  CompanyProblem    CompanyProblem[]
+  Comment           Comment[]
+}
+
+model List {
+  id       String    @id @default(uuid())
+  name     String
+  slug     String
+  isPublic Boolean
+  // Other list details
+  userId   String?
+  user     User?     @relation(fields: [userId], references: [id])
+  problems Problem[]
+}
+
+model ProblemStatus {
+  id        Int     @id @default(autoincrement())
+  userId    String
+  problemId Int
+  status    String
+  // Other status details
+  user      User    @relation(fields: [userId], references: [id])
+  problem   Problem @relation(fields: [problemId], references: [id])
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  slug     String
+  // Other tag details
+  problems Problem[] @relation("ProblemTags")
+}
+
+model Company {
+  id        Int              @id @default(autoincrement())
+  name      String
+  slug      String
+  companies CompanyProblem[] // A company can ask multiple problems
+}
+
+model CompanyProblem {
+  id        Int     @id @default(autoincrement())
+  count     Int
+  companyId Int
+  problemId Int
+  // Other company problem details
+  company   Company @relation(fields: [companyId], references: [id])
+  problem   Problem @relation(fields: [problemId], references: [id])
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  problemId   Int
+  comment     String
+  commentTime DateTime
+  // Other comment details
+  user        User     @relation(fields: [userId], references: [id])
+  problem     Problem  @relation(fields: [problemId], references: [id])
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// // model User {
+// //   id          String           @id @default(uuid())
+// //   username    String
+// //   profile     String
+// //   lists       Lists[] // User can have multiple lists
+// //   completions UserCompletion[] // Relationship to user completions
+// // }
+
+// model UserCompletion {
+//   id         String        @id @default(uuid())
+//   status     String // Status of completion (e.g., "completed", "in-progress", etc.)
+//   userId     String
+//   questionId String
+//   user       User          @relation(fields: [userId], references: [id])
+//   question   Question_Bank @relation(fields: [questionId], references: [id])
+// }
+
+// model Lists {
+//   id        String          @id @default(uuid())
+//   name      String
+//   slug      String
+//   userId    String
+//   user      User            @relation(fields: [userId], references: [id])
+//   questions Question_Bank[]
+// }
+
+// model Tag {
+//   id        String          @id @default(uuid())
+//   name      String
+//   slug      String
+//   questions Question_Bank[]
+// }
+
+// model Company {
+//   id        String            @id @default(uuid())
+//   name      String
+//   slug      String
+//   questions CompanyQuestion[] // A company can ask multiple questions
+// }
+
+// model CompanyQuestion {
+//   id         String        @id @default(uuid())
+//   companyId  String
+//   questionId String
+//   count      Int           @default(1) // Add a count field to capture the number of times the question is asked
+//   company    Company       @relation(fields: [companyId], references: [id])
+//   question   Question_Bank @relation(fields: [questionId], references: [id])
+// }
+
+// model Question_Bank {
+//   id              String            @id @default(uuid())
+//   title           String
+//   titleSlug       String
+//   difficulty      String
+//   platform        String            @default("https://leetcode.com/problems/")
+//   tags            Tag[]
+//   list            Lists[]
+//   CompanyQuestion CompanyQuestion[]
+//   completions     UserCompletion[] // Relationship to user completions
+// }

@@ -1,27 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Cagliostro&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans&display=swap");
+@import url("../assets/fonts/stylesheet.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+   --bg-prim1: #00000d;
+   --bg-prim2: #0b0b1b;
+   --bg-seco2: #111116;
+   --bg-seco1: #51557e;
+   --text-prim1: #f7fafc;
+   --text-prim2: #a0aec0;
+   --extra1: #303443;
+   --extra2: #989aa1;
+   --hard: crimson;
+   --medium: #fbc02d;
+   --easy: #00bfa5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+/* @media (prefers-color-scheme: dark) {
+} */
+input,
+textarea,
+button,
+select,
+a,
+div {
+   -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+   /* -moz-user-select: none; 
+   -webkit-user-select: none; 
+   -ms-user-select: none; 
+   user-select: none; */
+}
+/* width */
+::-webkit-scrollbar {
+   width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+   background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+   background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+   background: #555;
 }
