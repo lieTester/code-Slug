@@ -48,7 +48,7 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-   background: #888;
+   background: var(--bg-seco2);
 }
 
 /* Handle on hover */

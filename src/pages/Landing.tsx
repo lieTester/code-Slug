@@ -4,6 +4,8 @@ import { FC, useEffect, useContext, useState } from "react";
 import { SessionProp } from "@/types/index";
 // context
 import { SessionContext } from "@/context/SessionContext";
+import { ProblemsProvider } from "@/context/ProblemsContext";
+
 // component
 import Header from "@/components/Header";
 import Main from "@/components/Main";
@@ -21,11 +23,13 @@ const Landing: FC<SessionProp> = ({ session }) => {
 
    return (
       <section className="w-screen h-screen flex flex-col overflow-y-auto">
-         <Header />
-         <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] mx-auto h-fit mt-10 flex justify-between">
-            <SideBar />
-            <Main />
-         </div>
+         <ProblemsProvider>
+            <Header />
+            <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] mx-auto h-fit mt-10 flex justify-between">
+               <SideBar />
+               <Main />
+            </div>
+         </ProblemsProvider>
       </section>
    );
 };

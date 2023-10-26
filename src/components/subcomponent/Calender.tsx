@@ -26,6 +26,12 @@ const Calendar: React.FC = () => {
       return new Date(year, month + 1, 0).getDate();
    };
 
+   const getStartingDay = (date: Date) => {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      return new Date(year, month, 1).getDay();
+   };
+
    const previousMonth = () => {
       const prevDate = new Date(currentDate);
       prevDate.setMonth(prevDate.getMonth() - 1);
@@ -37,6 +43,9 @@ const Calendar: React.FC = () => {
       nextDate.setMonth(nextDate.getMonth() + 1);
       setCurrentDate(nextDate);
    };
+
+   const startingDay = getStartingDay(currentDate);
+   const totalDays = getDaysInMonth(currentDate);
 
    return (
       <div className="relative p-2 font-sofiaPro text-prim2 mt-5 bg-prim2 rounded-md">
@@ -61,7 +70,12 @@ const Calendar: React.FC = () => {
                   {day}
                </div>
             ))}
-            {[...Array(getDaysInMonth(currentDate))].map((_, day) => (
+            {[...Array(startingDay)].map((_, index) => (
+               <div key={`empty-${index}`} className="text-center text-seco2">
+                  {""}
+               </div>
+            ))}
+            {[...Array(totalDays)].map((_, day) => (
                <div
                   key={day}
                   onClick={() => console.log(currentDate.getDay())}
