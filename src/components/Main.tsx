@@ -24,12 +24,11 @@ const ProblemTable: React.FC = () => {
    const searchParams = useSearchParams();
    useEffect(() => {
       if (setAllProblems && setPage) {
-         console.log("setAllProblems");
+         console.log("setAllProblems:");
          GetAllProblems({ setAllProblems, setPage, page });
       }
    }, []);
    useEffect(() => {
-      console.log(loading);
       if (setPage) {
          const pagenumber = searchParams?.get("page") || "1";
          setPage((prev: any) => {
@@ -47,8 +46,8 @@ const ProblemTable: React.FC = () => {
             (page.currPage - 1) * page.pageSize,
             page.currPage * page.pageSize
          );
-
          if (problems) {
+            // console.log(problems);
             setProblemSet(problems); // Update problemSet
             if (problemSet && problemSet?.length > 0) setLoading(false); // Check if problems array is not empty
          }
@@ -56,33 +55,33 @@ const ProblemTable: React.FC = () => {
    }, [page, allproblems]);
 
    return (
-      <section className="relative w-full overflow-hidden lg:w-[70%] 2xl:w-[75%] font-sofiaPro">
+      <section className="relative w-full overflow-hidden lg:w-[70%] 2xl:w-[75%] font-baloo">
          <Filters />
-         <div className="overflow-x-auto my-4">
+         <div className="overflow-x-auto mt-4 mb-2">
             <table className="min-w-full ">
                <thead className="border-b-[0.5px] border-seco2  text-prim1 ">
                   <tr className="text-left [&>*]:font-medium">
                      <th className="py-2 px-4 text-center rounded-l-md">
                         Status
                      </th>
-
                      <th className="py-2 px-4">Title</th>
                      <th className="py-2 px-4 text-center">Difficulty</th>
+                     <th className="py-2 px-4 text-center">Platforms</th>
                      <th className="py-2 px-4 text-center rounded-r-md">
-                        Platform
+                        Companies
                      </th>
                   </tr>
                </thead>
                {loading ? <ProblemTableSkeleton /> : <ProblemTableBase />}
             </table>
-            <div className="flex justify-end text-prim2 [&>*]:cursor-pointer">
-               {page && (
-                  <Pagination
-                     currentPage={page.currPage}
-                     totalPages={page.totalPages}
-                  />
-               )}
-            </div>
+         </div>
+         <div className="flex justify-end text-prim2 [&>*]:cursor-pointer">
+            {page && (
+               <Pagination
+                  currentPage={page.currPage}
+                  totalPages={page.totalPages}
+               />
+            )}
          </div>
       </section>
    );

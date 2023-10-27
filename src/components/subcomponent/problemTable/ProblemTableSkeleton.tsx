@@ -20,6 +20,9 @@ const ProblemTableSkeleton = () => {
          <td className="py-2 px-4 ">
             <div className="h-6 w-24 bg-seco2 rounded-md mx-auto"></div>
          </td>
+         <td className="py-2 px-4 ">
+            <div className="h-6 w-24 bg-seco2 rounded-md mx-auto"></div>
+         </td>
       </tr>
    ));
 

@@ -1,16 +1,14 @@
 import React, { useContext, useEffect } from "react";
 // rect-icon
 import { FaCheck } from "react-icons/fa";
+import Image from "next/image";
 
 // context
 import { ProblemContext } from "@/context/ProblemsContext";
 
 const ProblemTableBase: React.FC = () => {
    const problemContext = useContext(ProblemContext);
-   const setAllProblems = problemContext?.setAllProblems;
    const problemSet = problemContext?.problemSet;
-   const page = problemContext?.page;
-   const setPage = problemContext?.setPage;
 
    const difficultyColor = (val: String) => {
       if (val === "Easy") return "text-easy";
@@ -23,7 +21,10 @@ const ProblemTableBase: React.FC = () => {
             problemSet.map((problem: any, idx: number) => (
                <tr
                   key={problem.id}
-                  className={`${idx % 2 === 1 && "bg-prim2"} text-seco1`}
+                  className={`${
+                     idx % 2 === 1 && "bg-prim2"
+                  } relative text-seco1 z-10 [&>*]:overflow-visible`}
+                  // over-flow visible is only meaningful to show overflow tag
                >
                   <td className="py-2 px-4 ">
                      {problem.status ? (
@@ -32,15 +33,22 @@ const ProblemTableBase: React.FC = () => {
                         ""
                      )}
                   </td>
-                  <td className="py-2 px-4  max-w-[300px] 2xl:w-auto truncate">
-                     <a
-                        href={`${problem.platformPath}${problem.titleSlug}`}
-                        target="_blank"
-                        className="hover:text-prim2"
-                     >
-                        {problem.frontEndId + ". " + problem.title}
-                     </a>
+                  <td className="relative hover:text-prim1 cursor-pointer py-2 px-4 max-w-[300px] 2xl:w-auto !truncate [&:hover>ul]:visible [&:hover>ul]:opacity-100 [&:hover>ul]:h-fit transition-all ease-linear">
+                     {problem.frontEndId + ". " + problem.title}
+                     <ul className="relative h-0 invisible opacity-0  w-full rounded-sm  transition-all ease-linear z-20 !truncate">
+                        {problem.tags.map((name: string, indx: number) => {
+                           return (
+                              <li
+                                 key={indx}
+                                 className="relative rounded-full bg-seco1 text-xs inline mx-[2px] px-1"
+                              >
+                                 {name}
+                              </li>
+                           );
+                        })}
+                     </ul>
                   </td>
+
                   <td
                      className={
                         "py-2 px-4 text-center !font-extralight " +
@@ -49,7 +57,25 @@ const ProblemTableBase: React.FC = () => {
                   >
                      {problem.difficulty}
                   </td>
-                  <td className="py-2 px-4 text-center">{problem.platform}</td>
+                  <td className="py-2 px-4 text-center truncate flex justify-center items-center">
+                     {problem.PlatformLinks.map(
+                        ({ name, link }: { name: string; link: string }) => {
+                           return (
+                              <span key={link} className=" inline">
+                                 <a href={link} target="_blank">
+                                    <Image
+                                       src={`/platforms/${name}.png`}
+                                       width={"25"}
+                                       height={"25"}
+                                       alt={`platform-link=${name}`}
+                                    />
+                                 </a>
+                              </span>
+                           );
+                        }
+                     )}
+                  </td>
+                  <td className="py-2 px-4 text-center">{}</td>
                </tr>
             ))}
       </tbody>
