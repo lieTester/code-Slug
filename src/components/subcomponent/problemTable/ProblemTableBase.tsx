@@ -8,7 +8,7 @@ import { ProblemContext } from "@/context/ProblemsContext";
 
 const ProblemTableBase: React.FC = () => {
    const problemContext = useContext(ProblemContext);
-   const problemSet = problemContext?.problemSet;
+   const currentPageProblemSet = problemContext?.currentPageProblemSet;
 
    const difficultyColor = (val: String) => {
       if (val === "Easy") return "text-easy";
@@ -17,13 +17,13 @@ const ProblemTableBase: React.FC = () => {
    };
    return (
       <tbody className="font-light transition-all ease-in-out">
-         {problemSet &&
-            problemSet.map((problem: any, idx: number) => (
+         {currentPageProblemSet &&
+            currentPageProblemSet.map((problem: any, idx: number) => (
                <tr
                   key={problem.id}
                   className={`${
                      idx % 2 === 1 && "bg-prim2"
-                  } relative text-seco1 z-10 [&>*]:overflow-visible`}
+                  } relative text-seco1 z-[2] [&>*]:overflow-visible`}
                   // over-flow visible is only meaningful to show overflow tag
                >
                   <td className="py-2 px-4 ">
@@ -35,7 +35,7 @@ const ProblemTableBase: React.FC = () => {
                   </td>
                   <td className="relative hover:text-prim1 cursor-pointer py-2 px-4 max-w-[300px] 2xl:w-auto !truncate [&:hover>ul]:visible [&:hover>ul]:opacity-100 [&:hover>ul]:h-fit transition-all ease-linear">
                      {problem.frontEndId + ". " + problem.title}
-                     <ul className="relative h-0 invisible opacity-0  w-full rounded-sm  transition-all ease-linear z-20 !truncate">
+                     <ul className="relative h-0 invisible opacity-0  w-full rounded-sm  transition-all ease-linear z-[5] !truncate">
                         {problem.tags.map((name: string, indx: number) => {
                            return (
                               <li

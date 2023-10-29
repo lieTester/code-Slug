@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+
+import { ProblemContext } from "@/context/ProblemsContext";
 
 const ProblemTableSkeleton = () => {
-   const skeletonRows = Array.from({ length: 15 }, (_, index) => (
+   // problem context
+   const problemContext = useContext(ProblemContext);
+   const page = problemContext?.page;
+
+   const skeletonRows = Array.from({ length: page.pageSize }, (_, index) => (
       <tr
          key={index}
          className={`${

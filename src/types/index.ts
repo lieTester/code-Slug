@@ -7,19 +7,27 @@ export type AuthCredType = {
 };
 
 export type SessionProp = {
-   session?: Session | null;
+   session: Session | null | undefined;
 };
 export type ChildrenProp = {
    children: ReactNode;
 };
 
 export type ProblemsProp = {
+   companyProblems?: String[];
+   PlatformLinks?: any[];
+   tags?: String[];
    description: String | null;
    difficulty: String;
-   frontEndId: String | number;
    id: number;
-   platform: String;
-   platformPath: String;
    title: String;
    titleSlug: String;
+};
+
+export type filterProps = {
+   status?: String;
+   dificulty?: String;
+   list?: String;
+   companies?: String[];
+   topics?: String[];
 };

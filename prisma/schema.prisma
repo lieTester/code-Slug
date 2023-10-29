@@ -13,7 +13,7 @@ datasource db {
 model User {
   id                String          @id @default(uuid())
   username          String
-  email             String
+  email             String          @unique
   profile           String
   // Other user details
   userLists         List[]
@@ -23,7 +23,7 @@ model User {
 
 model Problem {
   id                Int              @id @default(autoincrement())
-  title             String
+  title             String           @unique
   titleSlug         String
   frontEndId        String?
   description       String?
@@ -47,14 +47,14 @@ model Tag {
 
 model Company {
   id        Int              @id @default(autoincrement())
-  name      String
+  name      String           @unique
   slug      String
   companies CompanyProblem[] // A company can ask multiple problems
 }
 
 model List {
   id       String    @id @default(uuid())
-  name     String
+  name     String    @unique
   slug     String
   isPublic Boolean
   // Other list details
@@ -65,7 +65,7 @@ model List {
 
 model Platform {
   id        Int     @id @default(autoincrement())
-  link      String  @default("https://leetcode.com/problems/")
+  link      String  @unique
   name      String  @default("leetcode")
   problemId Int
   problem   Problem @relation(fields: [problemId], references: [id])
@@ -79,6 +79,8 @@ model ProblemStatus {
   // Other status details
   user      User    @relation(fields: [userId], references: [id])
   problem   Problem @relation(fields: [problemId], references: [id])
+
+  @@unique([userId, problemId], name: "UserProblemStatusUnique")
 }
 
 model CompanyProblem {
@@ -101,65 +103,3 @@ model Comment {
   user        User     @relation(fields: [userId], references: [id])
   problem     Problem  @relation(fields: [problemId], references: [id])
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-// // model User {
-// //   id          String           @id @default(uuid())
-// //   username    String
-// //   profile     String
-// //   lists       Lists[] // User can have multiple lists
-// //   completions UserCompletion[] // Relationship to user completions
-// // }
-
-// model UserCompletion {
-//   id         String        @id @default(uuid())
-//   status     String // Status of completion (e.g., "completed", "in-progress", etc.)
-//   userId     String
-//   questionId String
-//   user       User          @relation(fields: [userId], references: [id])
-//   question   Question_Bank @relation(fields: [questionId], references: [id])
-// }
-
-// model Lists {
-//   id        String          @id @default(uuid())
-//   name      String
-//   slug      String
-//   userId    String
-//   user      User            @relation(fields: [userId], references: [id])
-//   questions Question_Bank[]
-// }
-
-// model Tag {
-//   id        String          @id @default(uuid())
-//   name      String
-//   slug      String
-//   questions Question_Bank[]
-// }
-
-// model Company {
-//   id        String            @id @default(uuid())
-//   name      String
-//   slug      String
-//   questions CompanyQuestion[] // A company can ask multiple questions
-// }
-
-// model CompanyQuestion {
-//   id         String        @id @default(uuid())
-//   companyId  String
-//   questionId String
-//   count      Int           @default(1) // Add a count field to capture the number of times the question is asked
-//   company    Company       @relation(fields: [companyId], references: [id])
-//   question   Question_Bank @relation(fields: [questionId], references: [id])
-// }
-
-// model Question_Bank {
-//   id              String            @id @default(uuid())
-//   title           String
-//   titleSlug       String
-//   difficulty      String
-//   platform        String            @default("https://leetcode.com/problems/")
-//   tags            Tag[]
-//   list            Lists[]
-//   CompanyQuestion CompanyQuestion[]
-//   completions     UserCompletion[] // Relationship to user completions
-// }

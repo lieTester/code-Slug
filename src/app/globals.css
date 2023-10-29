@@ -12,8 +12,8 @@
    --bg-seco1: #51557e;
    --text-prim1: #f7fafc;
    --text-prim2: #a0aec0;
-   --extra1: #303443;
-   --extra2: #989aa1;
+   --extra1: #363738;
+   --extra2: #464748;
    --hard: crimson;
    --medium: #fbc02d;
    --easy: #00bfa5;
@@ -39,6 +39,7 @@ body {
 /* width */
 ::-webkit-scrollbar {
    width: 8px;
+   height: 8px;
 }
 
 /* Track */

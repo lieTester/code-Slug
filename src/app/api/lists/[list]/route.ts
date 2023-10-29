@@ -11,22 +11,18 @@ const getProblemsInList = async (
 
    try {
       const listId = params.list;
-      const problemsInList = await prisma.list.findUnique({
+      const problemsInList = await prisma.list.findFirst({
          where: {
-            id: Number(listId),
+            id: listId,
          },
          include: {
-            problems: {
-               include: {
-                  userProblemStatus: true,
-               },
-            },
+            problems: true,
          },
       });
       return NextResponse.json({ status: 200, data: problemsInList });
    } catch (error) {
       // console.error(error);
-      return NextResponse.json({ status: 500, error });
+      return NextResponse.json({ status: 500, params, error });
    }
 };
 

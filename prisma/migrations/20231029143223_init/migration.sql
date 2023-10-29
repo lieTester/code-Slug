@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "profile" TEXT NOT NULL,
@@ -13,34 +13,11 @@ CREATE TABLE "Problem" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "titleSlug" TEXT NOT NULL,
-    "frontEndId" TEXT NOT NULL,
+    "frontEndId" TEXT,
     "description" TEXT,
     "difficulty" TEXT NOT NULL,
-    "platform" TEXT NOT NULL DEFAULT 'leetcode',
-    "platformPath" TEXT NOT NULL DEFAULT 'https://leetcode.com/problems/',
 
     CONSTRAINT "Problem_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "List" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "slug" TEXT NOT NULL,
-    "isPublic" BOOLEAN NOT NULL,
-    "userId" INTEGER,
-
-    CONSTRAINT "List_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "ProblemStatus" (
-    "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "problemId" INTEGER NOT NULL,
-    "status" TEXT NOT NULL,
-
-    CONSTRAINT "ProblemStatus_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -62,8 +39,40 @@ CREATE TABLE "Company" (
 );
 
 -- CreateTable
+CREATE TABLE "List" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "isPublic" BOOLEAN NOT NULL,
+    "userId" TEXT,
+
+    CONSTRAINT "List_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Platform" (
+    "id" SERIAL NOT NULL,
+    "link" TEXT NOT NULL,
+    "name" TEXT NOT NULL DEFAULT 'leetcode',
+    "problemId" INTEGER NOT NULL,
+
+    CONSTRAINT "Platform_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ProblemStatus" (
+    "id" SERIAL NOT NULL,
+    "userId" TEXT NOT NULL,
+    "problemId" INTEGER NOT NULL,
+    "status" TEXT NOT NULL,
+
+    CONSTRAINT "ProblemStatus_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "CompanyProblem" (
     "id" SERIAL NOT NULL,
+    "count" INTEGER NOT NULL,
     "companyId" INTEGER NOT NULL,
     "problemId" INTEGER NOT NULL,
 
@@ -73,7 +82,7 @@ CREATE TABLE "CompanyProblem" (
 -- CreateTable
 CREATE TABLE "Comment" (
     "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
     "problemId" INTEGER NOT NULL,
     "comment" TEXT NOT NULL,
     "commentTime" TIMESTAMP(3) NOT NULL,
@@ -89,12 +98,30 @@ CREATE TABLE "_ProblemTags" (
 
 -- CreateTable
 CREATE TABLE "_ListToProblem" (
-    "A" INTEGER NOT NULL,
+    "A" TEXT NOT NULL,
     "B" INTEGER NOT NULL
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Problem_title_key" ON "Problem"("title");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Tag_name_key" ON "Tag"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Company_name_key" ON "Company"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "List_name_key" ON "List"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Platform_link_key" ON "Platform"("link");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProblemStatus_userId_problemId_key" ON "ProblemStatus"("userId", "problemId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_ProblemTags_AB_unique" ON "_ProblemTags"("A", "B");
@@ -110,6 +137,9 @@ CREATE INDEX "_ListToProblem_B_index" ON "_ListToProblem"("B");
 
 -- AddForeignKey
 ALTER TABLE "List" ADD CONSTRAINT "List_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Platform" ADD CONSTRAINT "Platform_problemId_fkey" FOREIGN KEY ("problemId") REFERENCES "Problem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProblemStatus" ADD CONSTRAINT "ProblemStatus_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

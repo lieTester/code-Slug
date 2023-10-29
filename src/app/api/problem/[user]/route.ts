@@ -1,33 +1,39 @@
-// pages/api/lists/[listId]/problems.ts
-
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/app/lib";
+import prisma from "@/app/lib"; // You'll need to set up Prisma
 
-const getProblemsInList = async (
+const getUserProblemsStatus = async (
    req: NextRequest,
-   { params }: { params: { list: string } }
+   { params }: { params: { user: string } }
 ) => {
-   console.log(params);
-
    try {
-      const listId = params.list;
-      const problemsInList = await prisma.list.findUnique({
+      const user = await prisma.user.findUnique({
+         where: { email: params.user },
+      });
+      console.log(params.user, user);
+      // Fetch problems and related data
+      const problems = await prisma.problem.findMany({
          where: {
-            id: Number(listId),
+            userProblemStatus: {
+               some: {
+                  userId: user?.id,
+               },
+            },
          },
          include: {
-            problems: {
-               include: {
-                  userProblemStatus: true,
+            userProblemStatus: {
+               where: {
+                  userId: user?.id,
+               },
+               select: {
+                  status: true,
                },
             },
          },
       });
-      return NextResponse.json({ status: 200, data: problemsInList });
+      return NextResponse.json({ status: 200, problems });
    } catch (error) {
-      // console.error(error);
+      console.error(error);
       return NextResponse.json({ status: 500, error });
    }
 };
-
-export { getProblemsInList as GET };
+export { getUserProblemsStatus as POST };

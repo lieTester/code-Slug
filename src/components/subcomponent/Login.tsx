@@ -18,13 +18,13 @@ const Login: React.FC<{ open: boolean; onClose: () => void }> = ({
       <div
          className={`${
             open ? "fixed" : "hidden"
-         }   top-0 left-0 inset-0 flex items-center justify-center z-10  fade`}
+         }   top-0 left-0 inset-0 flex items-center justify-center z-[100]  fade`}
       >
          <div
             onClick={onClose}
-            className="absolute w-full h-full  -z-10 bg-clip-padding backdrop-filter backdrop-blur-md "
+            className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-md "
          ></div>
-         <div className="relative p-2  text-center w-full sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-screen-sm mx-2 z-20">
+         <div className="relative p-2  text-center w-full sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-screen-sm mx-2 z-[100]">
             <Image
                src="/img/logo.png"
                alt="Google Drive"
