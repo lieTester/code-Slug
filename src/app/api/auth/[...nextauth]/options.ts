@@ -22,7 +22,7 @@ export const options: NextAuthOptions = {
    callbacks: {
       async signIn({ user, account, profile }) {
          try {
-            // console.log("signIn:", user);
+            console.log("signIn:", user);
             const response = await axios.post(
                process.env.NEXT_PUBLIC_API_BASE_URL + "auth/user",
                {
@@ -34,9 +34,9 @@ export const options: NextAuthOptions = {
                return true;
             } else {
                const data = {
-                  username: profile?.name,
-                  email: profile?.email,
-                  profile: profile?.picture,
+                  username: user?.name,
+                  email: user?.email,
+                  profile: user?.image,
                };
                const response = await axios.post(
                   process.env.NEXT_PUBLIC_API_BASE_URL + "/auth/user/signup",
@@ -66,8 +66,9 @@ export const options: NextAuthOptions = {
                email: session?.user?.email,
             }
          );
-         if (response?.data && session?.user)
-            session.user = { ...session.user, id: response.data.id };
+         if (response?.data && session?.user) {
+            session.user.id = response.data.id;
+         }
          return session;
       },
    },

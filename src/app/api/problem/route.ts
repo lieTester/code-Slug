@@ -32,6 +32,7 @@ const getAllProblems = async (req: NextRequest, res: NextResponse) => {
          ...problem,
          tags: problem.tags.map((tag) => tag.name),
          CompanyProblem: problem.CompanyProblem.map((cp) => cp.company.name),
+         status: "todo",
       }));
 
       return NextResponse.json({ status: 200, data: transformedProblems });
