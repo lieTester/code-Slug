@@ -12,25 +12,31 @@ import ProblemTableSkeleton from "@/components/subcomponent/problemTable/Problem
 
 const ProblemTable: React.FC = () => {
    const problemContext = useContext(ProblemContext);
-   const currentListProblems = problemContext?.currentListProblems;
    const currentPageProblemSet = problemContext?.currentPageProblemSet;
-   const page = problemContext?.page;
+   const setProblemSetLoading = problemContext?.setProblemSetLoading;
+   const problemSetLoading = problemContext?.problemSetLoading;
+   const filterdProblems = problemContext?.filterdProblems;
    const setPage = problemContext?.setPage;
-
-   const [loading, setLoading] = useState(true);
+   const page = problemContext?.page;
 
    useEffect(() => {
-      if (currentPageProblemSet && currentPageProblemSet?.length > 0)
-         setLoading(false); // Check if problems array is not empty
+      if (
+         currentPageProblemSet &&
+         currentPageProblemSet?.length > 0 &&
+         setProblemSetLoading
+      ) {
+         // console.log(problemSetLoading, currentPageProblemSet);
+         setProblemSetLoading(false); // Check if problems array is not empty
+      }
    }, [currentPageProblemSet]);
 
    const setPageSize = (size: number) => {
-      if (setPage && currentListProblems) {
+      if (setPage && filterdProblems) {
          setPage((prev: any) => {
             return {
                ...prev,
                pageSize: size,
-               totalPages: currentListProblems.length / size,
+               totalPages: Math.ceil(filterdProblems.length / size),
             };
          });
       }
@@ -38,7 +44,7 @@ const ProblemTable: React.FC = () => {
    return (
       <section className="relative w-[100%]  lg:w-[70%] 2xl:w-[75%] font-baloo">
          <Filters />
-         <div className="overflow-x-auto mt-4 mb-2">
+         <div className="overflow-x-auto overflow-y-hidden mt-4 pb-7">
             <table className="min-w-full ">
                <thead className="border-b-[0.5px] border-seco2  text-prim1 ">
                   <tr className="text-left [&>*]:font-medium">
@@ -53,18 +59,22 @@ const ProblemTable: React.FC = () => {
                      </th>
                   </tr>
                </thead>
-               {loading ? <ProblemTableSkeleton /> : <ProblemTableBase />}
+               {problemSetLoading ? (
+                  <ProblemTableSkeleton />
+               ) : (
+                  <ProblemTableBase />
+               )}
             </table>
          </div>
-         <div className="relative flex justify-between text-prim2 [&>*]:cursor-pointer ">
+         <div className="relative py-3  flex justify-between items-center text-prim2 [&>*]:cursor-pointer ">
             <div
-               className="relative bg-seco2  py-1 px-3 h-fit rounded-md group"
+               className="relative bg-seco2 py-1 px-3 h-fit rounded-md group"
                tabIndex={0}
             >
                <span className="flex items-center ">
                   {page.pageSize} / page <IoMdArrowDropdown className="ml-2" />
                </span>
-               <ul className="absolute invisible opacity-0 mt-3 group-focus:visible group-focus:opacity-100 transition-[transform] [&>li]:rounded-sm [&>li:hover]:bg-extra1 [&>*]:w-[120px] left-0 bg-seco2 [&>*]:px-2 p-1 h-fit rounded-md ">
+               <ul className="absolute mt-3 invisible opacity-0  group-focus:visible group-focus:opacity-100 transition-[transform] [&>li]:rounded-sm [&>li:hover]:bg-extra1 [&>*]:w-[120px] left-0 bg-seco2 [&>*]:px-2 p-1 h-fit rounded-md ">
                   <li
                      onClick={() => {
                         setPageSize(50);

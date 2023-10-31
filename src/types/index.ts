@@ -17,6 +17,7 @@ export type ProblemsProp = {
    companyProblems?: String[];
    PlatformLinks?: any[];
    tags?: String[];
+   status?: String;
    description: String | null;
    difficulty: String;
    id: number;

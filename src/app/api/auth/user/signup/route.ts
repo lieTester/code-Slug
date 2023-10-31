@@ -8,9 +8,9 @@ const SignUp = async (req: NextRequest, res: NextResponse) => {
       const user = await prisma.user.create({
          data: { email, username, profile },
       });
-      console.log(user);
+      // console.log(user);
       if (user && user.email)
-         return NextResponse.json({ status: 200, value: true });
+         return NextResponse.json({ status: 200, value: true, id: user.id });
       return NextResponse.json({ status: 200, value: false });
    } catch (error) {
       console.error(error);

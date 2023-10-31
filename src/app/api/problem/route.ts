@@ -41,4 +41,49 @@ const getAllProblems = async (req: NextRequest, res: NextResponse) => {
    }
 };
 
-export { getAllProblems as GET };
+const updateUserProblemStatus = async (req: NextRequest, res: NextResponse) => {
+   try {
+      const { problemID, status, id } = await req.json();
+      // to double check if the user id is correct
+      const user = await prisma.user.findFirst({
+         where: { email: id },
+      });
+      if (user) {
+         const problemStatus = await prisma.problemStatus.findUnique({
+            where: {
+               UserProblemStatusUnique: {
+                  problemId: problemID,
+                  userId: user?.id,
+               },
+            },
+         });
+         if (problemStatus) {
+            await prisma.problemStatus.update({
+               where: {
+                  UserProblemStatusUnique: {
+                     problemId: problemID,
+                     userId: user?.id,
+                  },
+               },
+               data: { status: status },
+            });
+         } else {
+            if (user) {
+               await prisma.problemStatus.create({
+                  data: {
+                     status: status,
+                     problemId: problemID,
+                     userId: user?.id,
+                  },
+               });
+            }
+            return NextResponse.json({ status: 200 });
+         }
+      }
+      return NextResponse.json({ status: 400 });
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({ status: 500, error });
+   }
+};
+export { getAllProblems as GET, updateUserProblemStatus as POST };

@@ -1,8 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
-import { IoMdArrowDropdown, IoMdSearch } from "react-icons/io"; // Import your desired filter icon
 import { useSearchParams } from "next/navigation";
+// icons
+import { IoMdArrowDropdown, IoMdSearch } from "react-icons/io"; // Import your desired filter icon
+import { IoIosCodeWorking } from "react-icons/io";
+import { BsCalendarMinus, BsCheck2Circle } from "react-icons/bs";
+//context
 import { SessionContext } from "@/context/SessionContext";
 import { ProblemContext } from "@/context/ProblemsContext";
+// component
 import FilterIcons from "@/components/subcomponent/FilterIcons";
 // function
 import { getAllLists, getSelectList } from "@/functions/ListFunctions";
@@ -10,112 +15,174 @@ import { getAllTags } from "@/functions/TagFunctions";
 import { getAllCompanylist } from "@/functions/CompanyFunctions";
 import { GetAllProblems } from "@/functions/ProblemFunctions";
 import { addFilter, removeFilter } from "@/functions/FilterFunctions";
-import { ProblemsProp, filterProps } from "@/types/index";
+//types
+import { filterProps } from "@/types/index";
+
 const Filters = () => {
-   ////////////////////////////////////////////////////////////////
-   // problem context
+   // problem context ///////////////////////////////////////////////////////
    const problemContext = useContext(ProblemContext);
    const currentListProblems = problemContext?.currentListProblems;
    const setCurrentListProblems = problemContext?.setCurrentListProblems;
+   const filterdProblems = problemContext?.filterdProblems;
+   const setFilterdProblems = problemContext?.setFilterdProblems;
    const setCurrentPageProblemSet = problemContext?.setCurrentPageProblemSet;
+   const setProblemSetLoading = problemContext?.setProblemSetLoading;
    const page = problemContext?.page;
    const setPage = problemContext?.setPage;
 
-   // session context
+   // session context ////////////////////////////////////////////////////////
    const sessionContext = useContext(SessionContext);
    const session = sessionContext?.session;
-   // filters related states and functions
+
+   // filters states /////////////////////////////////////////////////////////
    const [lists, setLists] = useState<any[]>();
    const [topics, setTopics] = useState<any[]>();
    const [companies, setCompanies] = useState<any[]>();
    const [isTopic, setIsTopic] = useState(true);
-   const dificulty = ["Easy", "Medium", "Hard"];
+   const difficulty = ["Easy", "Medium", "Hard"];
    const status = ["Todo", "Solved", "Attempted"];
-   // above filter data management
+   // above filter data management states ///////////////////////////////////
    const [filterValues, setFilterValues] = useState<filterProps>({});
    const [filterVisiblity, setFilterVisiblity] = useState<any>(null);
 
-   // UseEffects  //////////////////////////////////
-   // base data collection at loading time
-   useEffect(() => {
-      getAllTags().then((res: any) => setTopics(res.data.tags));
-      getAllCompanylist().then((res: any) => setCompanies(res.data.companies));
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////// all functions /////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   const performPageSetup = async ({
+      currentList,
+      pageNumber,
+   }: {
+      currentList?: any;
+      pageNumber?: number;
+   }) => {
+      currentList = currentList || filterdProblems;
 
-      async function getBase(email: string | null) {
-         // get all problems if user is logged in fetch its problem status as well
-         const { problemCollection } = await GetAllProblems(email);
-         if (setCurrentListProblems) setCurrentListProblems(problemCollection);
-
-         // get lists according to user pressence
-         getAllLists(email).then((res: any) => {
-            setLists(res.data.lists);
-         });
-         if (setPage) {
+      if (currentList.length) {
+         const totalPages = Math.ceil(currentList?.length / page.pageSize);
+         const currPage = pageNumber || page.currPage;
+         setPage &&
             setPage((prev: any) => {
                return {
                   ...prev,
-                  totalPages: problemCollection.length / page.pageSize,
+                  currPage: currPage % (totalPages + 1),
+                  totalPages: totalPages,
                };
+            });
+      }
+   };
+   // base data collection at loading time //////////////////////////////////
+   async function getBase(id: string | null) {
+      // get all problems if user is logged in fetch its problem status as well
+      const { problemCollection } = await GetAllProblems(id);
+      if (setCurrentListProblems && setFilterdProblems) {
+         // console.log(problemCollection);
+         setCurrentListProblems(problemCollection);
+         setFilterdProblems(problemCollection);
+      }
+      // get lists according to user pressence
+      getAllLists(id).then((res: any) => {
+         setLists(res.data.lists);
+      });
+      console.log("page called fome getBase()");
+      performPageSetup({ currentList: problemCollection });
+   }
+   const removeFilterVisiblity = () => {
+      setFilterVisiblity(null);
+   };
+
+   const catchFilter = async (category: string, value: string, id?: any) => {
+      if (setProblemSetLoading) setProblemSetLoading(true); // to make skeleton loading animation
+      await addFilter(category, value, filterValues, currentListProblems).then(
+         ({ filterValues, filteredProblemsList }) => {
+            setFilterValues((prev) => {
+               return { ...prev, ...filterValues };
+            });
+            category !== "list" &&
+               setFilterdProblems &&
+               setFilterdProblems(filteredProblemsList);
+            category !== "list" &&
+               performPageSetup({ currentList: filteredProblemsList });
+         }
+      );
+      if (category === "list") {
+         const { currentList } = await getSelectList(id, session?.user?.id);
+         if (setCurrentListProblems && setFilterdProblems) {
+            setCurrentListProblems(currentList ? currentList : []);
+            setFilterdProblems(currentList ? currentList : []);
+            performPageSetup({ currentList });
+         }
+      }
+
+      removeFilterVisiblity(); // becuse on click the filter data is
+   };
+   const fireFilter = async (category: string, value: string, id?: any) => {
+      await removeFilter(
+         category,
+         value,
+         filterValues,
+         currentListProblems
+      ).then(({ filterValues, filteredProblemsList }) => {
+         setFilterValues((prev) => {
+            return { ...prev, ...filterValues };
+         });
+         category !== "list" &&
+            setFilterdProblems &&
+            setFilterdProblems(filteredProblemsList);
+         category !== "list" &&
+            performPageSetup({ currentList: filteredProblemsList });
+      });
+      if (category === "list") {
+         if (setProblemSetLoading) setProblemSetLoading(true);
+         if (session !== undefined) {
+            console.log("working");
+            getBase(session?.user?.id).catch((error) => {
+               console.log(error);
             });
          }
       }
-      if (session !== undefined) {
-         getBase(session?.user?.email).catch((error) => {
+   };
+
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////// all useEffect /////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   useEffect(() => {
+      getAllTags().then((res: any) => setTopics(res.data.tags));
+      getAllCompanylist().then((res: any) => setCompanies(res.data.companies));
+      if (session !== undefined && currentListProblems?.length === 0) {
+         getBase(session?.user?.id).catch((error) => {
             console.log(error);
          });
       }
    }, [session]);
    useEffect(() => {
-      if (currentListProblems && setCurrentPageProblemSet) {
-         const problems: any[] = currentListProblems.slice(
+      if (filterdProblems && setCurrentPageProblemSet) {
+         const problems: any[] = filterdProblems.slice(
             (page.currPage - 1) * page.pageSize,
             page.currPage * page.pageSize
          );
-
          if (problems) setCurrentPageProblemSet(problems); // Update problemSet
       }
-   }, [page, currentListProblems]);
+   }, [page, filterdProblems]);
 
    // change the problemSet according to page and filter
    const searchParams = useSearchParams();
    useEffect(() => {
-      if (setPage && page.totalPages) {
-         const pagenumber = searchParams?.get("page") || "1";
-         setPage((prev: any) => {
-            return {
-               ...prev,
-               currPage: parseInt(pagenumber) % page.totalPages,
-               // mod is if someone wants to mess with url
-            };
-         });
+      if (searchParams?.get("page") !== page.currPage) {
+         const pageNumber = parseInt(searchParams?.get("page") || "1");
+         console.log("calling from page number use Effect");
+         performPageSetup({ pageNumber });
       }
    }, [searchParams?.get("page")]);
 
-   // all functions //////////////////////////////////
-   const removeFilterVisiblity = () => {
-      setFilterVisiblity(null);
-   };
-   const catchFilter = async (category: string, value: string, id?: any) => {
-      if (category === "list") {
-         await getSelectList(id).then((selectList) => {
-            console.log(selectList);
-         });
-      }
-      await addFilter(category, value, filterValues).then(({ filters }) => {
-         setFilterValues((prev) => {
-            return { ...prev, ...filters };
-         });
-      });
-      removeFilterVisiblity(); // becuse on click the filter data is
-   };
-   const fireFilter = async (category: string, value: string, id?: any) => {
-      await removeFilter(category, value, filterValues).then(({ filters }) => {
-         setFilterValues((prev) => {
-            return { ...prev, ...filters };
-         });
-      });
-   };
-
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////    Below JSX Section      ////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////////////////////////
    return (
       <section className="w-full z-[20]">
          <ul className="w-full relative z-[20] flex justify-end [&>*]:flex [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-seco2 text-prim2 ">
@@ -162,27 +229,27 @@ const Filters = () => {
                onClick={() => {
                   setFilterVisiblity((prev: any) => {
                      return {
-                        dificulty: prev?.dificulty ? !prev?.dificulty : true,
+                        difficulty: prev?.difficulty ? !prev?.difficulty : true,
                      };
                   });
                }}
                onBlur={removeFilterVisiblity}
             >
-               Dificulty
+               Difficulty
                <IoMdArrowDropdown
                   className={`ml-3 hover:cursor-pointer ${
-                     filterVisiblity?.dificulty && "rotate-180"
+                     filterVisiblity?.difficulty && "rotate-180"
                   } transition-[transform] ease-linear`}
                />
                <ul
                   className={`${
-                     filterVisiblity?.dificulty
+                     filterVisiblity?.difficulty
                         ? "visible opacity-100 translate-y-0"
                         : "-translate-y-2 invisible opacity-0 "
                   } absolute top-10 left-0 w-[200px] max-w-xl py-2 px-3 rounded-md   bg-seco2  transition-[opacity,transform]`}
                >
-                  {dificulty &&
-                     dificulty.map((val, index) => {
+                  {difficulty &&
+                     difficulty.map((val, index) => {
                         return (
                            <li
                               className={`${
@@ -193,7 +260,7 @@ const Filters = () => {
                                     : "text-hard"
                               } truncate hover:bg-extra1 mt-1 rounded-sm px-1`}
                               key={index}
-                              onClick={() => catchFilter("dificulty", val)}
+                              onClick={() => catchFilter("difficulty", val)}
                            >
                               {val}
                            </li>
@@ -232,10 +299,18 @@ const Filters = () => {
                                  val === "Solved"
                                     ? "text-easy"
                                     : val === "Attempted" && "text-medium"
-                              } truncate hover:bg-extra1 mt-1 rounded-sm px-1`}
+                              } truncate flex  items-center hover:bg-extra1 mt-1 rounded-sm px-1`}
                               key={index}
                               onClick={() => catchFilter("status", val)}
                            >
+                              {val === "Solved" ? (
+                                 <BsCheck2Circle className="mr-2 p-[2px]" />
+                              ) : val === "Attempted" ? (
+                                 <IoIosCodeWorking className="mr-2 p-[2px]" />
+                              ) : (
+                                 <BsCalendarMinus className="mr-2 p-[2px]" />
+                              )}
+
                               {val}
                            </li>
                         );

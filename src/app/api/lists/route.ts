@@ -17,13 +17,13 @@ const getAllLists = async (req: NextRequest, res: NextResponse) => {
                where: {
                   userId: user.id,
                },
-               select: { name: true, slug: true },
+               select: { id: true, name: true, slug: true },
             });
          });
       if (user) {
          await prisma.user
             .findUnique({
-               where: { email: user },
+               where: { id: user },
             })
             .then(async (user: any) => {
                await prisma.list
@@ -31,7 +31,7 @@ const getAllLists = async (req: NextRequest, res: NextResponse) => {
                      where: {
                         userId: user.id,
                      },
-                     select: { name: true, slug: true },
+                     select: { id: true, name: true, slug: true },
                   })
                   .then((res: any) => {
                      lists.push(...res);

@@ -17,6 +17,7 @@ const Landing: FC<SessionProp> = ({ session }) => {
    const setSession = sessionContext?.setSession;
    useEffect(() => {
       if (setSession) {
+         // console.log(session);
          setSession(session);
       }
    }, [session]);

@@ -28,7 +28,7 @@ const FilterIcons: React.FC<{
          return getLiTag("topic", value, "rounded-full", indx);
       });
       let companies = filters?.companies?.map((value: string, indx: number) => {
-         return getLiTag("companies", value, "rounded-full", indx);
+         return getLiTag("company", value, "rounded-full", indx);
       });
       let status =
          filters?.status &&

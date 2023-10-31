@@ -30,10 +30,10 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
    };
 
    return (
-      <div className="mb-4">
+      <div className="">
          {currentPage > 1 && (
             <button
-               className="px-3 py-1 m-2 rounded-md text-prim1 bg-seco2"
+               className="px-3 py-1 mx-2 rounded-md text-prim1 bg-seco2"
                onClick={() => onPageChange(currentPage - 1)}
             >
                Prev

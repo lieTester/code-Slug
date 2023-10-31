@@ -9,10 +9,13 @@ export type SessionContextType = {
 
 // ProblemContext.tsx
 export type ProblemContextType = {
+   problemSetLoading: boolean;
+   setProblemSetLoading: React.Dispatch<React.SetStateAction<boolean>>;
    currentListProblems: ProblemsProp[];
    setCurrentListProblems: React.Dispatch<React.SetStateAction<ProblemsProp[]>>;
-   userProblemStatus: String[];
-   setUserProblemStatus: React.Dispatch<React.SetStateAction<String[]>>;
+   filterdProblems: ProblemsProp[];
+   setFilterdProblems: React.Dispatch<React.SetStateAction<ProblemsProp[]>>;
+
    currentPageProblemSet: ProblemsProp[];
    setCurrentPageProblemSet: React.Dispatch<
       React.SetStateAction<ProblemsProp[]>

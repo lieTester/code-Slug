@@ -7,33 +7,35 @@ const getUserProblemsStatus = async (
 ) => {
    try {
       const user = await prisma.user.findUnique({
-         where: { email: params.user },
+         where: { id: params.user },
       });
-      console.log(params.user, user);
+      // console.log(params.user, user);
       // Fetch problems and related data
-      const problems = await prisma.problem.findMany({
-         where: {
-            userProblemStatus: {
-               some: {
-                  userId: user?.id,
+      if (user) {
+         const problems = await prisma.problemStatus.findMany({
+            where: {
+               user: {
+                  id: user?.id,
                },
             },
-         },
-         include: {
-            userProblemStatus: {
-               where: {
-                  userId: user?.id,
-               },
-               select: {
-                  status: true,
+            select: {
+               problemId: true,
+               status: true,
+               problem: {
+                  select: {
+                     title: true,
+                     titleSlug: true,
+                  },
                },
             },
-         },
-      });
-      return NextResponse.json({ status: 200, problems });
+         });
+
+         return NextResponse.json({ status: 200, problems });
+      }
+      return NextResponse.json({ status: 405, msg: "don't try" });
    } catch (error) {
       console.error(error);
       return NextResponse.json({ status: 500, error });
    }
 };
-export { getUserProblemsStatus as POST };
+export { getUserProblemsStatus as GET };

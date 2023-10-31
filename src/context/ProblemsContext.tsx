@@ -9,24 +9,33 @@ export const ProblemsProvider = ({ children }: ChildrenProp) => {
    const [currentListProblems, setCurrentListProblems] = useState<
       ProblemsProp[]
    >([]);
-   const [userProblemStatus, setUserProblemStatus] = useState<String[]>([]);
+   const [filterdProblems, setFilterdProblems] = useState<ProblemsProp[]>([]);
    const [currentPageProblemSet, setCurrentPageProblemSet] = useState<
       ProblemsProp[]
    >([]);
+   const [problemSetLoading, setProblemSetLoading] = useState(true);
    const [page, setPage] = useState({
       currPage: 1,
       pageSize: 50,
-      totalPages: 0,
+      totalPages: 1,
    });
    return (
       <ProblemContext.Provider
          value={{
+            // current list of problems for all problem or to fetch users specific List
             currentListProblems,
             setCurrentListProblems,
-            userProblemStatus,
-            setUserProblemStatus,
+            // filterProblem is the one which will actually go to frontEndTables with user filter
+            //and on removal will use currentList to alter bw filters
+            filterdProblems,
+            setFilterdProblems,
+            // all problems appear on current page
             currentPageProblemSet,
             setCurrentPageProblemSet,
+            // loading state for problems
+            problemSetLoading,
+            setProblemSetLoading,
+            // page related fields
             page,
             setPage,
          }}

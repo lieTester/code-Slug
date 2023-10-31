@@ -11,15 +11,43 @@ const getProblemsInList = async (
 
    try {
       const listId = params.list;
-      const problemsInList = await prisma.list.findFirst({
+      const currentList = await prisma.list.findFirst({
          where: {
             id: listId,
          },
          include: {
-            problems: true,
+            problems: {
+               include: {
+                  tags: {
+                     select: {
+                        name: true,
+                     },
+                  },
+                  PlatformLinks: {
+                     select: {
+                        name: true,
+                        link: true,
+                     },
+                  },
+                  CompanyProblem: {
+                     select: {
+                        company: {
+                           select: {
+                              name: true,
+                           },
+                        },
+                     },
+                  },
+               },
+            },
          },
       });
-      return NextResponse.json({ status: 200, data: problemsInList });
+      const transformedProblems = currentList?.problems?.map((problem) => ({
+         ...problem,
+         tags: problem.tags.map((tag) => tag.name),
+         CompanyProblem: problem.CompanyProblem.map((cp) => cp.company.name),
+      }));
+      return NextResponse.json({ status: 200, data: transformedProblems });
    } catch (error) {
       // console.error(error);
       return NextResponse.json({ status: 500, params, error });

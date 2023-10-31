@@ -7,8 +7,8 @@ const userCheck = async (req: NextRequest, res: NextResponse) => {
       const { email } = await req.json();
       const user = await prisma.user.findFirst({ where: { email: email } });
       if (user && user.email) {
-         console.log(user.email);
-         return NextResponse.json({ status: 200, value: true });
+         // console.log(user.email);
+         return NextResponse.json({ status: 200, value: true, id: user.id });
       }
       return NextResponse.json({ status: 200, value: false });
    } catch (error) {

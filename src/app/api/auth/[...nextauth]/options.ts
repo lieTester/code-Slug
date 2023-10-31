@@ -15,9 +15,14 @@ export const options: NextAuthOptions = {
          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       }),
    ],
+   session: {
+      strategy: "jwt",
+   },
+   secret: process.env.NEXTAUTH_SECRET,
    callbacks: {
       async signIn({ user, account, profile }) {
          try {
+            // console.log("signIn:", user);
             const response = await axios.post(
                process.env.NEXT_PUBLIC_API_BASE_URL + "auth/user",
                {
@@ -45,21 +50,25 @@ export const options: NextAuthOptions = {
                "error: ---------------------------------------------------",
                error
             );
+            return false;
          }
-         return true;
       },
-      // async jwt({ token, user, account, profile, isNewUser }) {
-      //    console.log("called jwt");
-      //    console.log(token, user, account, profile, isNewUser);
-      //    if (account) {
-      //       const userLoggedIn = await SignToken(user?.email as string);
-      //       token.loggedUser = userLoggedIn;
-      //    }
-      //    return token;
-      // },
-      // async session({ session, token, user }) {
-      //    session.loggedUser = token.loggedUser;
-      //    return session;
-      // },
+      async jwt({ token, user, account, profile }) {
+         console.log("called jwt");
+         // console.log(token, user, account, profile);
+         return token;
+      },
+      async session({ session, token, user }) {
+         // console.log("session:", session, user, token);
+         const response = await axios.post(
+            process.env.NEXT_PUBLIC_API_BASE_URL + "auth/user",
+            {
+               email: session?.user?.email,
+            }
+         );
+         if (response?.data && session?.user)
+            session.user = { ...session.user, id: response.data.id };
+         return session;
+      },
    },
 };
