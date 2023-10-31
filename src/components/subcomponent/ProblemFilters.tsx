@@ -103,7 +103,9 @@ const ProblemFilters = () => {
             category !== "list" &&
                filteredProblemsList.length === 0 &&
                setProblemSetLoading &&
-               setProblemSetLoading(false);
+               setTimeout(() => {
+                  setProblemSetLoading(false);
+               }, 300);
             category !== "list" &&
                setFilterdProblems &&
                setFilterdProblems(filteredProblemsList);
