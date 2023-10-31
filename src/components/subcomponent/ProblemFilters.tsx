@@ -142,7 +142,6 @@ const ProblemFilters = () => {
       });
       if (category === "list") {
          if (session !== undefined) {
-            console.log("working");
             getBase(session?.user?.id).catch((error) => {
                console.log(error);
             });
@@ -189,7 +188,6 @@ const ProblemFilters = () => {
    useEffect(() => {
       if (searchParams?.get("page") !== page.currPage) {
          const pageNumber = parseInt(searchParams?.get("page") || "1");
-         console.log("calling from page number use Effect");
          performPageSetup({ pageNumber });
       }
    }, [searchParams?.get("page")]);
