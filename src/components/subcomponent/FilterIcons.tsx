@@ -36,16 +36,16 @@ const FilterIcons: React.FC<{
       let list =
          filters?.list &&
          getLiTag("list", filters?.list, "rounded-sm", filters?.list);
-      let dificulty =
-         filters?.dificulty &&
+      let difficulty =
+         filters?.difficulty &&
          getLiTag(
-            "dificulty",
-            filters?.dificulty,
+            "difficulty",
+            filters?.difficulty,
             "rounded-sm",
-            filters?.dificulty
+            filters?.difficulty
          );
 
-      return [list, status, dificulty, topics, companies];
+      return [list, status, difficulty, topics, companies];
    }
    return <>{returnFilterdata(filterValues)}</>;
 };

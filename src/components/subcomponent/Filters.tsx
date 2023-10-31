@@ -118,6 +118,7 @@ const Filters = () => {
       removeFilterVisiblity(); // becuse on click the filter data is
    };
    const fireFilter = async (category: string, value: string, id?: any) => {
+      if (setProblemSetLoading) setProblemSetLoading(true);
       await removeFilter(
          category,
          value,
@@ -134,7 +135,6 @@ const Filters = () => {
             performPageSetup({ currentList: filteredProblemsList });
       });
       if (category === "list") {
-         if (setProblemSetLoading) setProblemSetLoading(true);
          if (session !== undefined) {
             console.log("working");
             getBase(session?.user?.id).catch((error) => {

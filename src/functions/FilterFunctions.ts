@@ -3,7 +3,7 @@ export const applyFilter = async (
    filterValues: any,
    filteredProblemsList: any
 ) => {
-   // console.log(filterValues, filteredProblemsList);
+   // console.log(filterValues);
    if (filterValues?.topics) {
       filterValues.topics.forEach((value: string) => {
          filteredProblemsList = filteredProblemsList.filter((problem: any) => {
@@ -35,7 +35,7 @@ export const applyFilter = async (
    }
    if (filterValues?.difficulty) {
       filteredProblemsList = filteredProblemsList.filter((problem: any) => {
-         if (problem.dificulty === filterValues?.dificulty) {
+         if (problem.difficulty === filterValues?.difficulty) {
             return problem;
          }
       });
@@ -69,10 +69,10 @@ export const addFilter = async (
       }
    } else if (category === "list") filterValues.list = value;
    else if (category === "status") filterValues.status = value;
-   else if (category === "dificulty") filterValues.dificulty = value;
+   else if (category === "difficulty") filterValues.difficulty = value;
 
    const response = await applyFilter(filterValues, filteredProblemsList);
-   console.log(response.filteredProblemsList);
+   // console.log(response.filteredProblemsList);
    return { filterValues, filteredProblemsList: response.filteredProblemsList };
 };
 
@@ -94,11 +94,11 @@ export const removeFilter = async (
    } else if (
       category === "list" ||
       category === "status" ||
-      category === "dificulty"
+      category === "difficulty"
    ) {
       delete filterValues[category];
    }
    const response = await applyFilter(filterValues, filteredProblemsList);
-   console.log(response.filteredProblemsList);
-   return { filterValues, filteredProblemsList };
+   // console.log(response.filteredProblemsList);
+   return { filterValues, filteredProblemsList: response.filteredProblemsList };
 };
