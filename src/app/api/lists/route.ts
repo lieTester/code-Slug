@@ -1,9 +1,7 @@
 // pages/api/lists/public.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "@/app/lib";
 
 const getAllLists = async (req: NextRequest, res: NextResponse) => {
    try {

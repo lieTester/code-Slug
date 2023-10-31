@@ -18,7 +18,7 @@ import { addFilter, removeFilter } from "@/functions/FilterFunctions";
 //types
 import { filterProps } from "@/types/index";
 
-const Filters = () => {
+const ProblemFilters = () => {
    // problem context ///////////////////////////////////////////////////////
    const problemContext = useContext(ProblemContext);
    const currentListProblems = problemContext?.currentListProblems;
@@ -93,7 +93,8 @@ const Filters = () => {
    };
 
    const catchFilter = async (category: string, value: string, id?: any) => {
-      if (setProblemSetLoading) setProblemSetLoading(true); // to make skeleton loading animation
+      if (setProblemSetLoading && category !== "search")
+         setProblemSetLoading(true); // to make skeleton loading animation
       await addFilter(category, value, filterValues, currentListProblems).then(
          ({ filterValues, filteredProblemsList }) => {
             setFilterValues((prev) => {
@@ -142,6 +143,16 @@ const Filters = () => {
             });
          }
       }
+   };
+
+   let debounceTimeout: any;
+   const filterByTitle = async (value: string) => {
+      // Clear the previous timeout
+      clearTimeout(debounceTimeout);
+      // Set a new timeout to trigger the search after a delay
+      debounceTimeout = setTimeout(() => {
+         catchFilter("search", value);
+      }, 800);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -385,7 +396,7 @@ const Filters = () => {
                <input
                   className="w-full bg-transparent outline-none"
                   placeholder="Search problem..."
-                  type="text"
+                  onChange={(e) => filterByTitle(e.target.value)}
                />
             </li>
          </ul>
@@ -401,4 +412,4 @@ const Filters = () => {
    );
 };
 
-export default Filters;
+export default ProblemFilters;

@@ -45,7 +45,7 @@ const getProblemsInList = async (
       const transformedProblems = currentList?.problems?.map((problem) => ({
          ...problem,
          tags: problem.tags.map((tag) => tag.name),
-         CompanyProblem: problem.CompanyProblem.map((cp) => cp.company.name),
+         companies: problem.CompanyProblem.map((cp) => cp.company.name),
       }));
       return NextResponse.json({ status: 200, data: transformedProblems });
    } catch (error) {

@@ -8,6 +8,7 @@ interface PaginationProps {
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
    // Calculate the range of page numbers to display (5 pages)
+   currentPage = Math.ceil(currentPage % (totalPages + 1));
    let pageRange = Array.from(
       { length: 5 },
       (_, index) => currentPage - 2 + index

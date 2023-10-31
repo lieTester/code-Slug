@@ -5,7 +5,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 // context
 import { ProblemContext } from "@/context/ProblemsContext";
 // component
-import Filters from "@/components/subcomponent/Filters";
+import ProblemFilter from "@/components/subcomponent/ProblemFilters";
 import Pagination from "@/components/subcomponent/Pagination";
 import ProblemTableBase from "@/components/subcomponent/problemTable/ProblemTableBase";
 import ProblemTableSkeleton from "@/components/subcomponent/problemTable/ProblemTableSkeleton";
@@ -43,7 +43,7 @@ const ProblemTable: React.FC = () => {
    };
    return (
       <section className="relative w-[100%]  lg:w-[70%] 2xl:w-[75%] font-baloo">
-         <Filters />
+         <ProblemFilter />
          <div className="overflow-x-auto overflow-y-hidden mt-4 pb-7">
             <table className="min-w-full ">
                <thead className="border-b-[0.5px] border-seco2  text-prim1 ">

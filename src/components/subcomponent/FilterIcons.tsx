@@ -30,6 +30,9 @@ const FilterIcons: React.FC<{
       let companies = filters?.companies?.map((value: string, indx: number) => {
          return getLiTag("company", value, "rounded-full", indx);
       });
+      let search =
+         filters?.search &&
+         getLiTag("search", filters?.search, "rounded-sm", filters?.search);
       let status =
          filters?.status &&
          getLiTag("status", filters?.status, "rounded-sm", filters?.status);
@@ -45,7 +48,7 @@ const FilterIcons: React.FC<{
             filters?.difficulty
          );
 
-      return [list, status, difficulty, topics, companies];
+      return [list, difficulty, status, search, topics, companies];
    }
    return <>{returnFilterdata(filterValues)}</>;
 };

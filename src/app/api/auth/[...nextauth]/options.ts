@@ -22,7 +22,6 @@ export const options: NextAuthOptions = {
    callbacks: {
       async signIn({ user, account, profile }) {
          try {
-            console.log("signIn:", user);
             const response = await axios.post(
                process.env.NEXT_PUBLIC_API_BASE_URL + "auth/user",
                {
@@ -47,14 +46,13 @@ export const options: NextAuthOptions = {
             }
          } catch (error) {
             console.error(
-               "error: ---------------------------------------------------",
+               "error: ---------------------------------------------------\n",
                error
             );
             return false;
          }
       },
       async jwt({ token, user, account, profile }) {
-         console.log("called jwt");
          // console.log(token, user, account, profile);
          return token;
       },

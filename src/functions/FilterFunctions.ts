@@ -1,4 +1,16 @@
 import { filterProps } from "@/types/index";
+
+export const searchFilter = async (value: string, sortedList: any) => {
+   // Filter the items based on the search term and sort by title
+   sortedList = sortedList
+      .filter((item: any) =>
+         item.title.toLowerCase().includes(value.toLowerCase())
+      )
+      .sort((a: any, b: any) => a.title.localeCompare(b.title));
+   // console.log(sortedList);
+   return { sortedList };
+};
+
 export const applyFilter = async (
    filterValues: any,
    filteredProblemsList: any
@@ -40,6 +52,14 @@ export const applyFilter = async (
          }
       });
    }
+   if (filterValues?.search) {
+      const { sortedList } = await searchFilter(
+         filterValues?.search,
+         filteredProblemsList
+      );
+      console.log(sortedList);
+      filteredProblemsList = sortedList;
+   }
    return { filteredProblemsList };
 };
 
@@ -67,6 +87,9 @@ export const addFilter = async (
       } else {
          filterValues.companies = [value];
       }
+   } else if (category === "search") {
+      if (value.length === 0) delete filterValues.search;
+      else filterValues.search = value;
    } else if (category === "list") filterValues.list = value;
    else if (category === "status") filterValues.status = value;
    else if (category === "difficulty") filterValues.difficulty = value;
@@ -94,7 +117,8 @@ export const removeFilter = async (
    } else if (
       category === "list" ||
       category === "status" ||
-      category === "difficulty"
+      category === "difficulty" ||
+      category === "search"
    ) {
       delete filterValues[category];
    }
