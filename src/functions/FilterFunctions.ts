@@ -57,7 +57,7 @@ export const applyFilter = async (
          filterValues?.search,
          filteredProblemsList
       );
-      console.log(sortedList);
+      // console.log(sortedList);
       filteredProblemsList = sortedList;
    }
    return { filteredProblemsList };

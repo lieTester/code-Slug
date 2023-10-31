@@ -101,6 +101,10 @@ const ProblemFilters = () => {
                return { ...prev, ...filterValues };
             });
             category !== "list" &&
+               filteredProblemsList.length === 0 &&
+               setProblemSetLoading &&
+               setProblemSetLoading(false);
+            category !== "list" &&
                setFilterdProblems &&
                setFilterdProblems(filteredProblemsList);
             category !== "list" &&
@@ -129,6 +133,7 @@ const ProblemFilters = () => {
          setFilterValues((prev) => {
             return { ...prev, ...filterValues };
          });
+
          category !== "list" &&
             setFilterdProblems &&
             setFilterdProblems(filteredProblemsList);
