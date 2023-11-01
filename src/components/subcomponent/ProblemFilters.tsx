@@ -14,7 +14,11 @@ import { getAllLists, getSelectList } from "@/functions/ListFunctions";
 import { getAllTags } from "@/functions/TagFunctions";
 import { getAllCompanylist } from "@/functions/CompanyFunctions";
 import { GetAllProblems } from "@/functions/ProblemFunctions";
-import { addFilter, removeFilter } from "@/functions/FilterFunctions";
+import {
+   addFilter,
+   removeFilter,
+   applyFilter,
+} from "@/functions/FilterFunctions";
 //types
 import { filterProps } from "@/types/index";
 
@@ -95,60 +99,61 @@ const ProblemFilters = () => {
    const catchFilter = async (category: string, value: string, id?: any) => {
       if (setProblemSetLoading && category !== "search")
          setProblemSetLoading(true); // to make skeleton loading animation
-      await addFilter(category, value, filterValues, currentListProblems).then(
-         ({ filterValues, filteredProblemsList }) => {
+      await addFilter(category, value, filterValues).then(
+         async ({ filterValues }) => {
             setFilterValues((prev) => {
                return { ...prev, ...filterValues };
             });
-            category !== "list" &&
-               filteredProblemsList.length === 0 &&
-               setProblemSetLoading &&
-               setTimeout(() => {
-                  setProblemSetLoading(false);
-               }, 300);
-            category !== "list" &&
-               setFilterdProblems &&
-               setFilterdProblems(filteredProblemsList);
-            category !== "list" &&
-               performPageSetup({ currentList: filteredProblemsList });
+            if (category === "list") {
+               const { currentList } = await getSelectList(
+                  id,
+                  session?.user?.id
+               );
+               if (setCurrentListProblems && setFilterdProblems) {
+                  setCurrentListProblems(currentList);
+                  setFilterdProblems(currentList);
+               }
+            }
+            await applyFilter(filterValues, currentListProblems).then(
+               ({ filteredProblemsList }) => {
+                  if (filteredProblemsList.length === 0 && setProblemSetLoading)
+                     setTimeout(() => {
+                        setProblemSetLoading(false);
+                     }, 300);
+                  performPageSetup({ currentList: filteredProblemsList });
+                  setFilterdProblems &&
+                     setFilterdProblems(filteredProblemsList);
+               }
+            );
          }
       );
-      if (category === "list") {
-         const { currentList } = await getSelectList(id, session?.user?.id);
-         if (setCurrentListProblems && setFilterdProblems) {
-            setCurrentListProblems(currentList ? currentList : []);
-            setFilterdProblems(currentList ? currentList : []);
-            performPageSetup({ currentList });
-         }
-      }
-
       removeFilterVisiblity(); // becuse on click the filter data is
    };
    const fireFilter = async (category: string, value: string, id?: any) => {
       if (setProblemSetLoading) setProblemSetLoading(true);
-      await removeFilter(
-         category,
-         value,
-         filterValues,
-         currentListProblems
-      ).then(({ filterValues, filteredProblemsList }) => {
-         setFilterValues((prev) => {
-            return { ...prev, ...filterValues };
-         });
-
-         category !== "list" &&
-            setFilterdProblems &&
-            setFilterdProblems(filteredProblemsList);
-         category !== "list" &&
-            performPageSetup({ currentList: filteredProblemsList });
-      });
-      if (category === "list") {
-         if (session !== undefined) {
-            getBase(session?.user?.id).catch((error) => {
-               console.log(error);
+      await removeFilter(category, value, filterValues).then(
+         async ({ filterValues }) => {
+            setFilterValues((prev) => {
+               return { ...prev, ...filterValues };
             });
+            if (category === "list") {
+               await getBase(session?.user?.id).catch((error) => {
+                  console.log(error);
+               });
+            }
+            await applyFilter(filterValues, currentListProblems).then(
+               ({ filteredProblemsList }) => {
+                  if (filteredProblemsList.length === 0 && setProblemSetLoading)
+                     setTimeout(() => {
+                        setProblemSetLoading(false);
+                     }, 300);
+                  performPageSetup({ currentList: filteredProblemsList });
+                  setFilterdProblems &&
+                     setFilterdProblems(filteredProblemsList);
+               }
+            );
          }
-      }
+      );
    };
 
    let debounceTimeout: any;

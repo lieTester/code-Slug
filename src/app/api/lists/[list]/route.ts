@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib";
+import { todo } from "node:test";
 
 const getProblemsInList = async (
    req: NextRequest,
@@ -44,6 +45,7 @@ const getProblemsInList = async (
       });
       const transformedProblems = currentList?.problems?.map((problem) => ({
          ...problem,
+         status: "todo",
          tags: problem.tags.map((tag) => tag.name),
          companies: problem.CompanyProblem.map((cp) => cp.company.name),
       }));

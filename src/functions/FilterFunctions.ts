@@ -15,7 +15,7 @@ export const applyFilter = async (
    filterValues: any,
    filteredProblemsList: any
 ) => {
-   // console.log(filterValues);
+   console.log(filterValues);
    if (filterValues?.topics) {
       filterValues.topics.forEach((value: string) => {
          filteredProblemsList = filteredProblemsList.filter((problem: any) => {
@@ -66,8 +66,7 @@ export const applyFilter = async (
 export const addFilter = async (
    category: string,
    value: string,
-   filterValues: any,
-   filteredProblemsList: any
+   filterValues: any
 ) => {
    filterValues = filterValues === undefined ? {} : filterValues;
 
@@ -94,16 +93,13 @@ export const addFilter = async (
    else if (category === "status") filterValues.status = value;
    else if (category === "difficulty") filterValues.difficulty = value;
 
-   const response = await applyFilter(filterValues, filteredProblemsList);
-   // console.log(response.filteredProblemsList);
-   return { filterValues, filteredProblemsList: response.filteredProblemsList };
+   return { filterValues };
 };
 
 export const removeFilter = async (
    category: string,
    value: string,
-   filterValues: any,
-   filteredProblemsList: any
+   filterValues: any
 ) => {
    // console.log(category, value);
    if (category === "topic") {
@@ -122,7 +118,6 @@ export const removeFilter = async (
    ) {
       delete filterValues[category];
    }
-   const response = await applyFilter(filterValues, filteredProblemsList);
-   // console.log(response.filteredProblemsList);
-   return { filterValues, filteredProblemsList: response.filteredProblemsList };
+
+   return { filterValues };
 };
