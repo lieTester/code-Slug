@@ -65,9 +65,16 @@ const ProblemFilters = () => {
    }) => {
       currentList = currentList || filterdProblems;
 
+      // will only receive goAhead when a filter func call and if filterd list is empty
+      // to show pagination propperly
       if (currentList.length || goAhead) {
          const totalPages = Math.ceil(currentList?.length / page.pageSize);
-         const currPage = pageNumber || page.currPage;
+         const currPage = pageNumber || page.currPage || 1;
+         // ||1 is most important because in case we have empty list after filter so we shown pagination ccorrectly
+         // but because list is empty currPage%(ttlPages+1) make it currPage:0
+         // and below useEffect to slice problem will not work for it to work properly currPage:1 is minimum criteria
+         // and as next time list will be having lenght>0 then over setProblemSetLoading will only call
+         // after useEffect slice and setProblemSetLoading will call from main.tsx file
          setPage &&
             setPage((prev: any) => {
                return {
@@ -78,7 +85,8 @@ const ProblemFilters = () => {
             });
       }
    };
-   // base data collection at loading time //////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   // base data collection at loading time and also if previous list filter removed//////////////////////////////////
    async function getBase(id: string | null) {
       // get all problems if user is logged in fetch its problem status as well
       const { problemCollection } = await GetAllProblems(id);
@@ -87,17 +95,39 @@ const ProblemFilters = () => {
          setCurrentListProblems(problemCollection);
          setFilterdProblems(problemCollection);
       }
-      // get lists according to user pressence
+      // get lists according to user presense
       getAllLists(id).then((res: any) => {
          setLists(res.data.lists);
       });
       console.log("page called fome getBase()");
       performPageSetup({ currentList: problemCollection });
+      return { problemCollection };
    }
    const removeFilterVisiblity = () => {
       setFilterVisiblity(null);
    };
 
+   const processFilters = async (
+      filterValues: any,
+      currentListProblems: any
+   ) => {
+      await applyFilter(filterValues, currentListProblems).then(
+         ({ filteredProblemsList }) => {
+            if (filteredProblemsList.length === 0 && setProblemSetLoading)
+               setTimeout(() => {
+                  setProblemSetLoading(false);
+               }, 300);
+            // why goAhead is true here is because here if we got list 0 we should change page setup
+            // and page cannot perform if list is empty so goAhead is to tackle that scenario
+            console.log(filteredProblemsList.length);
+            performPageSetup({
+               currentList: filteredProblemsList,
+               goAhead: true,
+            });
+            setFilterdProblems && setFilterdProblems(filteredProblemsList);
+         }
+      );
+   };
    const catchFilter = async (category: string, value: string, id?: any) => {
       if (setProblemSetLoading && category !== "search")
          setProblemSetLoading(true); // to make skeleton loading animation
@@ -111,27 +141,14 @@ const ProblemFilters = () => {
                   id,
                   session?.user?.id
                );
+               processFilters(filterValues, currentList);
                if (setCurrentListProblems && setFilterdProblems) {
                   setCurrentListProblems(currentList);
                   setFilterdProblems(currentList);
                }
+            } else {
+               processFilters(filterValues, currentListProblems);
             }
-            await applyFilter(filterValues, currentListProblems).then(
-               ({ filteredProblemsList }) => {
-                  if (filteredProblemsList.length === 0 && setProblemSetLoading)
-                     setTimeout(() => {
-                        setProblemSetLoading(false);
-                     }, 300);
-                  // why goAhead is true here is because here if we got list 0 we should change page setup
-                  // and page cannot perform if list is empty so goAhead is to tackle that scenario
-                  performPageSetup({
-                     currentList: filteredProblemsList,
-                     goAhead: true,
-                  });
-                  setFilterdProblems &&
-                     setFilterdProblems(filteredProblemsList);
-               }
-            );
          }
       );
       removeFilterVisiblity(); // becuse on click the filter data is
@@ -144,21 +161,16 @@ const ProblemFilters = () => {
                return { ...prev, ...filterValues };
             });
             if (category === "list") {
-               await getBase(session?.user?.id).catch((error) => {
-                  console.log(error);
-               });
+               await getBase(session?.user?.id)
+                  .then(({ problemCollection }) => {
+                     processFilters(filterValues, problemCollection);
+                  })
+                  .catch((error) => {
+                     console.log(error);
+                  });
+            } else {
+               processFilters(filterValues, currentListProblems);
             }
-            await applyFilter(filterValues, currentListProblems).then(
-               ({ filteredProblemsList }) => {
-                  if (filteredProblemsList.length === 0 && setProblemSetLoading)
-                     setTimeout(() => {
-                        setProblemSetLoading(false);
-                     }, 300);
-                  performPageSetup({ currentList: filteredProblemsList });
-                  setFilterdProblems &&
-                     setFilterdProblems(filteredProblemsList);
-               }
-            );
          }
       );
    };
@@ -193,7 +205,7 @@ const ProblemFilters = () => {
             (page.currPage - 1) * page.pageSize,
             page.currPage * page.pageSize
          );
-         if (problems) setCurrentPageProblemSet(problems); // Update problemSet
+         setCurrentPageProblemSet(problems); // Update problemSet
       }
    }, [page, filterdProblems]);
 
