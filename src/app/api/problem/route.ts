@@ -28,12 +28,17 @@ const getAllProblems = async (req: NextRequest, res: NextResponse) => {
          },
       });
 
-      const transformedProblems = problems.map((problem) => ({
-         ...problem,
-         tags: problem.tags.map((tag) => tag.name),
-         companies: problem.CompanyProblem.map((cp) => cp.company.name),
-         status: "todo",
-      }));
+      const transformedProblems = problems?.map((problem) => {
+         // Destructure the 'CompanyProblem' field to remove it
+         const { CompanyProblem, ...rest } = problem;
+
+         return {
+            ...rest,
+            status: "todo",
+            tags: problem.tags.map((tag) => tag.name),
+            companies: problem.CompanyProblem.map((cp) => cp.company.name),
+         };
+      });
 
       return NextResponse.json({ status: 200, data: transformedProblems });
    } catch (error) {

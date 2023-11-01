@@ -5,7 +5,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 // context
 import { ProblemContext } from "@/context/ProblemsContext";
 // component
-import ProblemFilter from "@/components/subcomponent/ProblemFilters";
+import ProblemFilter from "@/components/subcomponent/Filter/ProblemFilters";
 import Pagination from "@/components/subcomponent/Pagination";
 import ProblemTableBase from "@/components/subcomponent/problemTable/ProblemTableBase";
 import ProblemTableSkeleton from "@/components/subcomponent/problemTable/ProblemTableSkeleton";

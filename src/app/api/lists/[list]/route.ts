@@ -43,12 +43,17 @@ const getProblemsInList = async (
             },
          },
       });
-      const transformedProblems = currentList?.problems?.map((problem) => ({
-         ...problem,
-         status: "todo",
-         tags: problem.tags.map((tag) => tag.name),
-         companies: problem.CompanyProblem.map((cp) => cp.company.name),
-      }));
+      const transformedProblems = currentList?.problems?.map((problem) => {
+         // Destructure the 'CompanyProblem' field to remove it
+         const { CompanyProblem, ...rest } = problem;
+
+         return {
+            ...rest,
+            status: "todo",
+            tags: problem.tags.map((tag) => tag.name),
+            companies: problem.CompanyProblem.map((cp) => cp.company.name),
+         };
+      });
       return NextResponse.json({ status: 200, data: transformedProblems });
    } catch (error) {
       // console.error(error);

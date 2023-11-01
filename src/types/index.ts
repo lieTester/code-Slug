@@ -14,21 +14,22 @@ export type ChildrenProp = {
 };
 
 export type ProblemsProp = {
-   companyProblems?: String[];
-   PlatformLinks?: any[];
-   tags?: String[];
-   status?: String;
-   description: String | null;
-   difficulty: String;
    id: number;
-   title: String;
-   titleSlug: String;
+   title: string;
+   status?: string;
+   titleSlug: string;
+   frontEndId?: string;
+   difficulty: string;
+   description: string | null;
+   tags?: string[];
+   companies?: string[];
+   PlatformLinks?: any[];
 };
 
 export type filterProps = {
-   status?: String;
-   dificulty?: String;
-   list?: String;
-   companies?: String[];
-   topics?: String[];
+   status?: string;
+   dificulty?: string;
+   list?: string;
+   companies?: string[];
+   topics?: string[];
 };

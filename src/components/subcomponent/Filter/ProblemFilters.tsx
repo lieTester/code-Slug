@@ -8,7 +8,7 @@ import { BsCalendarMinus, BsCheck2Circle } from "react-icons/bs";
 import { SessionContext } from "@/context/SessionContext";
 import { ProblemContext } from "@/context/ProblemsContext";
 // component
-import FilterIcons from "@/components/subcomponent/FilterIcons";
+import FilterIcons from "@/components/subcomponent/Filter/FilterIcons";
 // function
 import { getAllLists, getSelectList } from "@/functions/ListFunctions";
 import { getAllTags } from "@/functions/TagFunctions";
@@ -119,7 +119,6 @@ const ProblemFilters = () => {
                }, 300);
             // why goAhead is true here is because here if we got list 0 we should change page setup
             // and page cannot perform if list is empty so goAhead is to tackle that scenario
-            console.log(filteredProblemsList.length);
             performPageSetup({
                currentList: filteredProblemsList,
                goAhead: true,
