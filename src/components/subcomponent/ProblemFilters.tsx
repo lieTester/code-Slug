@@ -57,13 +57,15 @@ const ProblemFilters = () => {
    const performPageSetup = async ({
       currentList,
       pageNumber,
+      goAhead,
    }: {
       currentList?: any;
       pageNumber?: number;
+      goAhead?: boolean;
    }) => {
       currentList = currentList || filterdProblems;
 
-      if (currentList.length) {
+      if (currentList.length || goAhead) {
          const totalPages = Math.ceil(currentList?.length / page.pageSize);
          const currPage = pageNumber || page.currPage;
          setPage &&
@@ -120,7 +122,12 @@ const ProblemFilters = () => {
                      setTimeout(() => {
                         setProblemSetLoading(false);
                      }, 300);
-                  performPageSetup({ currentList: filteredProblemsList });
+                  // why goAhead is true here is because here if we got list 0 we should change page setup
+                  // and page cannot perform if list is empty so goAhead is to tackle that scenario
+                  performPageSetup({
+                     currentList: filteredProblemsList,
+                     goAhead: true,
+                  });
                   setFilterdProblems &&
                      setFilterdProblems(filteredProblemsList);
                }
