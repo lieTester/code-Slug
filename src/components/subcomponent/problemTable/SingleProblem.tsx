@@ -42,16 +42,16 @@ const SingleProblem = ({
       );
    };
    return (
-      <td
+      <tr
          className={` ${
             open ? "fixed" : "hidden"
          } flex justify-center items-center w-full h-full z-20 top-0 left-0 transition-opacity ease-in-out`}
       >
-         <div
+         <td
             onClick={() => onClose(false)}
             className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-lg "
-         ></div>
-         <div className=" w-[60%] h-[500px] bg-prim2 p-6 rounded-lg flex justify-between  z-10">
+         ></td>
+         <td className=" w-[60%] h-[500px] bg-prim2 p-6 rounded-lg flex justify-between  z-10">
             <div className="shadow-md w-[40%] max-w-4xl flex flex-col">
                <h1
                   title={problem?.id + ". " + problem?.title}
@@ -140,8 +140,8 @@ const SingleProblem = ({
                </h1>
                <div className=""> write notes here.....</div>
             </div>
-         </div>
-      </td>
+         </td>
+      </tr>
    );
 };
 

@@ -48,7 +48,7 @@ const Calendar: React.FC = () => {
    const totalDays = getDaysInMonth(currentDate);
 
    return (
-      <div className="relative p-2 font-sofiaPro text-prim2 mt-5 bg-prim2 rounded-md">
+      <div className="relative p-2 font-sofiaPro text-prim2  bg-prim2 rounded-md">
          <div className="text-center">
             <div className="flex items-center justify-between  space-x-4">
                <h2 className=" font-medium">
@@ -64,9 +64,9 @@ const Calendar: React.FC = () => {
                </span>
             </div>
          </div>
-         <div className="grid grid-cols-7 gap-2 mt-4">
+         <div className="grid grid-cols-7 gap-2 mt-2">
             {days.map((day) => (
-               <div key={day} className="text-center font-medium text-seco2">
+               <div key={day} className="text-center font-medium text-prim2">
                   {day}
                </div>
             ))}
@@ -82,7 +82,7 @@ const Calendar: React.FC = () => {
                   className={`text-center w-7 h-7 p-[2px] text-seco1 cursor-pointer ${
                      currentDate.getDate() === day + 1
                         ? "bg-seco1 text-seco2"
-                        : "hover:bg-seco2"
+                        : "hover:bg-prim1 hover:text-prim1"
                   }  rounded-full`}
                >
                   {day + 1}

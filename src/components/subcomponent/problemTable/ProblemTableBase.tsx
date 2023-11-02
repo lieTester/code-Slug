@@ -97,12 +97,12 @@ const ProblemTableBase: React.FC = () => {
 
    return (
       <>
-         <SingleProblem
-            problem={currentProblem}
-            open={singleProblemVisblity}
-            onClose={setSingleProblemVisblity}
-         />
          <tbody className="font-light transition-all ease-in-out ">
+            <SingleProblem
+               problem={currentProblem}
+               open={singleProblemVisblity}
+               onClose={setSingleProblemVisblity}
+            />
             {currentPageProblemSet &&
                currentPageProblemSet.map(
                   (problem: ProblemsProp, idx: number) => (
