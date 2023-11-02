@@ -15,19 +15,19 @@ const ProblemTableSkeleton = () => {
          } text-seco1 [&>*]:animate-pulse`}
       >
          <td className="">
-            <div className="h-4 w-4 bg-seco2 rounded-md mx-auto"></div>
+            <div className="h-4 w-4 bg-seco1 rounded-md mx-auto"></div>
          </td>
          <td className="py-2 px-4">
-            <div className="h-6  min-w-[300px] 2xl:w-auto bg-seco2 rounded-md"></div>
+            <div className="h-6  min-w-[300px] 2xl:w-auto bg-seco1 rounded-md"></div>
          </td>
          <td className="py-2 px-4 ">
-            <div className="h-6 w-16 bg-seco2 rounded-md mx-auto"></div>
+            <div className="h-6 w-16 bg-seco1 rounded-md mx-auto"></div>
          </td>
          <td className="py-2 px-4 ">
-            <div className="h-6 w-24 bg-seco2 rounded-md mx-auto"></div>
+            <div className="h-6 w-24 bg-seco1 rounded-md mx-auto"></div>
          </td>
          <td className="py-2 px-4 ">
-            <div className="h-6 w-24 bg-seco2 rounded-md mx-auto"></div>
+            <div className="h-6 w-24 bg-seco1 rounded-md mx-auto"></div>
          </td>
       </tr>
    ));

@@ -5,6 +5,22 @@ import { SessionContext } from "@/context/SessionContext";
 const ProblemsProgress = () => {
    const problemContext = useContext(ProblemContext);
    const currentListProblems = problemContext?.currentListProblems;
+
+   const initialState = {
+      easy: 0,
+      medium: 0,
+      hard: 0,
+      totaleasy: 0,
+      totalmedium: 0,
+      totalhard: 0,
+      solvedProblems: 0,
+      totalProblems: 0,
+   };
+   const [problemsDetail, setProblemsDetail] = useState(initialState);
+   const [svgData, setSvgData] = useState({
+      radius: 42,
+   });
+   const [loading, setLoading] = useState(true);
    useEffect(() => {
       if (setProblemsDetail) {
          let problemsDetail = initialState;
@@ -27,23 +43,9 @@ const ProblemsProgress = () => {
          problemsDetail.solvedProblems =
             problemsDetail.easy + problemsDetail.medium + problemsDetail.hard;
          setProblemsDetail(problemsDetail);
+         currentListProblems?.length && setLoading(false);
       }
    }, [currentListProblems]);
-
-   const initialState = {
-      easy: 0,
-      medium: 0,
-      hard: 0,
-      totaleasy: 0,
-      totalmedium: 0,
-      totalhard: 0,
-      solvedProblems: 0,
-      totalProblems: 0,
-   };
-   const [problemsDetail, setProblemsDetail] = useState(initialState);
-   const [svgData, setSvgData] = useState({
-      radius: 42,
-   });
 
    // Calculate the percentage of problems for each difficulty
    const easyPercentage =
@@ -68,8 +70,12 @@ const ProblemsProgress = () => {
 
    return (
       <div className="w-full h-fit bg-prim2 p-4 rounded-md shadow-md mb-4">
-         <h2 className="text-lg mb-4 font-baloo font-semibold text-seco1">
-            List Progress
+         <h2
+            className={`${
+               loading && "animate-pulse bg-seco1 rounded-md h-[24px] w-[60%]"
+            } text-lg mb-3 font-baloo font-semibold text-seco1`}
+         >
+            {!loading && "List Progress"}
          </h2>
          <div className=" flex justify-between items-center">
             <div className="w-[40%]  shrink-1 z-base relative max-h-[100px] max-w-[100px]">
@@ -82,10 +88,10 @@ const ProblemsProgress = () => {
                      cx="50px"
                      cy="50px"
                      r={svgData.radius}
-                     strokeWidth="3"
+                     strokeWidth={`${loading ? "6" : "3"}`}
                      strokeLinecap="round"
                      stroke="currentColor"
-                     className="text-seco1"
+                     className={`${loading && "animate-pulse "} text-seco1`}
                   ></circle>
                   {problemsDetail.easy && (
                      <circle
@@ -140,35 +146,65 @@ const ProblemsProgress = () => {
                   )}
                </svg>
 
-               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform cursor-default">
-                  <div className="truncate text-center ">
-                     <div className="mb-[1px] text-[11px]">
-                        <span className="text-label-3 dark:text-dark-label-3">
-                           All
-                        </span>
-                     </div>
-                     <div className=" pb-0.5 text-md font-medium leading-none lg:text-xl lg:leading-none">
-                        {problemsDetail?.solvedProblems}
-                     </div>
-                     <hr className="mx-auto max-w-[32px]" />
-                     <div className="pt-0.5 text-xs font-semibold">
-                        {problemsDetail?.totalProblems}
+               {!loading && (
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform cursor-default">
+                     <div className="truncate text-center ">
+                        <div className="mb-[1px] text-[11px]">
+                           <span className="text-label-3 dark:text-dark-label-3">
+                              All
+                           </span>
+                        </div>
+                        <div className="pb-0.5 text-md font-medium leading-none lg:text-xl lg:leading-none">
+                           {problemsDetail?.solvedProblems}
+                        </div>
+                        <hr className="mx-auto max-w-[32px]" />
+                        <div className="pt-0.5 text-xs font-semibold">
+                           {problemsDetail?.totalProblems}
+                        </div>
                      </div>
                   </div>
-               </div>
+               )}
             </div>
-            <ul className="min-w-[50%] h-full text-[16px] font-baloo [&>li]!my-auto ">
-               <li className="text-seco1">
-                  <span className="text-easy">Easy: </span>
-                  {problemsDetail?.easy}/{problemsDetail?.totaleasy}
+            <ul
+               className={`${
+                  loading && "[&>li]:mb-[4px]"
+               } min-w-[60%] h-full text-[16px] font-baloo [&>li]!my-auto `}
+            >
+               <li
+                  className={`${
+                     loading && "w-[40%] animate-pulse bg-seco1 rounded-md h-5"
+                  } text-seco1`}
+               >
+                  {!loading && <span className="text-easy">Easy: </span>}
+                  {!loading && (
+                     <span>
+                        {problemsDetail?.easy}/{problemsDetail?.totaleasy}
+                     </span>
+                  )}
                </li>
-               <li className="text-seco1">
-                  <span className="text-medium ">Medium: </span>
-                  {problemsDetail?.medium}/{problemsDetail?.totalmedium}
+               <li
+                  className={`${
+                     loading && "w-[80%] animate-pulse bg-seco1 rounded-md h-5"
+                  } text-seco1`}
+               >
+                  {!loading && <span className="text-medium ">Medium: </span>}
+                  {!loading && (
+                     <span>
+                        {problemsDetail?.medium}/{problemsDetail?.totalmedium}
+                     </span>
+                  )}
                </li>
-               <li className="text-seco1">
-                  <span className="text-hard ">Hard: </span>
-                  {problemsDetail?.hard}/{problemsDetail?.totalhard}
+               <li
+                  className={`${
+                     loading && "w-[60%] animate-pulse bg-seco1 rounded-md h-5"
+                  } text-seco1 `}
+               >
+                  {!loading && <span className="text-hard ">Hard: </span>}
+                  {!loading && (
+                     <span>
+                        {problemsDetail?.hard}/{problemsDetail?.totalhard}{" "}
+                     </span>
+                  )}
                </li>
             </ul>
          </div>

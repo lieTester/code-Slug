@@ -18,7 +18,7 @@ const ProblemTableBase: React.FC = () => {
    const problemContext = useContext(ProblemContext);
    const setCurrentListProblems = problemContext?.setCurrentListProblems;
    const currentPageProblemSet = problemContext?.currentPageProblemSet;
-   const setCurrentPageProblemSet = problemContext?.setCurrentPageProblemSet;
+   const setFilterdProblems = problemContext?.setFilterdProblems;
    const sessionContext = useContext(SessionContext);
    const session = sessionContext?.session;
 
@@ -74,13 +74,13 @@ const ProblemTableBase: React.FC = () => {
          arrangeStatus();
       }
       function arrangeStatus() {
-         if (setCurrentListProblems && setCurrentPageProblemSet) {
+         if (setCurrentListProblems && setFilterdProblems) {
             setCurrentListProblems((prev) => {
                return prev.map((item: any) =>
                   item.id === id ? { ...item, status: status } : item
                );
             });
-            setCurrentPageProblemSet((prev) => {
+            setFilterdProblems((prev) => {
                return prev.map((item: any) =>
                   item.id === id ? { ...item, status: status } : item
                );

@@ -99,7 +99,7 @@ const ProblemFilters = () => {
       getAllLists(id).then((res: any) => {
          setLists(res.data.lists);
       });
-      console.log("page called fome getBase()");
+      // console.log("page called fome getBase()");
       performPageSetup({ currentList: problemCollection });
       return { problemCollection };
    }
