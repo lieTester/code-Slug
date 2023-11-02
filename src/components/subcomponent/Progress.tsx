@@ -15,7 +15,7 @@ const ProblemsProgress = () => {
                : dif === "medium"
                ? (problemsDetail.totalmedium += 1)
                : (problemsDetail.totalhard += 1);
-            console.log(problem.status);
+
             problem.status === "solved" &&
                (dif === "easy"
                   ? (problemsDetail.easy += 1)
