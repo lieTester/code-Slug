@@ -27,7 +27,7 @@ const Login: React.FC<{ open: boolean; onClose: () => void }> = ({
          <div className="relative p-2  text-center w-full sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-screen-sm mx-2 z-[100]">
             <Image
                src="/img/logo.png"
-               alt="Google Drive"
+               alt="codeSlug logo"
                width={100}
                height={100}
                className="mx-auto mb-4 rotate-180"
