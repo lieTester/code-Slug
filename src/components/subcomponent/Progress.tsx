@@ -69,146 +69,140 @@ const ProblemsProgress = () => {
    // The gap between Easy and Medium can be adjusted by changing the added values (1 and 2).
 
    return (
-      <div className="w-full h-fit bg-prim2 p-4 rounded-md shadow-md mb-4">
-         <h2
-            className={`${
-               loading && "animate-pulse bg-seco1 rounded-md h-[24px] w-[60%]"
-            } text-lg mb-3 font-baloo font-semibold text-seco1`}
-         >
-            {!loading && "List Progress"}
-         </h2>
-         <div className=" flex justify-between items-center">
-            <div className="w-[40%]  shrink-1 z-base relative max-h-[100px] max-w-[100px]">
-               <svg
-                  className="h-full w-full origin-center -rotate-90 transform"
-                  viewBox="0 0 100 100"
-               >
-                  <circle
-                     fill="none"
-                     cx="50px"
-                     cy="50px"
-                     r={svgData.radius}
-                     strokeWidth={`${loading ? "6" : "3"}`}
-                     strokeLinecap="round"
-                     stroke="currentColor"
-                     className={`${loading && "animate-pulse "} text-seco1`}
-                  ></circle>
-                  {problemsDetail.easy && (
-                     <circle
-                        fill="none"
-                        cx="50px"
-                        cy="50px"
-                        r={svgData.radius}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        stroke="currentColor"
-                        className="cursor-pointer text-easy"
-                        strokeDasharray={`${easyDashArray} ${
-                           2 * Math.PI * svgData.radius
-                        }`}
-                        strokeDashoffset={easyDashOffset}
-                        data-difficulty="EASY"
-                     ></circle>
-                  )}
-                  {problemsDetail.medium && (
-                     <circle
-                        fill="none"
-                        cx="50px"
-                        cy="50px"
-                        r={svgData.radius}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        stroke="currentColor"
-                        className="cursor-pointer text-medium"
-                        strokeDasharray={`${mediumDashArray} ${
-                           2 * Math.PI * svgData.radius
-                        }`}
-                        strokeDashoffset={mediumDashOffset}
-                        data-difficulty="MEDIUM"
-                     ></circle>
-                  )}
-                  {problemsDetail.hard && (
-                     <circle
-                        fill="none"
-                        cx="50px"
-                        cy="50px"
-                        r={svgData.radius}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        stroke="currentColor"
-                        className="cursor-pointer text-hard"
-                        strokeDasharray={`${hardDashArray} ${
-                           2 * Math.PI * svgData.radius
-                        }`}
-                        strokeDashoffset={hardDashOffset}
-                        data-difficulty="HARD"
-                     ></circle>
-                  )}
-               </svg>
+      <>
+         {loading ? (
+            <div className="w-full h-fit bg-prim2 p-4 rounded-md shadow-md mb-4">
+               <h2 className="w-[100%] h-7 mb-3 animate-pulse rounded-md bg-seco1"></h2>
+               <div className="flex  justify-between items-center">
+                  <div className="w-[40%] max-h-[100px] max-w-[100px]">
+                     <div className="w-[100px] h-[100px] rounded-full animate-pulse bg-seco1"></div>
+                  </div>
+                  <ul className="min-w-[60%] h-[90px] flex flex-col [&>li]:my-auto [&>li]:bg-seco1">
+                     <li className="w-[50%] h-5 animate-pulse rounded-full mb-2"></li>
+                     <li className="w-[80%] h-5 animate-pulse rounded-full mb-2"></li>
+                     <li className="w-[60%] h-5 animate-pulse rounded-full mb-2"></li>
+                  </ul>
+               </div>
+            </div>
+         ) : (
+            <div className="w-full h-fit bg-prim2 p-4 rounded-md shadow-md mb-4">
+               <h2 className="text-lg mb-3 font-baloo font-semibold text-seco1">
+                  List Progress
+               </h2>
+               <div className="h-[100px] flex justify-between items-center">
+                  <div className="w-[40%]  shrink-1 z-base relative max-h-[100px] max-w-[100px]">
+                     <svg
+                        className="h-full w-full origin-center -rotate-90 transform"
+                        viewBox="0 0 100 100"
+                     >
+                        <circle
+                           fill="none"
+                           cx="50px"
+                           cy="50px"
+                           r={svgData.radius}
+                           strokeWidth="5"
+                           strokeLinecap="round"
+                           stroke="currentColor"
+                           className="text-seco1"
+                        ></circle>
+                        {problemsDetail.easy && (
+                           <circle
+                              fill="none"
+                              cx="50px"
+                              cy="50px"
+                              r={svgData.radius}
+                              strokeWidth="5"
+                              strokeLinecap="round"
+                              stroke="currentColor"
+                              className="cursor-pointer text-easy"
+                              strokeDasharray={`${easyDashArray} ${
+                                 2 * Math.PI * svgData.radius
+                              }`}
+                              strokeDashoffset={easyDashOffset}
+                              data-difficulty="EASY"
+                           ></circle>
+                        )}
+                        {problemsDetail.medium && (
+                           <circle
+                              fill="none"
+                              cx="50px"
+                              cy="50px"
+                              r={svgData.radius}
+                              strokeWidth="5"
+                              strokeLinecap="round"
+                              stroke="currentColor"
+                              className="cursor-pointer text-medium"
+                              strokeDasharray={`${mediumDashArray} ${
+                                 2 * Math.PI * svgData.radius
+                              }`}
+                              strokeDashoffset={mediumDashOffset}
+                              data-difficulty="MEDIUM"
+                           ></circle>
+                        )}
+                        {problemsDetail.hard && (
+                           <circle
+                              fill="none"
+                              cx="50px"
+                              cy="50px"
+                              r={svgData.radius}
+                              strokeWidth="5"
+                              strokeLinecap="round"
+                              stroke="currentColor"
+                              className="cursor-pointer text-hard"
+                              strokeDasharray={`${hardDashArray} ${
+                                 2 * Math.PI * svgData.radius
+                              }`}
+                              strokeDashoffset={hardDashOffset}
+                              data-difficulty="HARD"
+                           ></circle>
+                        )}
+                     </svg>
 
-               {!loading && (
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform cursor-default">
-                     <div className="truncate text-center ">
-                        <div className="mb-[1px] text-[11px]">
-                           <span className="text-label-3 dark:text-dark-label-3">
-                              All
-                           </span>
-                        </div>
-                        <div className="pb-0.5 text-md font-medium leading-none lg:text-xl lg:leading-none">
-                           {problemsDetail?.solvedProblems}
-                        </div>
-                        <hr className="mx-auto max-w-[32px]" />
-                        <div className="pt-0.5 text-xs font-semibold">
-                           {problemsDetail?.totalProblems}
+                     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform cursor-default">
+                        <div className="truncate text-center ">
+                           <div className="mb-[1px] text-[11px]">
+                              <span className="text-label-3 dark:text-dark-label-3">
+                                 All
+                              </span>
+                           </div>
+                           <div className="pb-0.5 text-md font-medium leading-none lg:text-xl lg:leading-none">
+                              {problemsDetail?.solvedProblems}
+                           </div>
+                           <hr className="mx-auto max-w-[32px]" />
+                           <div className="pt-0.5 text-xs font-semibold">
+                              {problemsDetail?.totalProblems}
+                           </div>
                         </div>
                      </div>
                   </div>
-               )}
+                  <ul className="min-w-[60%] h-[90px] text-[16px] font-baloo flex flex-col  [&>li]:my-auto ">
+                     <li className=" text-seco1">
+                        <span className="text-easy">Easy: </span>
+
+                        <span>
+                           {problemsDetail?.easy}/{problemsDetail?.totaleasy}
+                        </span>
+                     </li>
+                     <li className=" text-seco1">
+                        <span className="text-medium ">Medium: </span>
+
+                        <span>
+                           {problemsDetail?.medium}/
+                           {problemsDetail?.totalmedium}
+                        </span>
+                     </li>
+                     <li className=" text-seco1">
+                        <span className="text-hard ">Hard: </span>
+
+                        <span>
+                           {problemsDetail?.hard}/{problemsDetail?.totalhard}{" "}
+                        </span>
+                     </li>
+                  </ul>
+               </div>
             </div>
-            <ul
-               className={`${
-                  loading && "[&>li]:mb-[4px]"
-               } min-w-[60%] h-full text-[16px] font-baloo [&>li]!my-auto `}
-            >
-               <li
-                  className={`${
-                     loading && "w-[40%] animate-pulse bg-seco1 rounded-md h-5"
-                  } text-seco1`}
-               >
-                  {!loading && <span className="text-easy">Easy: </span>}
-                  {!loading && (
-                     <span>
-                        {problemsDetail?.easy}/{problemsDetail?.totaleasy}
-                     </span>
-                  )}
-               </li>
-               <li
-                  className={`${
-                     loading && "w-[80%] animate-pulse bg-seco1 rounded-md h-5"
-                  } text-seco1`}
-               >
-                  {!loading && <span className="text-medium ">Medium: </span>}
-                  {!loading && (
-                     <span>
-                        {problemsDetail?.medium}/{problemsDetail?.totalmedium}
-                     </span>
-                  )}
-               </li>
-               <li
-                  className={`${
-                     loading && "w-[60%] animate-pulse bg-seco1 rounded-md h-5"
-                  } text-seco1 `}
-               >
-                  {!loading && <span className="text-hard ">Hard: </span>}
-                  {!loading && (
-                     <span>
-                        {problemsDetail?.hard}/{problemsDetail?.totalhard}{" "}
-                     </span>
-                  )}
-               </li>
-            </ul>
-         </div>
-      </div>
+         )}
+      </>
    );
 };
 
