@@ -35,12 +35,12 @@ const Header: FC<{}> = () => {
                <div className="absolute right-0 md:relative  p-1  flex justify-center [&>*]:ml-4">
                   {session?.user?.image ? (
                      <>
-                        <button className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
+                        <span className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
                            <Link href="#">Mark Calender</Link>
-                        </button>
-                        <button className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
+                        </span>
+                        <span className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
                            <Link href="/lists-landing">Create-Lists</Link>
-                        </button>
+                        </span>
                         <span className="rounded-full [&:hover>ul]:visible [&:hover>ul]:opacity-100 hover:bg-seco2">
                            <Image
                               src={session?.user?.image}
