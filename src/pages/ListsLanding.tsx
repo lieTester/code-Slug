@@ -20,10 +20,10 @@ const ListsLanding: FC<SessionProp> = ({ session }) => {
       }
    }, [session]);
    return (
-      <section className="w-screen h-screen flex flex-col overflow-y-auto">
+      <section className="w-screen h-screen  overflow-y-auto">
          <Header />
          <ProblemsProvider>
-            <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] mx-auto h-fit pt-20 pb-32 font-baloo ">
+            <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] h-[100%] mx-auto   pt-20 pb-20 font-baloo ">
                <ProblemFilters />
                <ListMaker />
             </div>
