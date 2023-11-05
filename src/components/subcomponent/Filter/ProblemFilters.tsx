@@ -224,7 +224,7 @@ const ProblemFilters = () => {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    return (
       <section className="w-full z-[20]">
-         <ul className="w-full relative z-[20] flex justify-end [&>*]:flex [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-seco2 text-prim2 ">
+         <ul className="w-full relative z-[20] flex justify-end flex-wrap [&>*]:flex [&>*]:mb-1 [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-seco2 text-prim2 ">
             <li
                className="relative cursor-pointer "
                tabIndex={0}

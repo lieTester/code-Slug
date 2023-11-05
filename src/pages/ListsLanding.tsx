@@ -19,6 +19,7 @@ const ListsLanding: FC<SessionProp> = ({ session }) => {
          setSession(session);
       }
    }, [session]);
+
    return (
       <section className="w-screen h-screen  overflow-y-auto">
          <Header />
