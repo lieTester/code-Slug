@@ -14,7 +14,6 @@
       "csv-parser": "^3.0.0",
       "encoding": "^0.1.13",
       "fast-csv": "^4.3.6",
-      "html2canvas": "^1.4.1",
       "next": "13.5.4",
       "next-auth": "^4.23.2",
       "react": "^18",

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 import ListsLanding from "@/pages/ListsLanding";
-import ListsLandingSkeleton from "@/pages/skeleton/ListLanding.skeleton";
+import { ListLandingSkeleton } from "@/pages/skeleton/ListLanding.skeleton";
 
 import { SessionProvider } from "@/context/SessionContext";
 import { ProblemsProvider } from "@/context/ProblemsContext";
@@ -24,7 +24,7 @@ export default function ListHome() {
       <main className="relative w-screen h-screen ">
          <SessionProvider>
             {!session ? (
-               <ListsLandingSkeleton />
+               <ListLandingSkeleton />
             ) : (
                <ProblemsProvider>
                   <ListsLanding session={session} />

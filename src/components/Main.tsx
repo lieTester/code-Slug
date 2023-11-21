@@ -27,7 +27,7 @@ const ProblemTable: React.FC = () => {
       ) {
          // console.log(problemSetLoading, currentPageProblemSet);
          setTimeout(() => {
-            setProblemSetLoading(false);
+            setProblemSetLoading({ loading: false });
             // console.log("worked");
          }, 300); // Check if problems array is not empty
       }
@@ -62,7 +62,7 @@ const ProblemTable: React.FC = () => {
                      </th>
                   </tr>
                </thead>
-               {problemSetLoading ? (
+               {problemSetLoading?.loading ? (
                   <ProblemTableSkeleton />
                ) : (
                   <ProblemTableBase />

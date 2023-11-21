@@ -88,6 +88,10 @@ const ProblemFilters = () => {
    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // base data collection at loading time and also if previous list filter removed//////////////////////////////////
    async function getBase(id: string | null) {
+      // get lists according to user presense
+      await getAllLists(id).then((res: any) => {
+         setLists(res.data.lists);
+      });
       // get all problems if user is logged in fetch its problem status as well
       const { problemCollection } = await GetAllProblems(id);
       if (setCurrentListProblems && setFilterdProblems) {
@@ -95,10 +99,6 @@ const ProblemFilters = () => {
          setCurrentListProblems(problemCollection);
          setFilterdProblems(problemCollection);
       }
-      // get lists according to user presense
-      getAllLists(id).then((res: any) => {
-         setLists(res.data.lists);
-      });
       // console.log("page called fome getBase()");
       performPageSetup({ currentList: problemCollection });
       return { problemCollection };
@@ -115,7 +115,7 @@ const ProblemFilters = () => {
          ({ filteredProblemsList }) => {
             if (filteredProblemsList.length === 0 && setProblemSetLoading)
                setTimeout(() => {
-                  setProblemSetLoading(false);
+                  setProblemSetLoading({ loading: false });
                }, 300);
             // why goAhead is true here is because here if we got list 0 we should change page setup
             // and page cannot perform if list is empty so goAhead is to tackle that scenario
@@ -129,7 +129,7 @@ const ProblemFilters = () => {
    };
    const catchFilter = async (category: string, value: string, id?: any) => {
       if (setProblemSetLoading && category !== "search")
-         setProblemSetLoading(true); // to make skeleton loading animation
+         setProblemSetLoading({ loading: true, value: category }); // to make skeleton loading animation
       await addFilter(category, value, filterValues).then(
          async ({ filterValues }) => {
             setFilterValues((prev) => {
@@ -153,7 +153,8 @@ const ProblemFilters = () => {
       removeFilterVisiblity(); // becuse on click the filter data is
    };
    const fireFilter = async (category: string, value: string, id?: any) => {
-      if (setProblemSetLoading) setProblemSetLoading(true);
+      if (setProblemSetLoading)
+         setProblemSetLoading({ loading: true, value: category });
       await removeFilter(category, value, filterValues).then(
          async ({ filterValues }) => {
             setFilterValues((prev) => {

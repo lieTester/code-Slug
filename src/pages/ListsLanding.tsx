@@ -6,10 +6,9 @@ import { SessionProp } from "@/types/index";
 import { SessionContext } from "@/context/SessionContext";
 import { ProblemContext } from "@/context/ProblemsContext";
 // component
-import ListsLandingSkeleton from "@/pages/skeleton/ListLanding.skeleton";
 import ListMaker from "@/components/ListMaker";
 import ProblemFilters from "@/components/subcomponent/Filter/ProblemFilters";
-import ListLandingBody from "./skeleton/ListLandingSub/ListLandingBody";
+import { ListLandingBodySkeleton } from "./skeleton/ListLanding.skeleton";
 
 const ListsLanding: FC<SessionProp> = ({ session }) => {
    const sessionContext = useContext(SessionContext);
@@ -23,9 +22,11 @@ const ListsLanding: FC<SessionProp> = ({ session }) => {
    }, [session]);
 
    const problemContext = useContext(ProblemContext);
+
    const currentPageProblemSet = problemContext?.currentPageProblemSet;
    const setProblemSetLoading = problemContext?.setProblemSetLoading;
    const problemSetLoading = problemContext?.problemSetLoading;
+
    useEffect(() => {
       if (
          currentPageProblemSet &&
@@ -34,17 +35,23 @@ const ListsLanding: FC<SessionProp> = ({ session }) => {
       ) {
          // console.log(problemSetLoading, currentPageProblemSet);
          setTimeout(() => {
-            setProblemSetLoading(false);
+            setProblemSetLoading({ loading: false });
             // console.log("worked");
          }, 300); // Check if problems array is not empty
       }
    }, [currentPageProblemSet]);
+
    return (
       <>
          <section className="w-screen h-screen  overflow-y-auto">
             <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] h-[100%] mx-auto   pt-20 pb-20 font-baloo ">
                <ProblemFilters />
-               {problemSetLoading ? <ListLandingBody /> : <ListMaker />}
+               {problemSetLoading?.loading &&
+               problemSetLoading?.value === "list" ? (
+                  <ListLandingBodySkeleton />
+               ) : (
+                  <ListMaker />
+               )}
             </div>
          </section>
       </>
