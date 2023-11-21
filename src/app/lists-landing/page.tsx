@@ -1,20 +1,35 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 import ListsLanding from "@/pages/ListsLanding";
+import ListsLandingSkeleton from "@/pages/skeleton/ListLanding.skeleton";
 
 import { SessionProvider } from "@/context/SessionContext";
+import { ProblemsProvider } from "@/context/ProblemsContext";
 
 export default function ListHome() {
-   // session
    const { data: session } = useSession();
    // console.log(session);
+   useEffect(() => {
+      if (session === null) {
+         console.log("session is null");
+         redirect("/");
+      }
+   }, [session]);
 
    return (
-      <main className="relative w-screen h-screen after:absolute after:inset-0 after after:bg-prim1  before:absolute before:right-0 before:top-10 before:inset-72  before:rounded-[90%] before:opacity-70 before:blur-[60px] before:bg-prim2 before:-z-10 after:-z-20">
+      <main className="relative w-screen h-screen ">
          <SessionProvider>
-            {session !== undefined && <ListsLanding session={session} />}
+            {!session ? (
+               <ListsLandingSkeleton />
+            ) : (
+               <ProblemsProvider>
+                  <ListsLanding session={session} />
+               </ProblemsProvider>
+            )}
          </SessionProvider>
       </main>
    );

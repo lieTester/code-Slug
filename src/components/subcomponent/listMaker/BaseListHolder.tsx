@@ -7,21 +7,16 @@ import {
    difficultyColor,
    handleDrop,
 } from "@/functions/Utils";
-import DraggedItem from "./DraggedProblem";
 const BaseListHolder: React.FC<{
    baseProblemList: ProblemsProp[];
    newProblemList: ProblemsProp[];
    setBaseProblemList: React.Dispatch<React.SetStateAction<ProblemsProp[]>>;
    setNewProblemList: React.Dispatch<React.SetStateAction<ProblemsProp[]>>;
-   setDraggedProbem: React.Dispatch<
-      React.SetStateAction<ProblemsProp | undefined>
-   >;
 }> = ({
    baseProblemList,
    newProblemList,
    setBaseProblemList,
    setNewProblemList,
-   setDraggedProbem,
 }) => {
    ////////////////////////////////////////////////////////////////////////
    //////////////////////////////// main functions////////////////////////////////
@@ -64,14 +59,6 @@ const BaseListHolder: React.FC<{
       problem: ProblemsProp,
       index: number
    ) => {
-      setDraggedProbem(problem);
-      const dragImage = new Image();
-      dragImage.src =
-         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wAA/wAB/2B4EwAAAABJRU5ErkJggg==";
-
-      // Set the custom dragImage
-      e.dataTransfer.setDragImage(dragImage, 0, 0);
-      console.log(e.defaultPrevented);
       e.dataTransfer.setData("text/plain", JSON.stringify(problem));
       // e.dataTransfer.effectAllowed = "none";
    };
@@ -87,7 +74,6 @@ const BaseListHolder: React.FC<{
                newProblemList,
                setNewProblemList
             );
-            setDraggedProbem(undefined);
          }}
          onDragOver={(e) => {
             e.preventDefault();

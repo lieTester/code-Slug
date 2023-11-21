@@ -15,15 +15,11 @@ const NewListCreator: React.FC<{
    newProblemList: ProblemsProp[];
    setBaseProblemList: React.Dispatch<React.SetStateAction<ProblemsProp[]>>;
    setNewProblemList: React.Dispatch<React.SetStateAction<ProblemsProp[]>>;
-   setDraggedProbem: React.Dispatch<
-      React.SetStateAction<ProblemsProp | undefined>
-   >;
 }> = ({
    baseProblemList,
    newProblemList,
    setBaseProblemList,
    setNewProblemList,
-   setDraggedProbem,
 }) => {
    ////////////////////////////////////////////////////////////////////////
    //////////////////////////////// main functions////////////////////////////////
@@ -33,13 +29,6 @@ const NewListCreator: React.FC<{
       e: React.DragEvent<HTMLDivElement>,
       problem: ProblemsProp
    ) => {
-      setDraggedProbem(problem);
-      const dragImage = new Image();
-      dragImage.src =
-         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wAA/wAB/2B4EwAAAABJRU5ErkJggg==";
-
-      // Set the custom dragImage
-      e.dataTransfer.setDragImage(dragImage, 0, 0);
       e.dataTransfer.setData("text/plain", JSON.stringify(problem));
    };
 
@@ -54,7 +43,6 @@ const NewListCreator: React.FC<{
                baseProblemList,
                setBaseProblemList
             );
-            setDraggedProbem(undefined);
          }}
          onDragOver={(e) => {
             e.preventDefault();
