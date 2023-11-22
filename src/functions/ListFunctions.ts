@@ -37,3 +37,23 @@ export const getSelectList = async (listId: number, id: string | null) => {
 
    return { currentList };
 };
+
+export const createNewList = async ({
+   id,
+   listName,
+   currentList,
+}: {
+   id: string;
+   listName: string;
+   currentList: ProblemsProp[];
+}) => {
+   try {
+      const response = await axios.post(
+         process.env.NEXT_PUBLIC_API_BASE_URL + `/lists/${listName}`,
+         { user: id, currentList }
+      );
+      return response;
+   } catch (error) {
+      return error;
+   }
+};

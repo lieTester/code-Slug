@@ -13,7 +13,11 @@ export const ProblemsProvider = ({ children }: ChildrenProp) => {
    const [currentPageProblemSet, setCurrentPageProblemSet] = useState<
       ProblemsProp[]
    >([]);
-   const [problemSetLoading, setProblemSetLoading] = useState(true);
+   const [problemSetLoading, setProblemSetLoading] = useState<{
+      loading: boolean;
+      value?: string;
+   }>({ loading: true, value: "list" });
+
    const [page, setPage] = useState({
       currPage: 1,
       pageSize: 50,

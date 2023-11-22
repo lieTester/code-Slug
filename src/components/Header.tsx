@@ -1,20 +1,18 @@
+"use client";
 // react, next
 import { useContext, FC, useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 
 // components
 import Logo from "@/components/subcomponent/Logo";
 import Login from "@/components/subcomponent/Login";
-// context
-import { SessionContext } from "@/context/SessionContext";
+
 import Link from "next/link";
 
 const Header: FC<{}> = () => {
-   const sessionContext = useContext(SessionContext);
-   const session = sessionContext?.session;
-
-   // to get session
+   const { data: session } = useSession();
    const [showLoginOverlay, setShowLoginOverlay] = useState(false);
    useEffect(() => {
       if (session?.user) {
@@ -26,21 +24,19 @@ const Header: FC<{}> = () => {
       <>
          <section className="fixed w-full h-[7%] flex justify-center border-b-[0.5px] border-seco2 z-[30] bg-clip-padding backdrop-filter backdrop-blur-sm">
             <div className="w-[95%] lg:w-[90%] 2xl:w-[80%]   flex  items-center justify-between  !important  text-prim1 z-20 ">
-               <Link
-                  href={process.env.NEXTAUTH_URL || "http://localhost:3000/"}
-               >
+               <Link href={"/"}>
                   <Logo />
                </Link>
 
                <div className="absolute right-0 md:relative  p-1  flex justify-center [&>*]:ml-4">
                   {session?.user?.image ? (
                      <>
-                        <button className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
+                        <span className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
                            <Link href="#">Mark Calender</Link>
-                        </button>
-                        <button className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
+                        </span>
+                        <span className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
                            <Link href="/lists-landing">Create-Lists</Link>
-                        </button>
+                        </span>
                         <span className="rounded-full [&:hover>ul]:visible [&:hover>ul]:opacity-100 hover:bg-seco2">
                            <Image
                               src={session?.user?.image}

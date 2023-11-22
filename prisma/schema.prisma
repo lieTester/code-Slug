@@ -16,6 +16,7 @@ model User {
   email             String          @unique
   profile           String
   // Other user details
+  Note              Note[]
   userLists         List[]
   comments          Comment[]
   userProblemStatus ProblemStatus[]
@@ -31,10 +32,11 @@ model Problem {
   // Other problem details
   tags              Tag[]            @relation("ProblemTags")
   lists             List[]
-  userProblemStatus ProblemStatus[]
-  CompanyProblem    CompanyProblem[]
+  Note              Note[]
   Comment           Comment[]
   PlatformLinks     Platform[]
+  CompanyProblem    CompanyProblem[]
+  userProblemStatus ProblemStatus[]
 }
 
 model Tag {
@@ -71,6 +73,16 @@ model Platform {
   problem   Problem @relation(fields: [problemId], references: [id])
 }
 
+model CompanyProblem {
+  id        Int     @id @default(autoincrement())
+  count     Int
+  companyId Int
+  problemId Int
+  // Other company problem details
+  company   Company @relation(fields: [companyId], references: [id])
+  problem   Problem @relation(fields: [problemId], references: [id])
+}
+
 model ProblemStatus {
   id        Int     @id @default(autoincrement())
   userId    String
@@ -83,16 +95,6 @@ model ProblemStatus {
   @@unique([userId, problemId], name: "UserProblemStatusUnique")
 }
 
-model CompanyProblem {
-  id        Int     @id @default(autoincrement())
-  count     Int
-  companyId Int
-  problemId Int
-  // Other company problem details
-  company   Company @relation(fields: [companyId], references: [id])
-  problem   Problem @relation(fields: [problemId], references: [id])
-}
-
 model Comment {
   id          Int      @id @default(autoincrement())
   userId      String
@@ -102,4 +104,17 @@ model Comment {
   // Other comment details
   user        User     @relation(fields: [userId], references: [id])
   problem     Problem  @relation(fields: [problemId], references: [id])
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  problemId Int
+  note      String
+  noteTime  DateTime
+  // Other note details
+  user      User     @relation(fields: [userId], references: [id])
+  problem   Problem  @relation(fields: [problemId], references: [id])
+
+  @@unique([userId, problemId], name: "UserProblemStatusUnique")
 }

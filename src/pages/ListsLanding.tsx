@@ -4,22 +4,57 @@ import { FC, useEffect, useContext, useState } from "react";
 import { SessionProp } from "@/types/index";
 // context
 import { SessionContext } from "@/context/SessionContext";
+import { ProblemContext } from "@/context/ProblemsContext";
 // component
-import Header from "@/components/Header";
+import ListMaker from "@/components/ListMaker";
+import ProblemFilters from "@/components/subcomponent/Filter/ProblemFilters";
+import { ListLandingBodySkeleton } from "./skeleton/ListLanding.skeleton";
 
 const ListsLanding: FC<SessionProp> = ({ session }) => {
    const sessionContext = useContext(SessionContext);
    const setSession = sessionContext?.setSession;
+
    useEffect(() => {
       if (setSession) {
          // console.log(session);
          setSession(session);
       }
    }, [session]);
+
+   const problemContext = useContext(ProblemContext);
+
+   const currentPageProblemSet = problemContext?.currentPageProblemSet;
+   const setProblemSetLoading = problemContext?.setProblemSetLoading;
+   const problemSetLoading = problemContext?.problemSetLoading;
+
+   useEffect(() => {
+      if (
+         currentPageProblemSet &&
+         currentPageProblemSet?.length > 0 &&
+         setProblemSetLoading
+      ) {
+         // console.log(problemSetLoading, currentPageProblemSet);
+         setTimeout(() => {
+            setProblemSetLoading({ loading: false });
+            console.log("worked");
+         }, 1000); // Check if problems array is not empty
+      }
+   }, [currentPageProblemSet]);
+
    return (
-      <section className="w-screen h-screen flex flex-col overflow-y-auto">
-         <Header />
-      </section>
+      <>
+         <section className="w-screen h-screen  overflow-y-auto">
+            <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] h-[100%] mx-auto   pt-20 pb-20 font-baloo ">
+               <ProblemFilters />
+               {problemSetLoading?.loading &&
+               problemSetLoading?.value === "list" ? (
+                  <ListLandingBodySkeleton />
+               ) : (
+                  <ListMaker />
+               )}
+            </div>
+         </section>
+      </>
    );
 };
 
