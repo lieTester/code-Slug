@@ -6,7 +6,7 @@ import { ProblemContext } from "@/context/ProblemsContext";
 import { ProblemsProp } from "@/types/index";
 // component
 import NewListCreator from "@/components/subcomponent/listMaker/NewListCreator";
-import { ListLandingBaseListHolderSkeleton } from "@/pages/skeleton/ListLandingSkeleton";
+import ListLandingBaseListHolderSkeleton from "@/components/skeleton/listlanding/ListLandingBaseListHolderSkeleton";
 
 const ListMaker: React.FC<{}> = ({}) => {
    const problemContext = useContext(ProblemContext);
