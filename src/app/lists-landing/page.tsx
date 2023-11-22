@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 import ListsLanding from "@/pages/ListsLanding";
-import { ListLandingSkeleton } from "@/pages/skeleton/ListLanding.skeleton";
+import ListLandingSkeleton from "@/components/skeleton/listlanding/ListLandingSkeleton";
 
 import { SessionProvider } from "@/context/SessionContext";
 import { ProblemsProvider } from "@/context/ProblemsContext";
