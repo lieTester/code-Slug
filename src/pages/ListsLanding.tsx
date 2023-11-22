@@ -8,7 +8,7 @@ import { ProblemContext } from "@/context/ProblemsContext";
 // component
 import ListMaker from "@/components/ListMaker";
 import ProblemFilters from "@/components/subcomponent/Filter/ProblemFilters";
-import { ListLandingBodySkeleton } from "./skeleton/ListLanding.skeleton";
+import { ListLandingBodySkeleton } from "./skeleton/ListLandingSkeleton";
 
 const ListsLanding: FC<SessionProp> = ({ session }) => {
    const sessionContext = useContext(SessionContext);
