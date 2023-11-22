@@ -36,8 +36,8 @@ const ListsLanding: FC<SessionProp> = ({ session }) => {
          // console.log(problemSetLoading, currentPageProblemSet);
          setTimeout(() => {
             setProblemSetLoading({ loading: false });
-            // console.log("worked");
-         }, 300); // Check if problems array is not empty
+            console.log("worked");
+         }, 1000); // Check if problems array is not empty
       }
    }, [currentPageProblemSet]);
 
