@@ -6,14 +6,21 @@
 @tailwind utilities;
 
 :root {
+   /* background */
    --bg-prim1: #00000d;
    --bg-prim2: #0b0b1b;
-   --bg-seco2: #111116;
-   --bg-seco1: #51557e;
+   --bg-seco1: #202533;
+   --bg-seco2: #0e0e1b;
+   --bg-extra1: #212434;
+   --bg-extra2: #2b2f3c;
+   /* text */
    --text-prim1: #f7fafc;
    --text-prim2: #a0aec0;
-   --extra1: #363738;
-   --extra2: #464748;
+   --text-seco1: #51557e;
+   --text-seco2: #111116;
+   --text-extra1: #363738;
+   --text-extra2: #464748;
+   /* others */
    --hard: crimson;
    --medium: #fbc02d;
    --easy: #00bfa5;
