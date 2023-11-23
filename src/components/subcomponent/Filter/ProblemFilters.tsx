@@ -316,7 +316,7 @@ const ProblemFilters = () => {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    return (
       <section className="w-full ">
-         <ul className="w-full relative grid lg:flex lg:justify-end   [&>*]:float-right [&>*]:flex [&>*]:mb-1 [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-extra2 text-prim2 ">
+         <ul className="w-full relative grid md:flex lg:justify-end flex-wrap  [&>*]:float-right [&>*]:flex [&>*]:mb-1 [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-extra2 text-prim2 ">
             <li
                className="relative  flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
@@ -455,7 +455,7 @@ const ProblemFilters = () => {
             >
                Tags
                <IoMdArrowDropdown className="ml-3 hover:cursor-pointer group-focus:rotate-180 transition-[transform] ease-linear" />
-               <ul className="absolute top-10 right-0 w-[350px] max-w-xl h-[500px] overflow-hidden p-2 my-auto rounded-md -translate-y-2 invisible opacity-0 bg-seco2 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform]">
+               <ul className="absolute top-10 right-0 w-full md:w-[350px] max-w-xl h-[500px] overflow-hidden p-2 my-auto rounded-md -translate-y-2 invisible opacity-0 bg-seco2 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform]">
                   <li className="h-[6%] flex items-center bg-extra1 rounded-sm mb-2">
                      <IoMdSearch className="m-2" />
                      <input

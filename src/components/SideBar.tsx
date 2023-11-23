@@ -9,7 +9,7 @@ const SideBar = () => {
    const sessionContext = useContext(SessionContext);
    const session = sessionContext?.session;
    return (
-      <section className="hidden lg:block  lg:w-[30%] 2xl:[25%] mr-2 text-prim1  ">
+      <section className="w-[100%] md:w[35%] lg:w-[30%] 2xl:[25%] mr-2 text-prim1  mb-4">
          {session?.user && (
             <div className="bg-prim2 rounded-md mb-4">
                {/* profile section */}

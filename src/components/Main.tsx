@@ -44,9 +44,9 @@ const ProblemTable: React.FC = () => {
       }
    };
    return (
-      <section className="relative w-[100%]  lg:w-[70%] 2xl:w-[75%] font-baloo">
+      <section className="relative md:w-[65%] lg:w-[70%] 2xl:w-[75%] font-baloo">
          <ProblemFilter />
-         <div className="overflow-x-auto overflow-y-hidden mt-4 pb-7">
+         <div className="w-full overflow-x-auto overflow-y-hidden mt-4 pb-7">
             <table className="min-w-full ">
                <thead className="border-b-[0.5px] border-seco2  text-prim1 ">
                   <tr className="text-left [&>*]:font-medium">
