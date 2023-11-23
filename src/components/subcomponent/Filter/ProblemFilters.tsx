@@ -316,7 +316,7 @@ const ProblemFilters = () => {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    return (
       <section className="w-full ">
-         <ul className="w-full relative grid md:flex lg:justify-end flex-wrap  [&>*]:float-right [&>*]:flex [&>*]:mb-1 [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-extra2 text-prim2 ">
+         <ul className="w-full relative grid grid-cols-1 md:grid-cols-2 lg:flex lg:justify-end flex-wrap  [&>*]:float-right [&>*]:flex [&>*]:mb-1 [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-extra2 text-prim2 ">
             <li
                className="relative  flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
