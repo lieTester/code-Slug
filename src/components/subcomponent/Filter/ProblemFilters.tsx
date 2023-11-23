@@ -303,8 +303,8 @@ const ProblemFilters = () => {
    // change the problemSet according to page and filter
    const searchParams = useSearchParams();
    useEffect(() => {
-      if (searchParams?.get("page") !== page.currPage) {
-         const pageNumber = parseInt(searchParams?.get("page") || "1");
+      if (searchParams?.get("pageno") !== page.currPage) {
+         const pageNumber = parseInt(searchParams?.get("pageno") || "1");
          performPageSetup({ pageNumber });
       }
    }, [searchParams]);

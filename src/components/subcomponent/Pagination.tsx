@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import useQueryParams from "@/hook/useQueryParams";
 
 interface PaginationProps {
    currentPage: number;
@@ -7,6 +7,8 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
+   const { setQueryParams } = useQueryParams();
+
    // Calculate the range of page numbers to display (5 pages)
    currentPage = Math.ceil(currentPage % (totalPages + 1));
    let pageRange = Array.from(
@@ -25,9 +27,9 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
       );
    }
 
-   const router = useRouter();
    const onPageChange = (pageNumber: number) => {
-      router.push(`/?page=${pageNumber}`);
+      const query: any = { pageno: pageNumber };
+      setQueryParams(query);
    };
 
    return (
