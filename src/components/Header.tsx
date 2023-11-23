@@ -48,7 +48,7 @@ const Header: FC<{}> = () => {
                            <ul className="absolute -bottom-[30px] right-0  invisible transition-all duration-100 ease-linear cursor-pointer">
                               <li className="p-1 before:absolute before:right-3 before:top-[3px] before:rotate-45 before:w-[12px] before:h-[12px]   before:bg-extra2 before:rounded-sm "></li>
                               <li
-                                 className="text-xs font-normal bg-extra2 text-seco1 rounded-sm p-1 px-3"
+                                 className="text-xs  bg-extra2 text-prim2 font-medium rounded-sm p-1 px-3"
                                  onClick={() => {
                                     signOut();
                                     console.log("signOut");

@@ -315,10 +315,10 @@ const ProblemFilters = () => {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////////////////////
    return (
-      <section className="w-full z-[20]">
-         <ul className="w-full relative z-[20] flex justify-end flex-wrap [&>*]:flex [&>*]:mb-1 [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-seco2 text-prim2 ">
+      <section className="w-full ">
+         <ul className="w-full relative grid lg:flex lg:justify-end   [&>*]:float-right [&>*]:flex [&>*]:mb-1 [&>*]:items-center [&>*]:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-extra2 text-prim2 ">
             <li
-               className="relative cursor-pointer "
+               className="relative  flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
                onClick={() => {
                   setFilterVisiblity((prev: any) => {
@@ -329,7 +329,7 @@ const ProblemFilters = () => {
             >
                Lists
                <IoMdArrowDropdown
-                  className={`ml-3 hover:cursor-pointer ${
+                  className={`ml-3  hover:cursor-pointer ${
                      filterVisiblity?.list && "rotate-180"
                   } transition-[transform] ease-linear`}
                />
@@ -355,7 +355,7 @@ const ProblemFilters = () => {
                </ul>
             </li>
             <li
-               className="relative cursor-pointer group"
+               className="relative flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
                onClick={() => {
                   setFilterVisiblity((prev: any) => {
@@ -400,7 +400,7 @@ const ProblemFilters = () => {
                </ul>
             </li>
             <li
-               className="relative cursor-pointer group"
+               className="relative flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
                onClick={() => {
                   setFilterVisiblity((prev: any) => {
@@ -449,7 +449,10 @@ const ProblemFilters = () => {
                </ul>
             </li>
 
-            <li className="relative cursor-pointer group" tabIndex={0}>
+            <li
+               className="relative flex justify-between cursor-pointer group focus-within:z-[20]"
+               tabIndex={0}
+            >
                Tags
                <IoMdArrowDropdown className="ml-3 hover:cursor-pointer group-focus:rotate-180 transition-[transform] ease-linear" />
                <ul className="absolute top-10 right-0 w-[350px] max-w-xl h-[500px] overflow-hidden p-2 my-auto rounded-md -translate-y-2 invisible opacity-0 bg-seco2 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform]">
