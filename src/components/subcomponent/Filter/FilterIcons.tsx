@@ -25,10 +25,10 @@ const FilterIcons: React.FC<{
    function returnFilterdata(filters: any) {
       // console.log(filters);
       let topics = filters?.topics?.map((value: string, indx: number) => {
-         return getLiTag("topic", value, "rounded-full", indx);
+         return getLiTag("topics", value, "rounded-full", indx);
       });
       let companies = filters?.companies?.map((value: string, indx: number) => {
-         return getLiTag("company", value, "rounded-full", indx);
+         return getLiTag("companies", value, "rounded-full", indx);
       });
       let search =
          filters?.search &&

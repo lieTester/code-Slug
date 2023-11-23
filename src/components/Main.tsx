@@ -12,7 +12,6 @@ import ProblemTableSkeleton from "@/components/subcomponent/problemTable/Problem
 
 const ProblemTable: React.FC = () => {
    const problemContext = useContext(ProblemContext);
-   const currentPageProblemSet = problemContext?.currentPageProblemSet;
    const setProblemSetLoading = problemContext?.setProblemSetLoading;
    const problemSetLoading = problemContext?.problemSetLoading;
    const filterdProblems = problemContext?.filterdProblems;
@@ -21,17 +20,17 @@ const ProblemTable: React.FC = () => {
 
    useEffect(() => {
       if (
-         currentPageProblemSet &&
-         currentPageProblemSet?.length > 0 &&
+         filterdProblems &&
+         filterdProblems?.length > 0 &&
          setProblemSetLoading
       ) {
-         // console.log(problemSetLoading, currentPageProblemSet);
+         // console.log("main->", problemSetLoading, filterdProblems);
          setTimeout(() => {
             setProblemSetLoading({ loading: false });
-            // console.log("worked");
+            console.log("worked");
          }, 300); // Check if problems array is not empty
       }
-   }, [currentPageProblemSet]);
+   }, [filterdProblems]);
 
    const setPageSize = (size: number) => {
       if (setPage && filterdProblems) {

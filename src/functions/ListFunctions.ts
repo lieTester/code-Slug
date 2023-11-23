@@ -12,7 +12,7 @@ export const getAllLists = async (id: string | null) => {
    return res;
 };
 
-export const getSelectList = async (listId: number, id: string | null) => {
+export const getSelectList = async (listId: string, id: string | null) => {
    const response = await axios.get(
       process.env.NEXT_PUBLIC_API_BASE_URL + `/lists/${listId}`
    );

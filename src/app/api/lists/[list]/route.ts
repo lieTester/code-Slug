@@ -7,7 +7,7 @@ const getProblemsInList = async (
    req: NextRequest,
    { params }: { params: { list: string } }
 ) => {
-   console.log(params);
+   // console.log(params);
 
    try {
       const listId = params.list;
