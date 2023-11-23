@@ -48,7 +48,7 @@ const Calendar: React.FC = () => {
    const totalDays = getDaysInMonth(currentDate);
 
    return (
-      <div className="relative p-2 font-sofiaPro text-prim2  bg-prim2 rounded-md">
+      <div className="hidden md:block relative p-2 font-sofiaPro text-prim2  bg-prim2 rounded-md">
          <div className="text-center">
             <div className="flex items-center justify-between  space-x-4">
                <h2 className=" font-medium">

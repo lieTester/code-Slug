@@ -24,7 +24,7 @@ const Landing: FC<SessionProp> = ({ session }) => {
    return (
       <section className="w-screen h-screen flex flex-col overflow-y-auto">
          <ProblemsProvider>
-            <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] mx-auto h-fit pt-20 pb-32 flex justify-between">
+            <div className="w-[95%]  lg:w-[90%] 2xl:w-[80%] mx-auto h-fit pt-20 pb-32 md:flex justify-between">
                <SideBar />
                <Main />
             </div>
