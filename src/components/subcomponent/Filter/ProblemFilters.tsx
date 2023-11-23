@@ -20,7 +20,9 @@ import {
    applyFilter,
 } from "@/functions/FilterFunctions";
 //types
-import { filterProps } from "@/types/index";
+import { ProblemsProp, filterProps } from "@/types/index";
+// hooks
+import useQueryParams from "@/hook/useQueryParams";
 
 const ProblemFilters = () => {
    // problem context ///////////////////////////////////////////////////////
@@ -39,6 +41,8 @@ const ProblemFilters = () => {
    const session = sessionContext?.session;
 
    // filters states /////////////////////////////////////////////////////////
+   const { setQueryParams, removeQueryParams, urlSearchParams } =
+      useQueryParams();
    const [lists, setLists] = useState<any[]>();
    const [topics, setTopics] = useState<any[]>();
    const [companies, setCompanies] = useState<any[]>();
@@ -87,26 +91,56 @@ const ProblemFilters = () => {
    };
    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // base data collection at loading time and also if previous list filter removed//////////////////////////////////
-   async function getBase(id: string | null) {
-      // get lists according to user presense
-      await getAllLists(id).then((res: any) => {
-         setLists(res.data.lists);
-      });
-      // get all problems if user is logged in fetch its problem status as well
-      const { problemCollection } = await GetAllProblems(id);
-      if (setCurrentListProblems && setFilterdProblems) {
-         // console.log(problemCollection);
-         setCurrentListProblems(problemCollection);
-         setFilterdProblems(problemCollection);
+   async function getBase(id: string | null, currentListId?: string | null) {
+      try {
+         let currentList: ProblemsProp[] = [];
+
+         if (currentListId) {
+            const result = await getSelectList(
+               currentListId,
+               session?.user?.id
+            );
+            currentList = result.currentList;
+         } else {
+            const { problemCollection } = await GetAllProblems(id);
+            currentList = problemCollection;
+         }
+
+         if (setCurrentListProblems && setFilterdProblems) {
+            setCurrentListProblems(currentList);
+            setFilterdProblems(currentList);
+         }
+
+         performPageSetup({ currentList });
+         return { currentList };
+      } catch (error) {
+         console.error("Error in getBase:", error);
+         throw error;
       }
-      // console.log("page called fome getBase()");
-      performPageSetup({ currentList: problemCollection });
-      return { problemCollection };
    }
+
    const removeFilterVisiblity = () => {
       setFilterVisiblity(null);
    };
 
+   const manageFiltersInUrl = ({
+      type,
+      category,
+      value,
+   }: {
+      type: string;
+      category: string;
+      value: string;
+   }) => {
+      const query: Record<string, string> = {};
+      query[category] = value;
+
+      if (type === "add") {
+         setQueryParams(query);
+      } else {
+         removeQueryParams(query);
+      }
+   };
    const processFilters = async (
       filterValues: any,
       currentListProblems: any
@@ -128,8 +162,14 @@ const ProblemFilters = () => {
       );
    };
    const catchFilter = async (category: string, value: string, id?: any) => {
-      if (setProblemSetLoading && category !== "search")
+      if (setProblemSetLoading && category !== "search") {
+         manageFiltersInUrl({
+            type: "add",
+            category,
+            value,
+         });
          setProblemSetLoading({ loading: true, value: category }); // to make skeleton loading animation
+      }
       await addFilter(category, value, filterValues).then(
          async ({ filterValues }) => {
             setFilterValues((prev) => {
@@ -153,8 +193,14 @@ const ProblemFilters = () => {
       removeFilterVisiblity(); // becuse on click the filter data is
    };
    const fireFilter = async (category: string, value: string, id?: any) => {
-      if (setProblemSetLoading)
+      if (setProblemSetLoading) {
+         manageFiltersInUrl({
+            type: "remove",
+            category,
+            value,
+         });
          setProblemSetLoading({ loading: true, value: category });
+      }
       await removeFilter(category, value, filterValues).then(
          async ({ filterValues }) => {
             setFilterValues((prev) => {
@@ -162,8 +208,8 @@ const ProblemFilters = () => {
             });
             if (category === "list") {
                await getBase(session?.user?.id)
-                  .then(({ problemCollection }) => {
-                     processFilters(filterValues, problemCollection);
+                  .then(({ currentList }) => {
+                     processFilters(filterValues, currentList);
                   })
                   .catch((error) => {
                      console.log(error);
@@ -191,14 +237,59 @@ const ProblemFilters = () => {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////////////////////
    useEffect(() => {
-      getAllTags().then((res: any) => setTopics(res.data.tags));
-      getAllCompanylist().then((res: any) => setCompanies(res.data.companies));
-      if (session !== undefined && currentListProblems?.length === 0) {
-         getBase(session?.user?.id).catch((error) => {
-            console.log(error);
-         });
-      }
+      const fetchData = async () => {
+         try {
+            const tagsRes = await getAllTags();
+            setTopics(tagsRes.data.tags);
+
+            const companiesRes = await getAllCompanylist();
+            setCompanies(companiesRes.data.companies);
+
+            if (session !== undefined && currentListProblems?.length === 0) {
+               // get lists according to user presense
+               const listsRes = await getAllLists(session?.user?.id);
+               setLists(listsRes.data.lists);
+
+               // get filters values from url
+               const iterator = urlSearchParams.entries();
+               const entriesArray = Array.from(iterator);
+               const captureUrlFilterValue = {} as {
+                  [key: string]: string | string[];
+               };
+               for (const [key, value] of entriesArray) {
+                  if (key === "topics" || key === "companies") {
+                     captureUrlFilterValue[key] = value.split("~");
+                  } else {
+                     captureUrlFilterValue[key] = value;
+                  }
+               }
+               // check if session is thier or not if not and url have list possible that it's user list
+               // or not but will prevent getting it
+               if (session === null) delete captureUrlFilterValue["list"];
+               setFilterValues(captureUrlFilterValue);
+
+               let currentListId: string | null = null;
+               if (captureUrlFilterValue?.list && session !== null) {
+                  listsRes.data.lists.map((item: any) => {
+                     if (item.name === captureUrlFilterValue?.list)
+                        currentListId = item.id;
+                  });
+               }
+
+               await getBase(session?.user?.id, currentListId).then(
+                  ({ currentList }) => {
+                     processFilters(captureUrlFilterValue, currentList);
+                  }
+               );
+            }
+         } catch (error) {
+            console.error("Error in useEffect:", error);
+         }
+      };
+
+      fetchData();
    }, [session]);
+
    useEffect(() => {
       if (filterdProblems && setCurrentPageProblemSet) {
          const problems: any[] = filterdProblems.slice(
@@ -216,7 +307,7 @@ const ProblemFilters = () => {
          const pageNumber = parseInt(searchParams?.get("page") || "1");
          performPageSetup({ pageNumber });
       }
-   }, [searchParams?.get("page")]);
+   }, [searchParams]);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -396,7 +487,9 @@ const ProblemFilters = () => {
                                    <li
                                       key={slug}
                                       className=" text-sm h-fit px-2 rounded-full mr-1 mb-2 bg-extra1"
-                                      onClick={() => catchFilter("topic", name)}
+                                      onClick={() =>
+                                         catchFilter("topics", name)
+                                      }
                                    >
                                       {name}
                                    </li>
@@ -408,7 +501,7 @@ const ProblemFilters = () => {
                                       key={slug}
                                       className=" text-sm px-2 rounded-full mr-1 mb-2 bg-extra1"
                                       onClick={() =>
-                                         catchFilter("company", name)
+                                         catchFilter("companies", name)
                                       }
                                    >
                                       {name}

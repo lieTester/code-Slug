@@ -70,7 +70,7 @@ export const addFilter = async (
 ) => {
    filterValues = filterValues === undefined ? {} : filterValues;
 
-   if (category === "topic") {
+   if (category === "topics") {
       if (filterValues?.topics) {
          filterValues.topics = Array.from(
             new Set([...filterValues.topics, value])
@@ -78,7 +78,7 @@ export const addFilter = async (
       } else {
          filterValues.topics = [value];
       }
-   } else if (category === "company") {
+   } else if (category === "companies") {
       if (filterValues?.companies) {
          filterValues.companies = Array.from(
             new Set([...filterValues.companies, value])
@@ -102,11 +102,11 @@ export const removeFilter = async (
    filterValues: any
 ) => {
    // console.log(category, value);
-   if (category === "topic") {
+   if (category === "topics") {
       filterValues.topics = filterValues.topics.filter(
          (item: string) => item !== value
       );
-   } else if (category === "company") {
+   } else if (category === "companies") {
       filterValues.companies = filterValues.companies.filter(
          (item: string) => item !== value
       );
