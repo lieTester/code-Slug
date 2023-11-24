@@ -42,7 +42,7 @@ const ListMaker: React.FC<{}> = ({}) => {
    }, [problemSetLoading]);
 
    return (
-      <div className="flex h-[95%]  ">
+      <div className="flex h-[95%] pb-10  ">
          {filterdProblems &&
             setFilterdProblems &&
             (problemSetLoading?.loading ? (

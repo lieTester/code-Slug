@@ -43,8 +43,8 @@ const ListsLanding: FC<SessionProp> = ({ session }) => {
 
    return (
       <>
-         <section className="w-screen h-screen  overflow-y-auto">
-            <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] h-[100%] mx-auto   pt-20 pb-20 font-baloo ">
+         <section className="w-screen min-h-screen h-full py-20  overflow-y-auto">
+            <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] h-[100%] mx-auto font-baloo ">
                <ProblemFilters />
                {problemSetLoading?.loading &&
                problemSetLoading?.value === "list" ? (

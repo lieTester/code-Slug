@@ -18,6 +18,7 @@ model User {
   // Other user details
   Note              Note[]
   userLists         List[]
+  Event             Event[]
   comments          Comment[]
   userProblemStatus ProblemStatus[]
 }
@@ -117,4 +118,20 @@ model Note {
   problem   Problem  @relation(fields: [problemId], references: [id])
 
   @@unique([userId, problemId], name: "UserProblemStatusUnique")
+}
+
+// Define the Event table
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  start       DateTime
+  end         DateTime
+  location    String?
+  // ... add other event-related fields as needed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // Define a relation to the user who owns the event
+  owner       User     @relation(fields: [ownerId], references: [id])
+  ownerId     String
 }

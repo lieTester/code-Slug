@@ -96,7 +96,7 @@ const NewListCreator: React.FC<{
    };
    return (
       <div
-         className="relative w-2/3 bg-black/10 h-full   ml-2  border-seco2 border-[1px] rounded-md overflow-hidden"
+         className="relative w-1/2 md:w-2/3 bg-black/10 h-full   ml-2 border-seco2 border-[1px] rounded-md overflow-hidden"
          onDrop={(e) => {
             handleDrop(
                e,
@@ -111,7 +111,7 @@ const NewListCreator: React.FC<{
          }}
       >
          <div className=" p-2  h-full overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-seco1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-prim2 ">
-            <div className="grid grid-cols-3 gap-2 col-span-3 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2  mb-10">
                {newProblemList &&
                   newProblemList.map((problem, index) => (
                      <div
@@ -127,7 +127,7 @@ const NewListCreator: React.FC<{
                         <ul className="flex justify-between">
                            <h1
                               title={problem.title}
-                              className="truncate text-prim1  font-medium"
+                              className="truncate text-prim1 font-medium"
                            >
                               {problem.title}
                            </h1>
@@ -164,7 +164,7 @@ const NewListCreator: React.FC<{
             </div>
          </div>
          {newProblemList.length && (
-            <div className="w-full absolute  left-0 bottom-[0px] bg-seco1 flex border-[1px] border-seco2 z-[20]">
+            <div className="w-full absolute left-0 bottom-[0px] bg-seco1 flex border-[1px] border-seco2 z-[20]">
                <span className="relative p-1 w-full">
                   <input
                      type="text"

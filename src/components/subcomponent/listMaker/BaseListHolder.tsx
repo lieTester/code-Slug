@@ -65,7 +65,7 @@ const BaseListHolder: React.FC<{
 
    return (
       <div
-         className="w-1/3 pointer-events-auto h-full overflow-y-auto  [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-seco1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-prim2    "
+         className="w-1/2 md:w-1/3 pr-1 pointer-events-auto h-full overflow-y-auto  [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-seco1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-prim2    "
          onDrop={(e) => {
             handleDrop(
                e,
