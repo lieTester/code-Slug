@@ -4,7 +4,9 @@ import { useContext, FC, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
-
+// icons
+import { CiViewList } from "react-icons/ci";
+import { SlCalender } from "react-icons/sl";
 // components
 import Logo from "@/components/subcomponent/Logo";
 import Login from "@/components/subcomponent/Login";
@@ -28,46 +30,77 @@ const Header: FC<{}> = () => {
                   <Logo />
                </Link>
 
-               <div className="absolute right-0 md:relative  p-1  flex justify-center [&>*]:ml-4">
-                  {session?.user?.image ? (
-                     <>
-                        <span className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
-                           <Link href="#">Mark Calender</Link>
-                        </span>
-                        <span className="flex items-center text-center text-prim2 text-xs px-2 border-seco2 border-[1px] rounded-md">
-                           <Link href="/lists-landing">Create-Lists</Link>
-                        </span>
-                        <span className="rounded-full [&:hover>ul]:visible [&:hover>ul]:opacity-100 hover:bg-seco2">
-                           <Image
-                              src={session?.user?.image}
-                              alt="user profile image"
-                              width={30}
-                              height={30}
-                              className="rounded-full "
-                           />
-                           <ul className="absolute -bottom-[30px] right-0  invisible transition-all duration-100 ease-linear cursor-pointer">
-                              <li className="p-1 before:absolute before:right-3 before:top-[3px] before:rotate-45 before:w-[12px] before:h-[12px]   before:bg-extra2 before:rounded-sm "></li>
-                              <li
-                                 className="text-xs  bg-extra2 text-prim2 font-medium rounded-sm p-1 px-3"
-                                 onClick={() => {
-                                    signOut();
-                                    console.log("signOut");
-                                 }}
-                              >
-                                 Signout
-                              </li>
-                           </ul>
-                        </span>
-                     </>
-                  ) : (
-                     <button
-                        onClick={() => setShowLoginOverlay(!showLoginOverlay)}
-                        className="bg-seco1 px-3 py-1 text-base font-baloo rounded-sm hover:bg-seco2 ease-linear"
+               {session === undefined ? (
+                  <div className="absolute right-0 md:relative  p-1  flex justify-center items-center [&>*]:ml-4 animate-pulse">
+                     <span className="rounded-md w-8 h-7 md:w-20 border-seco2 border-[2px]"></span>
+                     <span className="rounded-md w-8 h-7 md:w-20 border-seco2 border-[2px]"></span>
+                     <svg
+                        className="w-9 h-9 me-3 text-gray-200 dark:text-gray-700"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
                      >
-                        Log In
-                     </button>
-                  )}
-               </div>
+                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
+                     </svg>
+                  </div>
+               ) : (
+                  <div className="absolute right-0 md:relative  p-1  flex justify-center [&>*]:ml-4">
+                     {session?.user?.image ? (
+                        <>
+                           <span className="flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 border-[1px] rounded-md">
+                              <Link href="#" className="flex items-center">
+                                 <SlCalender className="text-base md:mr-1" />
+                                 <span className="hidden md:inline">
+                                    Mark Calender
+                                 </span>
+                              </Link>
+                           </span>
+                           <span className=" flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 border-[1px] rounded-md">
+                              <Link
+                                 href="/lists-landing"
+                                 className="flex items-center"
+                              >
+                                 <CiViewList className="text-lg md:mr-1" />
+                                 <span className="hidden md:inline">
+                                    Create-Lists
+                                 </span>
+                              </Link>
+                           </span>
+                           <span className="rounded-full [&:hover>ul]:visible [&:hover>ul]:opacity-100 hover:bg-seco2">
+                              <Image
+                                 src={session?.user?.image}
+                                 alt="user profile image"
+                                 width={30}
+                                 height={30}
+                                 className="rounded-full "
+                              />
+                              <ul className="absolute -bottom-[30px] right-0  invisible transition-all duration-100 ease-linear cursor-pointer">
+                                 <li className="p-1 before:absolute before:right-3 before:top-[3px] before:rotate-45 before:w-[12px] before:h-[12px]   before:bg-extra2 before:rounded-sm "></li>
+                                 <li
+                                    className="text-xs  bg-extra2 text-prim2 font-medium rounded-sm p-1 px-3"
+                                    onClick={() => {
+                                       signOut();
+                                       console.log("signOut");
+                                    }}
+                                 >
+                                    Signout
+                                 </li>
+                              </ul>
+                           </span>
+                        </>
+                     ) : (
+                        <button
+                           onClick={() =>
+                              setShowLoginOverlay(!showLoginOverlay)
+                           }
+                           className="bg-seco1 px-3 py-1 text-base font-baloo rounded-sm hover:bg-seco2 ease-linear"
+                        >
+                           Log In
+                        </button>
+                     )}
+                  </div>
+               )}
             </div>
          </section>
          <Login

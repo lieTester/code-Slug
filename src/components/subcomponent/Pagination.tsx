@@ -52,7 +52,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
                      className={`w-7 h-7 mx-2 rounded-md  ${
                         pageNumber === currentPage
                            ? "bg-seco2 text-prim1"
-                           : "   bg-prim2 text-seco1"
+                           : " hidden md:inline bg-prim2 text-seco1"
                      }`}
                   >
                      {pageNumber}
