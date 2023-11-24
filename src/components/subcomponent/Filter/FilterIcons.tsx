@@ -12,7 +12,7 @@ const FilterIcons: React.FC<{
             key={indx}
             className={` flex items-center justify-between ${css} text-xs bg-extra2`}
          >
-            <span className="mr-1 ml-1">{value}</span>
+            <span className="mx-1">{value}</span>
             <AiOutlineCloseCircle
                className="text-prim2 cursor-pointer hover:text-prim1"
                onClick={() => {

@@ -526,7 +526,7 @@ const ProblemFilters = () => {
                />
             </li>
          </ul>
-         <ul className="p-2 w-full flex flex-wrap text-prim1 list-none [&>*]:m-1 [&>*]:px-1 [&>*]:py-[2px]">
+         <ul className="py-2 px-1 w-full flex flex-wrap text-prim1 list-none [&>*]:mr-2 [&>*]:px-1 [&>*]:py-[2px]">
             {filterValues && (
                <FilterIcons
                   filterValues={filterValues}
