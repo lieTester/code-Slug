@@ -5,8 +5,9 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 // icons
-import { CiViewList } from "react-icons/ci";
+import { CiViewList, CiHome } from "react-icons/ci";
 import { SlCalender } from "react-icons/sl";
+import { TiHomeOutline } from "react-icons/ti";
 // components
 import Logo from "@/components/subcomponent/Logo";
 import Login from "@/components/subcomponent/Login";
@@ -32,10 +33,16 @@ const Header: FC<{}> = () => {
 
                {session === undefined ? (
                   <div className="absolute right-0 md:relative  p-1  flex justify-center items-center [&>*]:ml-4 animate-pulse">
-                     <span className="rounded-md w-8 h-7 md:w-20 border-seco2 border-[2px]"></span>
-                     <span className="rounded-md w-8 h-7 md:w-20 border-seco2 border-[2px]"></span>
+                     <span className="flex items-center h-[30px] text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 hover:border-white border-[2px] rounded-md">
+                        <Link href="/" className="flex items-center">
+                           <TiHomeOutline className="text-lg md:mr-1" />
+                           <span className="hidden md:inline">Home</span>
+                        </Link>
+                     </span>
+                     <span className="rounded-md w-8 h-[30px] md:w-[107px] border-seco2 border-[2px]"></span>
+                     <span className="rounded-md w-8 h-[30px] md:w-[120px] border-seco2 border-[2px]"></span>
                      <svg
-                        className="w-9 h-9 me-3 text-gray-200 dark:text-gray-700"
+                        className="w-[32px] h-[32px]  text-gray-200 dark:text-gray-700"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -45,25 +52,34 @@ const Header: FC<{}> = () => {
                      </svg>
                   </div>
                ) : (
-                  <div className="absolute right-0 md:relative  p-1  flex justify-center [&>*]:ml-4">
+                  <div className="relative  p-1  flex justify-center [&>*]:ml-4">
+                     <span className="flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 hover:border-white border-[1px] rounded-md">
+                        <Link href="/" className="flex items-center">
+                           <TiHomeOutline className="text-lg md:mr-1" />
+                           <span className="hidden md:inline">Home</span>
+                        </Link>
+                     </span>
                      {session?.user?.image ? (
                         <>
-                           <span className="flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 border-[1px] rounded-md">
-                              <Link href="#" className="flex items-center">
-                                 <SlCalender className="text-base md:mr-1" />
-                                 <span className="hidden md:inline">
-                                    Mark Calender
-                                 </span>
-                              </Link>
-                           </span>
-                           <span className=" flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 border-[1px] rounded-md">
+                           <span className=" flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 hover:border-white border-[1px] rounded-md">
                               <Link
                                  href="/lists-landing"
                                  className="flex items-center"
                               >
                                  <CiViewList className="text-lg md:mr-1" />
                                  <span className="hidden md:inline">
-                                    Create-Lists
+                                    Create Lists
+                                 </span>
+                              </Link>
+                           </span>
+                           <span className="flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 hover:border-white border-[1px] rounded-md">
+                              <Link
+                                 href="/mark-calender"
+                                 className="flex items-center"
+                              >
+                                 <SlCalender className="text-base md:mr-1" />
+                                 <span className="hidden md:inline">
+                                    Mark Calender
                                  </span>
                               </Link>
                            </span>
