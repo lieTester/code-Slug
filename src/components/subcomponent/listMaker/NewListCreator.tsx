@@ -52,7 +52,7 @@ const NewListCreator: React.FC<{
       const collectUserLists = async () => {
          await getAllLists(session?.user?.id).then((res) => {
             setUserLists(res.data.lists);
-            console.log(res.data.lists);
+            // console.log(res.data.lists);
          });
       };
       try {
@@ -70,11 +70,11 @@ const NewListCreator: React.FC<{
       setListNameExist(isExist);
    };
    const checkBeforeCreateNewList = async () => {
-      console.log(
-         "working list already exists",
-         listNameExist,
-         listName.length
-      );
+      // console.log(
+      //    "working list already exists",
+      //    listNameExist,
+      //    listName.length
+      // );
       if (listName.length > 0 && !listNameExist) {
          setListCreationProgress(true);
          setListName("");
