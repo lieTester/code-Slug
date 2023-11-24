@@ -41,6 +41,7 @@ const ProblemFilters = () => {
    const session = sessionContext?.session;
 
    // filters states /////////////////////////////////////////////////////////
+   const searchParams = useSearchParams();
    const { setQueryParams, removeQueryParams, urlSearchParams } =
       useQueryParams();
    const [lists, setLists] = useState<any[]>();
@@ -111,7 +112,6 @@ const ProblemFilters = () => {
             setFilterdProblems(currentList);
          }
 
-         performPageSetup({ currentList });
          return { currentList };
       } catch (error) {
          console.error("Error in getBase:", error);
@@ -153,8 +153,10 @@ const ProblemFilters = () => {
                }, 300);
             // why goAhead is true here is because here if we got list 0 we should change page setup
             // and page cannot perform if list is empty so goAhead is to tackle that scenario
+            const pageNumber = parseInt(searchParams?.get("pageno") || "1");
             performPageSetup({
                currentList: filteredProblemsList,
+               pageNumber,
                goAhead: true,
             });
             setFilterdProblems && setFilterdProblems(filteredProblemsList);
@@ -301,13 +303,12 @@ const ProblemFilters = () => {
    }, [page, filterdProblems]);
 
    // change the problemSet according to page and filter
-   const searchParams = useSearchParams();
    useEffect(() => {
       if (searchParams?.get("pageno") !== page.currPage) {
          const pageNumber = parseInt(searchParams?.get("pageno") || "1");
          performPageSetup({ pageNumber });
       }
-   }, [searchParams]);
+   }, [searchParams?.get("pageno")]);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////////////////////
