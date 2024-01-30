@@ -109,7 +109,7 @@ const ProblemTableBase: React.FC = () => {
                      <tr
                         key={problem.id}
                         className={`${
-                           idx % 2 === 1 ? " bg-prim2 " : "bg-inherit"
+                           idx % 2 === 1 ? " bg-backg2 " : "bg-inherit"
                         } relative text-seco1 z-2`}
                         // over-flow visible is only meaningful to show overflow tag
                      >
@@ -132,9 +132,9 @@ const ProblemTableBase: React.FC = () => {
                                     problemStatusVisiblity[problem.id]
                                        ? " opacity-100 visible"
                                        : " opacity-0 invisible"
-                                 }  absolute -top-0 -right-9 py-1 px-2 z-10 text-prim2 bg-prim2 rounded-sm transition-[opacity] drop-shadow-[0_0_0.5px_#ABB2BF] `}
+                                 }  absolute -top-0 -right-9 py-1 px-2 z-10 text-prim2 bg-backg2 rounded-sm transition-[opacity] drop-shadow-[0_0_0.5px_#ABB2BF] `}
                               >
-                                 <span className="absolute w-3 h-3 top-1 -left-[2px] rounded-sm bg-prim2 -z-[2] rotate-45 font-bold"></span>
+                                 <span className="absolute w-3 h-3 top-1 -left-[2px] rounded-sm bg-backg2 -z-[2] rotate-45 font-bold"></span>
                                  <BsCheck2Circle
                                     onClick={() =>
                                        setStatus(problem.id, "solved")
@@ -167,7 +167,7 @@ const ProblemTableBase: React.FC = () => {
                                  tags={problem.tags}
                                  maxWidth={320}
                                  ulCss="relative h-0 invisible opacity-0  w-full flex rounded-sm  transition-all ease-linear z-[5] "
-                                 liCss="relative rounded-full bg-seco1 text-xs  mx-[2px] px-1"
+                                 liCss="relative rounded-full bg-secod1 text-xs  mx-[2px] px-1"
                               />
                            )}
                         </td>
@@ -225,7 +225,7 @@ const ProblemTableBase: React.FC = () => {
                                  tags={problem.companies}
                                  maxWidth={200}
                                  ulCss="w-full  flex justify-start text-prim1"
-                                 liCss="whitespace-nowrap text-center rounded-full  bg-seco1 text-xs mr-[4px] px-1 "
+                                 liCss="whitespace-nowrap text-center rounded-full  bg-secod1  text-xs mr-[4px] px-1 "
                               />
                            )}
                         </td>

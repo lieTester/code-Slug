@@ -317,7 +317,7 @@ const ProblemFilters = () => {
    ////////////////////////////////////////////////////////////////////////////////////////////////
    return (
       <section className="w-full ">
-         <ul className="w-full relative grid grid-cols-1 gap-x-2 gap-y-1 md:grid-cols-2 lg:flex lg:justify-end flex-wrap  [&>*]:flex [&>*]:items-center [&>*]:mb-1  [&>*]:lg:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-extra2 text-prim2 ">
+         <ul className="w-full relative grid grid-cols-1 gap-x-2 gap-y-1 md:grid-cols-2 lg:flex lg:justify-end flex-wrap  [&>*]:flex [&>*]:items-center [&>*]:mb-1  [&>*]:lg:ml-3 [&>*]:py-1 [&>*]:px-2 [&>*]:rounded-md [&>*]:bg-secod3 text-prim2 ">
             <li
                className="relative  flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
@@ -339,13 +339,13 @@ const ProblemFilters = () => {
                      filterVisiblity?.list
                         ? "visible opacity-100 translate-y-0"
                         : "-translate-y-2 invisible opacity-0 "
-                  } absolute top-10 left-0 w-[200px] max-w-xl py-2 px-3 rounded-md   bg-seco2  transition-[opacity,transform]`}
+                  } absolute top-10 left-0 w-[200px] max-w-xl py-2 px-3 rounded-md   bg-front2  transition-[opacity,transform]`}
                >
                   {lists &&
                      lists.map(({ name, slug, id }) => {
                         return (
                            <li
-                              className="truncate hover:bg-extra1 mt-1 rounded-sm px-1"
+                              className="truncate hover:bg-secod2 mt-1 rounded-sm px-1"
                               key={slug}
                               onClick={() => catchFilter("list", name, id)}
                            >
@@ -378,7 +378,7 @@ const ProblemFilters = () => {
                      filterVisiblity?.difficulty
                         ? "visible opacity-100 translate-y-0"
                         : "-translate-y-2 invisible opacity-0 "
-                  } absolute top-10 left-0 w-[200px] max-w-xl py-2 px-3 rounded-md   bg-seco2  transition-[opacity,transform]`}
+                  } absolute top-10 left-0 w-[200px] max-w-xl py-2 px-3 rounded-md   bg-front2  transition-[opacity,transform]`}
                >
                   {difficulty &&
                      difficulty.map((val, index) => {
@@ -390,7 +390,7 @@ const ProblemFilters = () => {
                                     : val === "Medium"
                                     ? "text-medium"
                                     : "text-hard"
-                              } truncate hover:bg-extra1 mt-1 rounded-sm px-1`}
+                              } truncate hover:bg-secod2 mt-1 rounded-sm px-1`}
                               key={index}
                               onClick={() => catchFilter("difficulty", val)}
                            >
@@ -421,7 +421,7 @@ const ProblemFilters = () => {
                      filterVisiblity?.status
                         ? "visible opacity-100 translate-y-0"
                         : "-translate-y-2 invisible opacity-0 "
-                  } absolute top-10 left-0 w-[200px] max-w-xl py-2 px-3 rounded-md   bg-seco2  transition-[opacity,transform]`}
+                  } absolute top-10 left-0 w-[200px] max-w-xl py-2 px-3 rounded-md   bg-front2  transition-[opacity,transform]`}
                >
                   {status &&
                      status.map((val, index) => {
@@ -431,16 +431,16 @@ const ProblemFilters = () => {
                                  val === "Solved"
                                     ? "text-easy"
                                     : val === "Attempted" && "text-medium"
-                              } truncate flex  items-center hover:bg-extra1 mt-1 rounded-sm px-1`}
+                              } truncate flex  items-center hover:bg-secod2 mt-1 rounded-sm px-1`}
                               key={index}
                               onClick={() => catchFilter("status", val)}
                            >
                               {val === "Solved" ? (
-                                 <BsCheck2Circle className="mr-2 p-[2px]" />
+                                 <BsCheck2Circle className="mr-2 p-[2px] text-[20px] " />
                               ) : val === "Attempted" ? (
-                                 <IoIosCodeWorking className="mr-2 p-[2px]" />
+                                 <IoIosCodeWorking className="mr-2 p-[2px] text-[20px] " />
                               ) : (
-                                 <BsCalendarMinus className="mr-2 p-[2px]" />
+                                 <BsCalendarMinus className="mr-2 p-[2px] text-[18px] " />
                               )}
 
                               {val}
@@ -456,8 +456,8 @@ const ProblemFilters = () => {
             >
                Tags
                <IoMdArrowDropdown className="ml-3 hover:cursor-pointer group-focus:rotate-180 transition-[transform] ease-linear" />
-               <ul className="absolute top-10 right-0 w-full md:w-[350px] max-w-xl h-[500px] overflow-hidden p-2 my-auto rounded-md -translate-y-2 invisible opacity-0 bg-seco2 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform]">
-                  <li className="h-[6%] flex items-center bg-extra1 rounded-sm mb-2">
+               <ul className="absolute top-10 right-0 w-full md:w-[350px] max-w-xl h-[500px] overflow-hidden p-2 my-auto rounded-md -translate-y-2 invisible opacity-0 bg-front2 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform]">
+                  <li className="h-[6%] flex items-center bg-secod2 rounded-sm mb-2">
                      <IoMdSearch className="m-2" />
                      <input
                         className="w-full bg-transparent outline-none"
@@ -490,7 +490,7 @@ const ProblemFilters = () => {
                                 return (
                                    <li
                                       key={slug}
-                                      className=" text-sm h-fit px-2 rounded-full mr-1 mb-2 bg-extra1"
+                                      className=" text-sm h-fit px-2 rounded-full mr-1 mb-2 bg-secod2"
                                       onClick={() =>
                                          catchFilter("topics", name)
                                       }
@@ -503,7 +503,7 @@ const ProblemFilters = () => {
                                 return (
                                    <li
                                       key={slug}
-                                      className=" text-sm px-2 rounded-full mr-1 mb-2 bg-extra1"
+                                      className=" text-sm px-2 rounded-full mr-1 mb-2 bg-secod2"
                                       onClick={() =>
                                          catchFilter("companies", name)
                                       }

@@ -6,13 +6,15 @@
 @tailwind utilities;
 
 :root {
-   /* background */
-   --bg-prim1: #00000d;
-   --bg-prim2: #0b0b1b;
-   --bg-seco1: #202533;
-   --bg-seco2: #0e0e1b;
-   --bg-extra1: #212434;
-   --bg-extra2: #2b2f3c;
+   --backg-cl1: #00000d;
+   --backg-cl2: #0b0b1b;
+   --front-cl1: #202533;
+   --front-cl2: #0e0e1b;
+   --bordr-cl1: #202533;
+   --secod-cl1: #4a4494;
+   --secod-cl2: #212434;
+   --secod-cl3: #2b2f3c;
+
    /* text */
    --text-prim1: #f7fafc;
    --text-prim2: #a0aec0;

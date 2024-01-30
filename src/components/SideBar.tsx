@@ -11,10 +11,10 @@ const SideBar = () => {
    return (
       <section className="w-[100%] md:w[35%] lg:w-[30%] 2xl:[25%] mr-2 text-prim1  mb-4">
          {session?.user && (
-            <div className="bg-prim2 rounded-md mb-4">
+            <div className="bg-backg2 rounded-md mb-4">
                {/* profile section */}
                <ul className="p-1 flex ">
-                  <li className="w-fit h-fit bg-prim2 rounded-md overflow-hidden">
+                  <li className="w-fit h-fit bg-backg2 rounded-md overflow-hidden">
                      <Image
                         src={
                            session?.user

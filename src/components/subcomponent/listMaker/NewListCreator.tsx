@@ -96,7 +96,7 @@ const NewListCreator: React.FC<{
    };
    return (
       <div
-         className="relative w-1/2 md:w-2/3 bg-black/10 h-full   ml-2 border-seco2 border-[1px] rounded-md overflow-hidden"
+         className="relative w-1/2 md:w-2/3 bg-black/10 h-full   ml-2 border-bordr1 border-[1px] rounded-md overflow-hidden"
          onDrop={(e) => {
             handleDrop(
                e,
@@ -110,7 +110,7 @@ const NewListCreator: React.FC<{
             e.preventDefault();
          }}
       >
-         <div className=" p-2  h-full overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-seco1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-prim2 ">
+         <div className=" p-2  h-full overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg2 ">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2  mb-10">
                {newProblemList &&
                   newProblemList.map((problem, index) => (
@@ -120,9 +120,9 @@ const NewListCreator: React.FC<{
                         onDragStart={(e) => handleDragStart(e, problem)}
                         className={`${
                            index % 2 === 1
-                              ? " bg-prim2  "
+                              ? " bg-backg2  "
                               : " bg-black bg-opacity-10 bg-blur-lg "
-                        }  w-full h-fit block  rounded-md px-3 py-2 text-prim2   cursor-pointer border-seco2 border-[1px] truncate`}
+                        }  w-full h-fit block  rounded-md px-3 py-2 text-prim2   cursor-pointer border-bordr1 border-[1px] truncate`}
                      >
                         <ul className="flex justify-between">
                            <h1
@@ -155,7 +155,7 @@ const NewListCreator: React.FC<{
                                  tags={problem.tags}
                                  maxWidth={200}
                                  ulCss="relative w-full flex rounded-sm  transition-all ease-linear z-[5] "
-                                 liCss="relative rounded-full bg-seco1 text-xs  mr-[4px] px-1 whitespace-nowrap hover:text-prim1"
+                                 liCss="relative rounded-full bg-front1 text-xs  mr-[4px] px-1 whitespace-nowrap hover:text-prim1"
                               />
                            )}
                         </ul>
@@ -164,7 +164,7 @@ const NewListCreator: React.FC<{
             </div>
          </div>
          {newProblemList.length && (
-            <div className="w-full absolute left-0 bottom-[0px] bg-seco1 flex border-[1px] border-seco2 z-[20]">
+            <div className="w-full absolute left-0 bottom-[0px] bg-front1 flex border-[1px] border-bordr1 z-[20]">
                <span className="relative p-1 w-full">
                   <input
                      type="text"
@@ -177,12 +177,12 @@ const NewListCreator: React.FC<{
                   />
                </span>
                {listCreationProgress ? (
-                  <div className="w-[20%]  bg-prim2  flex items-center justify-center pt-2">
+                  <div className="w-[20%]  bg-backg2  flex items-center justify-center pt-2">
                      <DotLoader />
                   </div>
                ) : (
                   <button
-                     className="w-[20%]  bg-prim2 hover:bg-prim1 text-prim2 px-3 flex items-center justify-between"
+                     className="w-[20%]  bg-backg2 hover:bg-backg1 text-prim2 px-3 flex items-center justify-between"
                      onClick={checkBeforeCreateNewList}
                   >
                      Create

@@ -51,7 +51,7 @@ const SingleProblem = ({
             onClick={() => onClose(false)}
             className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-lg "
          ></td>
-         <td className=" w-[60%] h-[500px] bg-prim2 p-6 rounded-lg flex justify-between  z-10">
+         <td className=" w-[60%] h-[500px] bg-backg2 p-6 rounded-lg flex justify-between  z-10">
             <div className="shadow-md w-[40%] max-w-4xl flex flex-col">
                <h1
                   title={problem?.id + ". " + problem?.title}
@@ -75,7 +75,7 @@ const SingleProblem = ({
                            problem?.status?.slice(1)}
                   </li>
                </ul>
-               <div className="flex-grow  text-prim1 px-1 overflow-y-auto [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-seco1">
+               <div className="flex-grow  text-prim1 px-1 overflow-y-auto [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-front1">
                   {problem?.description}
                   <div className="  rounded-md mb-2  bg-clip-padding backdrop-filter backdrop-blur-lg">
                      <h2 className="text-seco1 text-md font-semibold my-1">
@@ -88,7 +88,7 @@ const SingleProblem = ({
                               <li
                                  key={index}
                                  className="whitespace-nowrap text-center rounded-full
-                     bg-seco1 text-xs m-[4px] px-2 "
+                     bg-front1 text-xs m-[4px] px-2 "
                               >
                                  {value}
                               </li>
@@ -106,7 +106,7 @@ const SingleProblem = ({
                                  <li
                                     key={index}
                                     className="whitespace-nowrap text-center rounded-full
-                     bg-seco1 text-xs m-[4px] px-2 "
+                     bg-front1 text-xs m-[4px] px-2 "
                                  >
                                     {value}
                                  </li>
@@ -115,7 +115,7 @@ const SingleProblem = ({
                         )}
                      </ul>
                   </div>
-                  <pre className="text-seco2 bg-seco1 p-2 rounded-md mb-2">
+                  <pre className="text-seco2 bg-front1 p-2 rounded-md mb-2">
                      <h2 className="text-md font-semibold mb-2">
                         Sample Input
                      </h2>
@@ -123,7 +123,7 @@ const SingleProblem = ({
                         <code>{`[2, 7, 11, 15], target = 9`}</code>
                      </pre>
                   </pre>
-                  <pre className="text-seco2 bg-seco1 p-2 rounded-md">
+                  <pre className="text-seco2 bg-front1 p-2 rounded-md">
                      <h2 className="text-md font-semibold mb-2">Output</h2>
                      <pre>
                         <code>{`[0, 1]`}</code>
@@ -131,7 +131,7 @@ const SingleProblem = ({
                   </pre>
                </div>
             </div>
-            <div className="w-[55%] bg-seco1 rounded-md p-2">
+            <div className="w-[55%] bg-front1 rounded-md p-2">
                <h1
                   title={problem?.id + ". " + problem?.title}
                   className="text-xl font-semibold mb-2 text-seco2 font-sofiaPro"

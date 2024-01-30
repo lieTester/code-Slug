@@ -48,7 +48,7 @@ const ProblemTable: React.FC = () => {
          <ProblemFilter />
          <div className="w-full overflow-x-auto overflow-y-hidden mt-4 pb-7">
             <table className="min-w-full ">
-               <thead className="border-b-[0.5px] border-seco2  text-prim1 ">
+               <thead className="border-b-[0.5px] border-bordr1  text-prim1 ">
                   <tr className="text-left [&>*]:font-medium">
                      <th className="py-2 px-4 text-center rounded-l-md">
                         Status
@@ -70,13 +70,13 @@ const ProblemTable: React.FC = () => {
          </div>
          <div className="relative py-3  flex justify-between items-center text-prim2 [&>*]:cursor-pointer ">
             <div
-               className="relative bg-seco2 py-1 px-3 h-fit rounded-md group"
+               className="relative bg-secod2 py-1 px-3 h-fit rounded-md group"
                tabIndex={0}
             >
                <span className="flex items-center ">
                   {page.pageSize} / page <IoMdArrowDropdown className="ml-2" />
                </span>
-               <ul className="absolute mt-3 invisible opacity-0  group-focus:visible group-focus:opacity-100 transition-[transform] [&>li]:rounded-sm [&>li:hover]:bg-extra1 [&>*]:w-[120px] left-0 bg-seco2 [&>*]:px-2 p-1 h-fit rounded-md ">
+               <ul className="absolute mt-3 invisible opacity-0  group-focus:visible group-focus:opacity-100 transition-[transform] [&>li]:rounded-sm [&>li:hover]:bg-secod2 [&>*]:w-[120px] left-0 bg-front2 [&>*]:px-2 p-1 h-fit rounded-md ">
                   <li
                      onClick={() => {
                         setPageSize(50);

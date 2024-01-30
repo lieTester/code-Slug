@@ -36,7 +36,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
       <div className="">
          {currentPage > 1 && (
             <button
-               className="px-3 py-1 mx-2 rounded-md text-prim1 bg-seco2"
+               className="px-3 py-1 mx-2 rounded-md text-prim1 bg-secod1"
                onClick={() => onPageChange(currentPage - 1)}
             >
                Prev
@@ -51,8 +51,8 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
                      onClick={() => onPageChange(pageNumber)}
                      className={`w-7 h-7 mx-2 rounded-md  ${
                         pageNumber === currentPage
-                           ? "bg-seco2 text-prim1"
-                           : " hidden md:inline bg-prim2 text-seco1"
+                           ? "bg-secod1 text-prim1"
+                           : " hidden md:inline bg-front2 text-prim2"
                      }`}
                   >
                      {pageNumber}
@@ -64,7 +64,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
 
          {currentPage < totalPages && (
             <button
-               className="px-3 py-1 ml-2 rounded-md text-prim1 bg-seco2"
+               className="px-3 py-1 ml-2 rounded-md text-prim1 bg-secod1"
                onClick={() => onPageChange(currentPage + 1)}
             >
                Next

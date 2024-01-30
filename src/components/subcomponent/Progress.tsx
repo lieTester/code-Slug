@@ -71,13 +71,13 @@ const ProblemsProgress = () => {
    return (
       <>
          {loading ? (
-            <div className="w-full h-fit bg-prim2 p-4 rounded-md shadow-md mb-4">
-               <h2 className="w-[100%] h-7 mb-3 animate-pulse rounded-md bg-seco1"></h2>
+            <div className="w-full h-fit bg-backg2 p-4 rounded-md shadow-md mb-4">
+               <h2 className="w-[100%] h-7 mb-3 animate-pulse rounded-md bg-front1"></h2>
                <div className="flex  justify-between items-center">
                   <div className="w-[40%] max-h-[100px] max-w-[100px]">
-                     <div className="w-[100px] h-[100px] rounded-full animate-pulse bg-seco1"></div>
+                     <div className="w-[100px] h-[100px] rounded-full animate-pulse bg-front1"></div>
                   </div>
-                  <ul className="min-w-[40%] h-[90px] flex flex-col [&>li]:my-auto [&>li]:bg-seco1">
+                  <ul className="min-w-[40%] h-[90px] flex flex-col [&>li]:my-auto [&>li]:bg-front1">
                      <li className="w-[50%] h-5 animate-pulse rounded-full mb-2"></li>
                      <li className="w-[80%] h-5 animate-pulse rounded-full mb-2"></li>
                      <li className="w-[60%] h-5 animate-pulse rounded-full mb-2"></li>
@@ -85,7 +85,7 @@ const ProblemsProgress = () => {
                </div>
             </div>
          ) : (
-            <div className="w-full h-fit bg-prim2 p-4 rounded-md shadow-md mb-4">
+            <div className="w-full h-fit bg-backg2 p-4 rounded-md shadow-md mb-4">
                <h2 className="text-lg mb-3 font-baloo font-semibold text-seco1">
                   List Progress
                </h2>

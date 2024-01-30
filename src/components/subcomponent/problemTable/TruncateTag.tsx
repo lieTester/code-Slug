@@ -27,7 +27,7 @@ function TruncateTags({
             );
          })}
          {remainingCount > 0 && (
-            <li className="relative rounded-full bg-extra1 text-xs inline mx-[2px] px-1">
+            <li className="relative rounded-full bg-secod2 text-xs inline mx-[2px] px-1">
                +{remainingCount}
             </li>
          )}

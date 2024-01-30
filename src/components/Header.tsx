@@ -25,7 +25,7 @@ const Header: FC<{}> = () => {
 
    return (
       <>
-         <section className="fixed w-full h-[7%] flex justify-center border-b-[0.5px] border-seco2 z-[30] bg-clip-padding backdrop-filter backdrop-blur-sm">
+         <section className="fixed w-full h-[7%] flex justify-center border-b-[0.5px] border-bordr1 z-[30] bg-clip-padding backdrop-filter backdrop-blur-sm">
             <div className="w-[95%] lg:w-[90%] 2xl:w-[80%]   flex  items-center justify-between  !important  text-prim1 z-20 ">
                <Link href={"/"}>
                   <Logo />
@@ -33,14 +33,14 @@ const Header: FC<{}> = () => {
 
                {session === undefined ? (
                   <div className="absolute right-0 md:relative  p-1  flex justify-center items-center [&>*]:ml-4 animate-pulse">
-                     <span className="flex items-center h-[30px] text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 hover:border-white border-[2px] rounded-md">
+                     <span className="flex items-center h-[30px] text-center text-prim2 hover:text-prim1 text-xs px-2 border-bordr1 hover:border-white border-[2px] rounded-md">
                         <Link href="/" className="flex items-center">
                            <TiHomeOutline className="text-lg md:mr-1" />
                            <span className="hidden md:inline">Home</span>
                         </Link>
                      </span>
-                     <span className="rounded-md w-8 h-[30px] md:w-[107px] border-seco2 border-[2px]"></span>
-                     <span className="rounded-md w-8 h-[30px] md:w-[120px] border-seco2 border-[2px]"></span>
+                     <span className="rounded-md w-8 h-[30px] md:w-[107px] border-bordr1 border-[2px]"></span>
+                     <span className="rounded-md w-8 h-[30px] md:w-[120px] border-bordr1 border-[2px]"></span>
                      <svg
                         className="w-[32px] h-[32px]  text-gray-200 dark:text-gray-700"
                         aria-hidden="true"
@@ -53,7 +53,7 @@ const Header: FC<{}> = () => {
                   </div>
                ) : (
                   <div className="relative  p-1  flex justify-center [&>*]:ml-4">
-                     <span className="flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 hover:border-white border-[1px] rounded-md">
+                     <span className="flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-bordr1 hover:border-white border-[1px] rounded-md">
                         <Link href="/" className="flex items-center">
                            <TiHomeOutline className="text-lg md:mr-1" />
                            <span className="hidden md:inline">Home</span>
@@ -61,29 +61,27 @@ const Header: FC<{}> = () => {
                      </span>
                      {session?.user?.image ? (
                         <>
-                           <span className=" flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 hover:border-white border-[1px] rounded-md">
+                           <span className=" flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-bordr1 hover:border-white border-[1px] rounded-md">
                               <Link
                                  href="/lists-landing"
                                  className="flex items-center"
                               >
                                  <CiViewList className="text-lg md:mr-1" />
-                                 <span className="hidden md:inline">
-                                    Create Lists
-                                 </span>
+                                 <span className="hidden md:inline">Lists</span>
                               </Link>
                            </span>
-                           <span className="flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-seco2 hover:border-white border-[1px] rounded-md">
+                           <span className="flex items-center text-center text-prim2 hover:text-prim1 text-xs px-2 border-bordr1 hover:border-white border-[1px] rounded-md">
                               <Link
-                                 href="/mark-calender"
+                                 href="/calender-landing"
                                  className="flex items-center"
                               >
                                  <SlCalender className="text-base md:mr-1" />
                                  <span className="hidden md:inline">
-                                    Mark Calender
+                                    Calender
                                  </span>
                               </Link>
                            </span>
-                           <span className="rounded-full [&:hover>ul]:visible [&:hover>ul]:opacity-100 hover:bg-seco2">
+                           <span className="rounded-full [&:hover>ul]:visible [&:hover>ul]:opacity-100 hover:bg-front2">
                               <Image
                                  src={session?.user?.image}
                                  alt="user profile image"
@@ -92,9 +90,9 @@ const Header: FC<{}> = () => {
                                  className="rounded-full "
                               />
                               <ul className="absolute -bottom-[30px] right-0  invisible transition-all duration-100 ease-linear cursor-pointer">
-                                 <li className="p-1 before:absolute before:right-3 before:top-[3px] before:rotate-45 before:w-[12px] before:h-[12px]   before:bg-extra2 before:rounded-sm "></li>
+                                 <li className="p-1 before:absolute before:right-3 before:top-[3px] before:rotate-45 before:w-[12px] before:h-[12px]   before:bg-secod2 before:rounded-sm "></li>
                                  <li
-                                    className="text-xs  bg-extra2 text-prim2 font-medium rounded-sm p-1 px-3"
+                                    className="text-xs  bg-secod2 text-prim2 font-medium rounded-sm p-1 px-3"
                                     onClick={() => {
                                        signOut();
                                        console.log("signOut");
@@ -110,7 +108,7 @@ const Header: FC<{}> = () => {
                            onClick={() =>
                               setShowLoginOverlay(!showLoginOverlay)
                            }
-                           className="bg-seco1 px-3 py-1 text-base font-baloo rounded-sm hover:bg-seco2 ease-linear"
+                           className="bg-front1 px-3 py-1 text-base font-baloo rounded-sm hover:bg-front2 ease-linear"
                         >
                            Log In
                         </button>
