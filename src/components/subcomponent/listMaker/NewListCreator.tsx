@@ -155,7 +155,7 @@ const NewListCreator: React.FC<{
                                  tags={problem.tags}
                                  maxWidth={200}
                                  ulCss="relative w-full flex rounded-sm  transition-all ease-linear z-[5] "
-                                 liCss="relative rounded-full bg-front1 text-xs  mr-[4px] px-1 whitespace-nowrap hover:text-prim1"
+                                 liCss="relative rounded-full bg-secod1 text-xs  mr-[4px] px-1 whitespace-nowrap hover:text-prim1"
                               />
                            )}
                         </ul>

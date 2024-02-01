@@ -88,7 +88,7 @@ const SingleProblem = ({
                               <li
                                  key={index}
                                  className="whitespace-nowrap text-center rounded-full
-                     bg-front1 text-xs m-[4px] px-2 "
+                     bg-secod1 text-xs m-[4px] px-2 "
                               >
                                  {value}
                               </li>
@@ -106,7 +106,7 @@ const SingleProblem = ({
                                  <li
                                     key={index}
                                     className="whitespace-nowrap text-center rounded-full
-                     bg-front1 text-xs m-[4px] px-2 "
+                     bg-secod1 text-xs m-[4px] px-2 "
                                  >
                                     {value}
                                  </li>
@@ -115,7 +115,7 @@ const SingleProblem = ({
                         )}
                      </ul>
                   </div>
-                  <pre className="text-seco2 bg-front1 p-2 rounded-md mb-2">
+                  <pre className="text-seco2 bg-secod1 p-2 rounded-md mb-2">
                      <h2 className="text-md font-semibold mb-2">
                         Sample Input
                      </h2>
@@ -123,7 +123,7 @@ const SingleProblem = ({
                         <code>{`[2, 7, 11, 15], target = 9`}</code>
                      </pre>
                   </pre>
-                  <pre className="text-seco2 bg-front1 p-2 rounded-md">
+                  <pre className="text-seco2 bg-secod1 p-2 rounded-md">
                      <h2 className="text-md font-semibold mb-2">Output</h2>
                      <pre>
                         <code>{`[0, 1]`}</code>
@@ -131,7 +131,7 @@ const SingleProblem = ({
                   </pre>
                </div>
             </div>
-            <div className="w-[55%] bg-front1 rounded-md p-2">
+            <div className="w-[55%] bg-secod1 rounded-md p-2">
                <h1
                   title={problem?.id + ". " + problem?.title}
                   className="text-xl font-semibold mb-2 text-seco2 font-sofiaPro"

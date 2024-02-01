@@ -81,7 +81,7 @@ const Calendar: React.FC = () => {
                   onClick={() => console.log(currentDate.getDay())}
                   className={`text-center w-7 h-7 p-[2px] text-seco1 cursor-pointer ${
                      currentDate.getDate() === day + 1
-                        ? "bg-front1 text-seco2"
+                        ? "bg-secod1 text-seco2"
                         : "hover:bg-backg1 hover:text-prim1"
                   }  rounded-full`}
                >
