@@ -5,7 +5,7 @@ import { CiCircleCheck } from "react-icons/ci";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 // type
 import { ProblemsProp } from "@/types/index";
-import TruncateTags from "../problemTable/TruncateTag";
+import TruncateTags from "@/components/commonComponents/TruncateTag";
 // functions
 import {
    giveMyStatus,
@@ -17,7 +17,7 @@ import { createNewList, getAllLists } from "@/functions/ListFunctions";
 // context
 import { SessionContext } from "@/context/SessionContext";
 //component
-import { DotLoader } from "@/components/subcomponent/Loaders";
+import { DotLoader } from "@/components/commonComponents/Loaders";
 
 const NewListCreator: React.FC<{
    baseProblemList: ProblemsProp[];

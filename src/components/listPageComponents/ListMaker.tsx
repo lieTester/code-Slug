@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import BaseListHolder from "./subcomponent/listMaker/BaseListHolder";
+import BaseListHolder from "@/components/listPageComponents/listMaker/BaseListHolder";
 // context
 import { ProblemContext } from "@/context/ProblemsContext";
 // type
 import { ProblemsProp } from "@/types/index";
 // component
-import NewListCreator from "@/components/subcomponent/listMaker/NewListCreator";
+import NewListCreator from "@/components/listPageComponents/listMaker/NewListCreator";
 import ListLandingBaseListHolderSkeleton from "@/components/skeleton/listlanding/ListLandingBaseListHolderSkeleton";
 
 const ListMaker: React.FC<{}> = ({}) => {

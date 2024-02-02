@@ -6,8 +6,8 @@ import { SessionProp } from "@/types/index";
 import { SessionContext } from "@/context/SessionContext";
 import { ProblemContext } from "@/context/ProblemsContext";
 // component
-import ListMaker from "@/components/ListMaker";
-import ProblemFilters from "@/components/subcomponent/Filter/ProblemFilters";
+import ListMaker from "@/components/listPageComponents/ListMaker";
+import ProblemFilters from "@/components/commonComponents/Filter/ProblemFilters";
 import ListLandingBodySkeleton from "@/components/skeleton/listlanding/ListLandingBodySkeleton";
 
 const ListsLanding: FC<SessionProp> = ({ session }) => {

@@ -11,8 +11,8 @@ import { SessionContext } from "@/context/SessionContext";
 // function
 import { addUpdateProblemStatus } from "@/functions/ProblemFunctions";
 import { ProblemsProp } from "@/types";
-import TruncateTags from "@/components/subcomponent/problemTable/TruncateTag";
-import SingleProblem from "@/components/subcomponent/problemTable//SingleProblem";
+import TruncateTags from "@/components/commonComponents/TruncateTag";
+import SingleProblem from "@/components/_FirstPageComponents/problemTable/SingleProblem";
 
 const ProblemTableBase: React.FC = () => {
    const problemContext = useContext(ProblemContext);

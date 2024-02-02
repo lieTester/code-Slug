@@ -2,8 +2,8 @@ import Image from "next/image";
 import { useContext } from "react";
 
 import { SessionContext } from "@/context/SessionContext";
-import Calendar from "./subcomponent/Calender";
-import ProblemsProgress from "@/components/subcomponent/Progress";
+import Calendar from "@/components/commonComponents/Calender";
+import ProblemsProgress from "@/components/commonComponents/Progress";
 
 const SideBar = () => {
    const sessionContext = useContext(SessionContext);

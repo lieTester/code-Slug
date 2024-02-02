@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { ProblemsProp } from "@/types/index";
-import TruncateTags from "../problemTable/TruncateTag";
+import TruncateTags from "@/components/commonComponents/TruncateTag";
 import {
    giveMyStatus,
    statusColor,

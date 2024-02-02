@@ -9,8 +9,8 @@ import { CiViewList, CiHome } from "react-icons/ci";
 import { SlCalender } from "react-icons/sl";
 import { TiHomeOutline } from "react-icons/ti";
 // components
-import Logo from "@/components/subcomponent/Logo";
-import Login from "@/components/subcomponent/Login";
+import Logo from "@/components/commonComponents/Logo";
+import Login from "@/components/commonComponents/Login";
 
 import Link from "next/link";
 

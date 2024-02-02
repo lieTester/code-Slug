@@ -8,7 +8,7 @@ import { BsCalendarMinus, BsCheck2Circle } from "react-icons/bs";
 import { SessionContext } from "@/context/SessionContext";
 import { ProblemContext } from "@/context/ProblemsContext";
 // component
-import FilterIcons from "@/components/subcomponent/Filter/FilterIcons";
+import FilterIcons from "@/components/commonComponents/Filter/FilterIcons";
 // function
 import { getAllLists, getSelectList } from "@/functions/ListFunctions";
 import { getAllTags } from "@/functions/TagFunctions";

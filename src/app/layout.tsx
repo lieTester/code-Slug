@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 // component
-import Header from "@/components/Header";
+import Header from "@/components/commonComponents/Header";
 
 export const metadata: Metadata = {
    title: "Code-Slug",

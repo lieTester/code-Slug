@@ -7,8 +7,8 @@ import { SessionContext } from "@/context/SessionContext";
 import { ProblemsProvider } from "@/context/ProblemsContext";
 
 // component
-import Main from "@/components/Main";
-import SideBar from "@/components/SideBar";
+import Main from "@/components/_FirstPageComponents/Main";
+import SideBar from "@/components/_FirstPageComponents/SideBar";
 
 const Landing: FC<SessionProp> = ({ session }) => {
    // session store functionality below
