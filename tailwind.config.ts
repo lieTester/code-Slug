@@ -62,6 +62,14 @@ const config: Config = {
             secod1: "var(--secod-cl1)",
             secod2: "var(--secod-cl2)",
             secod3: "var(--secod-cl3)",
+            glass: "rgba(255, 255, 255, 0.1)", // Semi-transparent white
+         },
+         backdropFilter: {
+            none: "none",
+            blur: "blur(20px)",
+         },
+         boxShadow: {
+            around: "0 4px 6px rgba(0, 0, 0, 0.1)", // Optional shadow for depth
          },
       },
    },

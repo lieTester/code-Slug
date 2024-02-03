@@ -45,13 +45,20 @@ const SingleProblem = ({
       <tr
          className={` ${
             open ? "fixed" : "hidden"
-         } flex justify-center items-center w-full h-full z-20 top-0 left-0 transition-opacity ease-in-out`}
+         } flex justify-center items-center w-full h-full pt-[15%] lg:pt-20 lg:p-10  z-20 top-0 left-0 transition-opacity ease-in-out`}
       >
          <td
             onClick={() => onClose(false)}
             className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-lg "
          ></td>
-         <td className=" w-[60%] h-[500px] bg-backg2 p-6 rounded-lg flex justify-between  z-10">
+
+         <td className="relative w-[100%] h-full  bg-backg2 p-6 lg:rounded-lg flex justify-between  z-10">
+            <div
+               onClick={() => onClose(false)}
+               className="absolute right-2 cursor-pointer top-0 lg:hidden text-white font-extrabold"
+            >
+               X
+            </div>
             <div className="shadow-md w-[40%] max-w-4xl flex flex-col">
                <h1
                   title={problem?.id + ". " + problem?.title}

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 import { SessionProvider } from "@/context/SessionContext";
-import CalenderLanding from "@/pages/CalenderLanding";
+import CalendarLanding from "@/pages/CalendarLanding";
 
 export default function ListHome() {
    const { data: session } = useSession();
@@ -19,7 +19,7 @@ export default function ListHome() {
    return (
       <main className="relative w-screen h-screen ">
          <SessionProvider>
-            {session && <CalenderLanding session={session} />}
+            {session && <CalendarLanding session={session} />}
          </SessionProvider>
       </main>
    );
