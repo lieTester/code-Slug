@@ -20,15 +20,17 @@ import {
    applyFilter,
 } from "@/functions/FilterFunctions";
 //types
-import { ProblemsProp, filterProps } from "@/types/index";
+import { ProblemsProp } from "@/types/index";
 // hooks
 import useQueryParams from "@/hook/useQueryParams";
+import { FiltersContext } from "@/context/FiltersContext";
 
 const ProblemFilters = () => {
    // problem context ///////////////////////////////////////////////////////
    const problemContext = useContext(ProblemContext);
    const currentListProblems = problemContext?.currentListProblems;
    const setCurrentListProblems = problemContext?.setCurrentListProblems;
+   const setCurrentListDetail = problemContext?.setCurrentListDetail;
    const filterdProblems = problemContext?.filterdProblems;
    const setFilterdProblems = problemContext?.setFilterdProblems;
    const setCurrentPageProblemSet = problemContext?.setCurrentPageProblemSet;
@@ -40,20 +42,29 @@ const ProblemFilters = () => {
    const sessionContext = useContext(SessionContext);
    const session = sessionContext?.session;
 
-   // filters states /////////////////////////////////////////////////////////
+   // filter context /////////////////////////////////////////////////////////
+   const filtersContext = useContext(FiltersContext);
+
    const searchParams = useSearchParams();
    const { setQueryParams, removeQueryParams, urlSearchParams } =
       useQueryParams();
-   const [lists, setLists] = useState<any[]>();
-   const [topics, setTopics] = useState<any[]>();
-   const [companies, setCompanies] = useState<any[]>();
-   const [isTopic, setIsTopic] = useState(true);
-   const difficulty = ["Easy", "Medium", "Hard"];
-   const status = ["Todo", "Solved", "Attempted"];
-   // above filter data management states ///////////////////////////////////
-   const [filterValues, setFilterValues] = useState<filterProps>({});
-   const [filterVisiblity, setFilterVisiblity] = useState<any>(null);
 
+   const lists = filtersContext?.lists;
+   const setLists = filtersContext?.setLists;
+   const topics = filtersContext?.topics;
+   const setTopics = filtersContext?.setTopics;
+   const companies = filtersContext?.companies;
+   const setCompanies = filtersContext?.setCompanies;
+   const isTopic = filtersContext?.isTopic;
+   const setIsTopic = filtersContext?.setIsTopic;
+   const difficulty = filtersContext?.difficulty;
+   const status = filtersContext?.status;
+
+   // above filter data management states ///////////////////////////////////
+   const filterValues = filtersContext?.filterValues;
+   const setFilterValues = filtersContext?.setFilterValues;
+   const filterVisiblity = filtersContext?.filterVisiblity;
+   const setFilterVisiblity = filtersContext?.setFilterVisiblity;
    ////////////////////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////////////////////
    //////////////////////////////////// all functions /////////////////////////////////////////////
@@ -120,7 +131,7 @@ const ProblemFilters = () => {
    }
 
    const removeFilterVisiblity = () => {
-      setFilterVisiblity(null);
+      setFilterVisiblity && setFilterVisiblity(null);
    };
 
    const manageFiltersInUrl = ({
@@ -174,9 +185,10 @@ const ProblemFilters = () => {
       }
       await addFilter(category, value, filterValues).then(
          async ({ filterValues }) => {
-            setFilterValues((prev) => {
-               return { ...prev, ...filterValues };
-            });
+            setFilterValues &&
+               setFilterValues((prev) => {
+                  return { ...prev, ...filterValues };
+               });
             if (category === "list") {
                const { currentList } = await getSelectList(
                   id,
@@ -205,9 +217,10 @@ const ProblemFilters = () => {
       }
       await removeFilter(category, value, filterValues).then(
          async ({ filterValues }) => {
-            setFilterValues((prev) => {
-               return { ...prev, ...filterValues };
-            });
+            setFilterValues &&
+               setFilterValues((prev) => {
+                  return { ...prev, ...filterValues };
+               });
             if (category === "list") {
                await getBase(session?.user?.id)
                   .then(({ currentList }) => {
@@ -215,6 +228,10 @@ const ProblemFilters = () => {
                   })
                   .catch((error) => {
                      console.log(error);
+                  });
+               setCurrentListDetail &&
+                  setCurrentListDetail(() => {
+                     return {};
                   });
             } else {
                processFilters(filterValues, currentListProblems);
@@ -242,15 +259,15 @@ const ProblemFilters = () => {
       const fetchData = async () => {
          try {
             const tagsRes = await getAllTags();
-            setTopics(tagsRes.data.tags);
+            setTopics && setTopics(tagsRes.data.tags);
 
             const companiesRes = await getAllCompanylist();
-            setCompanies(companiesRes.data.companies);
+            setCompanies && setCompanies(companiesRes.data.companies);
 
             if (session !== undefined && currentListProblems?.length === 0) {
                // get lists according to user presense
                const listsRes = await getAllLists(session?.user?.id);
-               setLists(listsRes.data.lists);
+               setLists && setLists(listsRes.data.lists);
 
                // get filters values from url
                const iterator = urlSearchParams.entries();
@@ -263,12 +280,27 @@ const ProblemFilters = () => {
                      captureUrlFilterValue[key] = value.split("~");
                   } else {
                      captureUrlFilterValue[key] = value;
+                     if (key === "list") {
+                        // lists.data.res is above in this same function
+                        // its important to enter list in setCurrentListDetail if in url to make baseListHolder in listLanding to
+                        // to show delete symbol for private lists
+                        listsRes.data.lists?.map(
+                           ({ name, id, isPublic }: any) => {
+                              if (value === name) {
+                                 setCurrentListDetail &&
+                                    setCurrentListDetail(() => {
+                                       return { isPublic, id };
+                                    });
+                              }
+                           }
+                        );
+                     }
                   }
                }
                // check if session is thier or not if not and url have list possible that it's user list
                // or not but will prevent getting it
                if (session === null) delete captureUrlFilterValue["list"];
-               setFilterValues(captureUrlFilterValue);
+               setFilterValues && setFilterValues(captureUrlFilterValue);
 
                let currentListId: string | null = null;
                if (captureUrlFilterValue?.list && session !== null) {
@@ -322,9 +354,10 @@ const ProblemFilters = () => {
                className="relative  flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
                onClick={() => {
-                  setFilterVisiblity((prev: any) => {
-                     return { list: prev?.list ? !prev?.list : true };
-                  });
+                  setFilterVisiblity &&
+                     setFilterVisiblity((prev: any) => {
+                        return { list: prev?.list ? !prev?.list : true };
+                     });
                }}
                onBlur={removeFilterVisiblity}
             >
@@ -342,12 +375,18 @@ const ProblemFilters = () => {
                   } absolute top-10 left-0 w-[200px] max-w-xl py-2 px-3 rounded-md   bg-front2  transition-[opacity,transform]`}
                >
                   {lists &&
-                     lists.map(({ name, slug, id }) => {
+                     lists.map(({ name, slug, id, isPublic }) => {
                         return (
                            <li
                               className="truncate hover:bg-secod2 mt-1 rounded-sm px-1"
                               key={slug}
-                              onClick={() => catchFilter("list", name, id)}
+                              onClick={() => {
+                                 catchFilter("list", name, id);
+                                 setCurrentListDetail &&
+                                    setCurrentListDetail(() => {
+                                       return { isPublic, id };
+                                    });
+                              }}
                            >
                               {name}
                            </li>
@@ -359,11 +398,14 @@ const ProblemFilters = () => {
                className="relative flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
                onClick={() => {
-                  setFilterVisiblity((prev: any) => {
-                     return {
-                        difficulty: prev?.difficulty ? !prev?.difficulty : true,
-                     };
-                  });
+                  setFilterVisiblity &&
+                     setFilterVisiblity((prev: any) => {
+                        return {
+                           difficulty: prev?.difficulty
+                              ? !prev?.difficulty
+                              : true,
+                        };
+                     });
                }}
                onBlur={removeFilterVisiblity}
             >
@@ -404,9 +446,10 @@ const ProblemFilters = () => {
                className="relative flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
                onClick={() => {
-                  setFilterVisiblity((prev: any) => {
-                     return { status: prev?.status ? !prev?.status : true };
-                  });
+                  setFilterVisiblity &&
+                     setFilterVisiblity((prev: any) => {
+                        return { status: prev?.status ? !prev?.status : true };
+                     });
                }}
                onBlur={removeFilterVisiblity}
             >
@@ -471,7 +514,7 @@ const ProblemFilters = () => {
                            className={`${
                               isTopic && "text-prim1 border-b-2"
                            } px-1 mr-1`}
-                           onClick={() => setIsTopic(true)}
+                           onClick={() => setIsTopic && setIsTopic(true)}
                         >
                            Topics
                         </li>
@@ -479,7 +522,7 @@ const ProblemFilters = () => {
                            className={`${
                               !isTopic && "text-prim1 border-b-2"
                            } px-1 mr-1`}
-                           onClick={() => setIsTopic(false)}
+                           onClick={() => setIsTopic && setIsTopic(false)}
                         >
                            Companies
                         </li>

@@ -17,6 +17,10 @@ export const ProblemsProvider = ({ children }: ChildrenProp) => {
       loading: boolean;
       value?: string;
    }>({ loading: true, value: "list" });
+   const [currentListDetail, setCurrentListDetail] = useState<{
+      isPublic?: boolean;
+      id?: string;
+   }>({});
 
    const [page, setPage] = useState({
       currPage: 1,
@@ -29,6 +33,9 @@ export const ProblemsProvider = ({ children }: ChildrenProp) => {
             // current list of problems for all problem or to fetch users specific List
             currentListProblems,
             setCurrentListProblems,
+            // current list if exist in filter than its detail
+            currentListDetail,
+            setCurrentListDetail,
             // filterProblem is the one which will actually go to frontEndTables with user filter
             //and on removal will use currentList to alter bw filters
             filterdProblems,

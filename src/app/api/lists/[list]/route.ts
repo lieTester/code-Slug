@@ -2,13 +2,12 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib";
+import { ProblemsProp } from "@/types";
 
 const getProblemsInList = async (
    req: NextRequest,
    { params }: { params: { list: string } }
 ) => {
-   // console.log(params);
-
    try {
       const listId = params.list;
       const currentList = await prisma.list.findFirst({
@@ -61,53 +60,219 @@ const getProblemsInList = async (
 };
 
 const createNewListForUser = async (
+   userId: string,
+   currentList: ProblemsProp[],
+   list: string
+) => {
+   try {
+      const isUser = await prisma.user.findUnique({ where: { id: userId } });
+      if (isUser) {
+         const newList = await prisma.list.create({
+            data: {
+               name: list,
+               slug: list.toLowerCase().replace(/ /g, "-"),
+               isPublic: false,
+               userId: userId,
+               problems: {
+                  connect: currentList.map((problem: ProblemsProp) => ({
+                     id: problem.id,
+                  })),
+               },
+            },
+         });
+      }
+      return NextResponse.json({ status: 200, msg: "successfully created" });
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json({
+         status: 500,
+         params: { userId, list, currentList },
+         error,
+      });
+   }
+};
+const deleteListForUser = async (userId: string, listId: string) => {
+   try {
+      const isUser = await prisma.user.findUnique({ where: { id: userId } });
+
+      if (!isUser) {
+         return NextResponse.json(
+            { error: "User ID not provided" },
+            { status: 400 }
+         );
+      }
+      // Check if the list exists and belongs to the user
+      const list = await prisma.list.findUnique({
+         where: { id: listId },
+         include: { user: true }, // Include user to check ownership
+      });
+
+      if (!list || list.isPublic) {
+         return NextResponse.json(
+            { error: "List not found or is Public" },
+            { status: 404 }
+         );
+      }
+
+      if (list.userId !== userId) {
+         return NextResponse.json(
+            { error: "Not authorized to delete this list" },
+            { status: 403 }
+         );
+      }
+      // Delete the list
+      await prisma.list.delete({
+         where: { id: listId },
+      });
+
+      return NextResponse.json({ message: "List deleted successfully" });
+   } catch (error) {
+      console.error("Error deleting list:", error);
+      return NextResponse.json(
+         { error: "Internal Server Error" },
+         { status: 500 }
+      );
+   }
+};
+const unlinkProblemFromList = async (
+   userId: string,
+   listId: string,
+   problemId: number
+) => {
+   try {
+      const isUser = await prisma.user.findUnique({ where: { id: userId } });
+
+      if (!isUser) {
+         return NextResponse.json(
+            { error: "User ID not provided" },
+            { status: 400 }
+         );
+      }
+      // Check if the list exists and belongs to the user
+      const list = await prisma.list.findUnique({
+         where: { id: listId },
+         include: { user: true }, // Include user to check ownership
+      });
+
+      if (!list || list.isPublic) {
+         return NextResponse.json(
+            { error: "List not found or is Public" },
+            { status: 404 }
+         );
+      }
+
+      if (list.userId !== userId) {
+         return NextResponse.json(
+            { error: "Not authorized to delete this list" },
+            { status: 403 }
+         );
+      }
+      // disconnect the problem from list
+      await prisma.list.update({
+         where: { id: listId },
+         data: {
+            problems: {
+               disconnect: {
+                  id: problemId,
+               },
+            },
+         },
+      });
+
+      return NextResponse.json({ message: "List updated successfully" });
+   } catch (error) {
+      return NextResponse.json(
+         { error: "Internal Server Error" },
+         { status: 500 }
+      );
+   }
+};
+
+const updateUsersListName = async (
+   userId: string,
+   listName: string,
+   listId: string
+) => {
+   try {
+      const isUser = await prisma.user.findUnique({ where: { id: userId } });
+      if (!isUser) {
+         return NextResponse.json(
+            { error: "User ID not provided" },
+            { status: 400 }
+         );
+      }
+      // Check if the list exists and belongs to the user
+      const list = await prisma.list.findUnique({
+         where: { id: listId },
+         include: { user: true }, // Include user to check ownership
+      });
+
+      if (!list || list.isPublic) {
+         return NextResponse.json(
+            { error: "List not found or is Public" },
+            { status: 404 }
+         );
+      }
+
+      if (list.userId !== userId) {
+         return NextResponse.json(
+            { error: "Not authorized to delete this list" },
+            { status: 403 }
+         );
+      }
+      await prisma.list.update({
+         where: {
+            id: listId,
+         },
+         data: {
+            name: listName,
+            slug: listName.toLowerCase().replace(/ /g, "-"),
+         },
+      });
+      return NextResponse.json({ message: "List name updated successfully" });
+   } catch (error) {
+      console.error("Error updating list:", error);
+      return NextResponse.json(
+         { error: "Internal Server Error" },
+         { status: 500 }
+      );
+   }
+};
+
+const acceptPostRequestOnListsUrl = async (
    req: NextRequest,
    { params }: { params: { list: string } }
 ) => {
    try {
-      const { user, currentList } = await req.json();
-      const isUser = await prisma.user.findUnique({ where: { id: user } });
-      if (isUser) {
-         const newList = await prisma.list.create({
-            data: {
-               name: params.list,
-               slug: params.list.toLowerCase().replace(/ /g, "-"),
-               isPublic: false,
-               userId: user,
-            },
-         });
-         if (newList) {
-            // Now, iterate through the problem URLs and connect them to the list
-            for (const problem of currentList) {
-               // Extract the problem slug from the URL (you may need to adjust this based on your schema)
+      const data = await req.json();
+      switch (data.type) {
+         case "createNewListForUser":
+            return createNewListForUser(
+               data?.user,
+               data.currentList,
+               params.list
+            );
+         case "deleteListForUser":
+            return deleteListForUser(data?.user, params.list);
+         case "updateUsersListName":
+            return updateUsersListName(data?.user, data?.listName, params.list);
+         case "unlinkProblemFromList":
+            return unlinkProblemFromList(
+               data?.user,
+               params.list,
+               data?.problemId
+            );
 
-               // Connect the problem to the list
-               // Check if the problem is not already connected to the list
-               const isProblemInList = await prisma.list.findFirst({
-                  where: {
-                     id: newList.id,
-                     problems: { some: { id: problem.id } },
-                  },
-               });
-
-               if (!isProblemInList) {
-                  // Connect the problem to the list
-                  await prisma.list.update({
-                     where: { id: newList.id },
-                     data: {
-                        problems: {
-                           connect: { id: problem.id },
-                        },
-                     },
-                  });
-               }
-            }
-         }
+         default:
+            break;
       }
-      return NextResponse.json({ status: 200, msg: "successfully created" });
    } catch (error) {
-      return NextResponse.json({ status: 500, params, error });
+      return NextResponse.json({
+         status: 500,
+         params,
+         error,
+      });
    }
 };
 
-export { getProblemsInList as GET, createNewListForUser as POST };
+export { getProblemsInList as GET, acceptPostRequestOnListsUrl as POST };

@@ -15,7 +15,7 @@ const getAllLists = async (req: NextRequest, res: NextResponse) => {
                where: {
                   userId: user.id,
                },
-               select: { id: true, name: true, slug: true },
+               select: { id: true, name: true, slug: true, isPublic: true },
             });
          });
       if (user) {
@@ -29,7 +29,12 @@ const getAllLists = async (req: NextRequest, res: NextResponse) => {
                      where: {
                         userId: user.id,
                      },
-                     select: { id: true, name: true, slug: true },
+                     select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                        isPublic: true,
+                     },
                   })
                   .then((res: any) => {
                      lists.push(...res);
@@ -39,7 +44,7 @@ const getAllLists = async (req: NextRequest, res: NextResponse) => {
       // console.log(lists, user);
       return NextResponse.json({ status: 200, lists });
    } catch (error) {
-      console.error(error);
+      console.error("getAllLists", error);
       return NextResponse.json({ status: 500, error: "Internal Server Error" });
    }
 };

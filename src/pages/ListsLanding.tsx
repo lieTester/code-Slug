@@ -8,6 +8,7 @@ import { ProblemsProvider } from "@/context/ProblemsContext";
 // types
 import { SessionProp } from "@/types/index";
 import ListMaker from "@/components/listPageComponents/ListMaker";
+import { FiltersProvider } from "@/context/FiltersContext";
 
 const ListsLanding: FC<SessionProp> = ({ session }) => {
    // session store functionality below
@@ -22,10 +23,12 @@ const ListsLanding: FC<SessionProp> = ({ session }) => {
    return (
       <section className="w-screen h-full pt-20 py-10 flex flex-col overflow-y-auto ">
          <ProblemsProvider>
-            <div className="w-[95%] h-full lg:w-[90%] 2xl:w-[80%] mx-auto  flex justify-between ">
-               <ListSideBar />
-               <ListMaker />
-            </div>
+            <FiltersProvider>
+               <div className="w-[95%] h-full lg:w-[90%] 2xl:w-[80%] mx-auto  flex justify-between ">
+                  <ListSideBar />
+                  <ListMaker />
+               </div>
+            </FiltersProvider>
          </ProblemsProvider>
       </section>
    );

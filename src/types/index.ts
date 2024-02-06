@@ -26,10 +26,26 @@ export type ProblemsProp = {
    PlatformLinks?: any[];
 };
 
-export type filterProps = {
+export type filterProp = {
    status?: string;
    dificulty?: string;
    list?: string;
    companies?: string[];
    topics?: string[];
+};
+export type listProp = {
+   id: string;
+   name: string;
+   slug: string;
+   isPublic: boolean;
+};
+export type topicProp = {
+   id: string;
+   name: string;
+   slug: string;
+};
+export type companieProp = {
+   id: string;
+   name: string;
+   slug: string;
 };

@@ -1,11 +1,11 @@
 import React from "react";
-import { filterProps } from "@/types/index";
+import { filterProp } from "@/types/index";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BsCalendarMinus, BsCheck2Circle } from "react-icons/bs";
 import { IoIosCodeWorking } from "react-icons/io";
 
 const FilterIcons: React.FC<{
-   filterValues: filterProps | undefined;
+   filterValues: filterProp | undefined;
    fireFilter: (category: string, value: string) => void;
 }> = ({ filterValues, fireFilter }) => {
    const difficultyColor = (val: String) => {

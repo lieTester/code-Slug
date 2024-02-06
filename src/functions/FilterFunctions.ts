@@ -1,5 +1,3 @@
-import { filterProps } from "@/types/index";
-
 export const searchFilter = async (value: string, sortedList: any) => {
    // Filter the items based on the search term and sort by title
    sortedList = sortedList

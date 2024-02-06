@@ -50,7 +50,49 @@ export const createNewList = async ({
    try {
       const response = await axios.post(
          process.env.NEXT_PUBLIC_API_BASE_URL + `/lists/${listName}`,
-         { user: id, currentList }
+         { type: "createNewListForUser", user: id, currentList }
+      );
+      return response;
+   } catch (error) {
+      return error;
+   }
+};
+
+export const deleteList = async (id: string, listId: string) => {
+   try {
+      const response = await axios.post(
+         process.env.NEXT_PUBLIC_API_BASE_URL + `/lists/${listId}`,
+         { type: "deleteListForUser", user: id }
+      );
+      return response;
+   } catch (error) {
+      return error;
+   }
+};
+export const updateListName = async (
+   id: string,
+   listId: string,
+   name: string
+) => {
+   try {
+      const response = await axios.post(
+         process.env.NEXT_PUBLIC_API_BASE_URL + `/lists/${listId}`,
+         { type: "updateUsersListName", user: id, listName: name }
+      );
+      return response;
+   } catch (error) {
+      return error;
+   }
+};
+export const removeProblemFromList = async (
+   id: string,
+   listId: string,
+   problemId: number
+) => {
+   try {
+      const response = await axios.post(
+         process.env.NEXT_PUBLIC_API_BASE_URL + `/lists/${listId}`,
+         { type: "unlinkProblemFromList", user: id, problemId }
       );
       return response;
    } catch (error) {
