@@ -22,7 +22,7 @@ const ListsLanding: FC<SessionProp> = ({ session }) => {
    return (
       <section className="w-screen h-full pt-20 py-10 flex flex-col overflow-y-auto ">
          <ProblemsProvider>
-            <div className="w-[95%] h-full lg:w-[90%] 2xl:w-[80%] mx-auto  md:flex justify-between ">
+            <div className="w-[95%] h-full lg:w-[90%] 2xl:w-[80%] mx-auto  flex justify-between ">
                <ListSideBar />
                <ListMaker />
             </div>

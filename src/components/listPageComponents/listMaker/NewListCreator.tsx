@@ -96,7 +96,7 @@ const NewListCreator: React.FC<{
    };
    return (
       <div
-         className="relative w-full bg-black/10 h-[48%] mt-[1%] border-bordr1 border-[1px] rounded-sm overflow-hidden"
+         className="relative w-full bg-black/10 h-[48%] mt-[10px] border-bordr1 border-[1px] rounded-sm overflow-hidden"
          onDrop={(e) => {
             handleDrop(
                e,
