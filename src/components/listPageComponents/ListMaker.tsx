@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { FC, useState, useEffect, useContext } from "react";
 import BaseListHolder from "@/components/listPageComponents/listMaker/BaseListHolder";
 // context
 import { ProblemContext } from "@/context/ProblemsContext";
@@ -7,9 +7,14 @@ import { ProblemsProp } from "@/types/index";
 // component
 import NewListCreator from "@/components/listPageComponents/listMaker/NewListCreator";
 import ListLandingBaseListHolderSkeleton from "@/components/skeleton/listlanding/ListLandingBaseListHolderSkeleton";
+import ProblemFilters from "@/components/commonComponents/Filter/ProblemFilters";
+import ListLandingBodySkeleton from "@/components/skeleton/listlanding/ListLandingBodySkeleton";
 
-const ListMaker: React.FC<{}> = ({}) => {
+const ListMaker: FC = () => {
    const problemContext = useContext(ProblemContext);
+   const currentPageProblemSet = problemContext?.currentPageProblemSet;
+   const setProblemSetLoading = problemContext?.setProblemSetLoading;
+
    const filterdProblems = problemContext?.filterdProblems;
    const setFilterdProblems = problemContext?.setFilterdProblems;
    const problemSetLoading = problemContext?.problemSetLoading;
@@ -18,6 +23,7 @@ const ListMaker: React.FC<{}> = ({}) => {
       checkPointForFilterListUpdateOnce,
       setCheckPointForFilterListUpdateOnce,
    ] = useState(false);
+
    const updateFilterListAfterFilterApplied = () => {
       const newFilterdProblemList = filterdProblems?.filter((problem) => {
          const res = newProblemList.find((item) => item.id === problem.id);
@@ -25,6 +31,20 @@ const ListMaker: React.FC<{}> = ({}) => {
       });
       setFilterdProblems && setFilterdProblems(newFilterdProblemList || []);
    };
+
+   useEffect(() => {
+      if (
+         currentPageProblemSet &&
+         currentPageProblemSet?.length > 0 &&
+         setProblemSetLoading
+      ) {
+         // console.log(problemSetLoading, currentPageProblemSet);
+         setTimeout(() => {
+            setProblemSetLoading({ loading: false });
+            // console.log("worked");
+         }, 1000); // Check if problems array is not empty
+      }
+   }, [currentPageProblemSet]);
 
    useEffect(() => {
       if (problemSetLoading?.value !== "list")
@@ -42,28 +62,41 @@ const ListMaker: React.FC<{}> = ({}) => {
    }, [problemSetLoading]);
 
    return (
-      <div className="flex h-[95%] pb-10 lg:pb-0  ">
-         {filterdProblems &&
-            setFilterdProblems &&
-            (problemSetLoading?.loading ? (
-               <ListLandingBaseListHolderSkeleton />
-            ) : (
-               <BaseListHolder
-                  baseProblemList={filterdProblems}
-                  newProblemList={newProblemList}
-                  setBaseProblemList={setFilterdProblems}
-                  setNewProblemList={setNewProblemList}
-               />
-            ))}
-         {filterdProblems && setFilterdProblems && (
-            <NewListCreator
-               baseProblemList={filterdProblems}
-               newProblemList={newProblemList}
-               setBaseProblemList={setFilterdProblems}
-               setNewProblemList={setNewProblemList}
-            />
+      <section className="relative w-full h-full md:w-[65%] lg:w-[70%] 2xl:w-[75%] font-baloo  ">
+         <div className="h-[14%]">
+            {/* because the sam filter is used in first page where height directly
+               assign in problem filter component will affect page
+            */}
+            <ProblemFilters />
+         </div>
+         {/* problem filter above has h[14%] */}
+         {problemSetLoading?.loading && problemSetLoading?.value === "list" ? (
+            <ListLandingBodySkeleton />
+         ) : (
+            <div className="relative h-[86%] pl-2 ">
+               {filterdProblems &&
+                  setFilterdProblems &&
+                  (problemSetLoading?.loading ? (
+                     <ListLandingBaseListHolderSkeleton />
+                  ) : (
+                     <BaseListHolder
+                        baseProblemList={filterdProblems}
+                        newProblemList={newProblemList}
+                        setBaseProblemList={setFilterdProblems}
+                        setNewProblemList={setNewProblemList}
+                     />
+                  ))}
+               {filterdProblems && setFilterdProblems && (
+                  <NewListCreator
+                     baseProblemList={filterdProblems}
+                     newProblemList={newProblemList}
+                     setBaseProblemList={setFilterdProblems}
+                     setNewProblemList={setNewProblemList}
+                  />
+               )}
+            </div>
          )}
-      </div>
+      </section>
    );
 };
 

@@ -1,12 +1,16 @@
 import ListLandingBodySkeleton from "@/components/skeleton/listlanding/ListLandingBodySkeleton";
-import ListLandingProblemFilterSkeleton from "@/components/skeleton/listlanding/ListLandingProblemFilterSkeleton";
+import ListLandingSideBar from "./ListLandingSideBar";
+import ListLandingProblemFilterSkeleton from "./ListLandingProblemFilterSkeleton";
 
 const ListLandingSkeleton = () => {
    return (
-      <div className="w-[95%] lg:w-[90%] 2xl:w-[80%] h-[95%]  mx-auto pt-20 pb-20 ">
-         <ListLandingProblemFilterSkeleton />
-         <ListLandingBodySkeleton />
-      </div>
+      <section className="w-[95%] lg:w-[90%] 2xl:w-[80%] h-full  mx-auto md:flex pt-20 py-10  ">
+         <ListLandingSideBar />
+         <div className="relative mx-auto w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo">
+            <ListLandingProblemFilterSkeleton />
+            <ListLandingBodySkeleton />
+         </div>
+      </section>
    );
 };
 

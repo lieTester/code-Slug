@@ -15,8 +15,8 @@ const ListLandingNewListCreaterSkeleton = () => {
       newListCreater.push(my_div);
    }
    return (
-      <div className="w-2/3 bg-black/10  p-2 border-bordr1 border-[1px] rounded-md ml-2 overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg2 ">
-         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 ">
+      <div className="relative w-full h-[48%] mt-[1%] bg-black/10  border-bordr1 border-[1px] rounded-sm  overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-front1  [&::-webkit-scrollbar-track]:bg-backg2 ">
+         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 p-2">
             {newListCreater.map((children, index) => {
                return (
                   <div

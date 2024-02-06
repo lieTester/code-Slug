@@ -3,10 +3,10 @@ import ListLandingNewListCreaterSkeleton from "@/components/skeleton/listlanding
 
 const ListLandingBodySkeleton = () => {
    return (
-      <section className="w-full overflow-hidden flex h-[95%]">
+      <div className="relative h-[86%] pl-2">
          <ListLandingBaseListHolderSkeleton />
          <ListLandingNewListCreaterSkeleton />
-      </section>
+      </div>
    );
 };
 

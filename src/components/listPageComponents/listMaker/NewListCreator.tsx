@@ -96,7 +96,7 @@ const NewListCreator: React.FC<{
    };
    return (
       <div
-         className="relative w-1/2 md:w-2/3 bg-black/10 h-full   ml-2 border-bordr1 border-[1px] rounded-md overflow-hidden"
+         className="relative w-full bg-black/10 h-[48%] mt-[1%] border-bordr1 border-[1px] rounded-sm overflow-hidden"
          onDrop={(e) => {
             handleDrop(
                e,
@@ -110,7 +110,7 @@ const NewListCreator: React.FC<{
             e.preventDefault();
          }}
       >
-         <div className=" p-2  h-full overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg2 ">
+         <div className="p-2 h-full overflow-y-auto  [&::-webkit-scrollbar-thumb]:bg-front1  [&::-webkit-scrollbar-track]:bg-backg2 ">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2  mb-10">
                {newProblemList &&
                   newProblemList.map((problem, index) => (
