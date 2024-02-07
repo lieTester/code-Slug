@@ -126,7 +126,7 @@ function ListSideBar() {
    };
    return (
       <>
-         <div className="h-full w-[40%] lg:w-[30%] border-bordr1 border-[2px] rounded-md p-2 overflow-y-auto">
+         <div className="h-full w-[40%] lg:w-[30%] border-secod1 border-[2px] rounded-md p-2 overflow-y-auto">
             {lists &&
                lists.map(({ name, slug, id, isPublic }) => {
                   return (
