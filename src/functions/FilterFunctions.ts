@@ -17,7 +17,7 @@ export const applyFilter = async (
    if (filterValues?.topics) {
       filterValues.topics.forEach((value: string) => {
          filteredProblemsList = filteredProblemsList.filter((problem: any) => {
-            const res = problem.tags.some((topic: string) => topic === value);
+            const res = problem.topics.some((topic: string) => topic === value);
             if (res) {
                return problem;
             }

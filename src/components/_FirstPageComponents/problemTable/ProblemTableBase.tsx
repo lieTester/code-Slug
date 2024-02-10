@@ -162,9 +162,9 @@ const ProblemTableBase: React.FC = () => {
                            >
                               {problem.frontEndId + ". " + problem.title}
                            </span>
-                           {problem?.tags && (
+                           {problem?.topics && (
                               <TruncateTags
-                                 tags={problem.tags}
+                                 tags={problem.topics}
                                  maxWidth={320}
                                  ulCss="relative h-0 invisible opacity-0  w-full flex rounded-sm  transition-all ease-linear z-[5] "
                                  liCss="relative rounded-full bg-secod1 text-xs  mx-[2px] px-1"

@@ -17,7 +17,7 @@ const getProblemsInList = async (
          include: {
             problems: {
                include: {
-                  tags: {
+                  topics: {
                      select: {
                         name: true,
                      },
@@ -48,7 +48,7 @@ const getProblemsInList = async (
          return {
             ...rest,
             status: "todo",
-            tags: problem.tags.map((tag) => tag.name),
+            topics: problem.topics.map((topic) => topic.name),
             companies: problem.CompanyProblem.map((cp) => cp.company.name),
          };
       });

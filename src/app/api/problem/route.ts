@@ -5,7 +5,7 @@ const getAllProblems = async (req: NextRequest, res: NextResponse) => {
    try {
       const problems = await prisma.problem.findMany({
          include: {
-            tags: {
+            topics: {
                select: {
                   name: true,
                },
@@ -35,7 +35,7 @@ const getAllProblems = async (req: NextRequest, res: NextResponse) => {
          return {
             ...rest,
             status: "todo",
-            tags: problem.tags.map((tag) => tag.name),
+            topics: problem.topics.map((topic) => topic.name),
             companies: problem.CompanyProblem.map((cp) => cp.company.name),
          };
       });

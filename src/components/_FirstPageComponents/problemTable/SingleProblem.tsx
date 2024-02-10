@@ -90,17 +90,19 @@ const SingleProblem = ({
                      </h2>
 
                      <ul className="w-full flex flex-wrap justify-start text-prim1 mb-2">
-                        {problem?.tags?.map((value: string, index: number) => {
-                           return (
-                              <li
-                                 key={index}
-                                 className="whitespace-nowrap text-center rounded-full
+                        {problem?.topics?.map(
+                           (value: string, index: number) => {
+                              return (
+                                 <li
+                                    key={index}
+                                    className="whitespace-nowrap text-center rounded-full
                      bg-secod1 text-xs m-[4px] px-2 "
-                              >
-                                 {value}
-                              </li>
-                           );
-                        })}
+                                 >
+                                    {value}
+                                 </li>
+                              );
+                           }
+                        )}
                      </ul>
                      <h2 className="text-seco1 text-md font-semibold my-1">
                         Companies :

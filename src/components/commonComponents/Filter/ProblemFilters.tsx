@@ -11,7 +11,7 @@ import { ProblemContext } from "@/context/ProblemsContext";
 import FilterIcons from "@/components/commonComponents/Filter/FilterIcons";
 // function
 import { getAllLists, getSelectList } from "@/functions/ListFunctions";
-import { getAllTags } from "@/functions/TagFunctions";
+import { getAllTopics } from "@/functions/TopicFunctions";
 import { getAllCompanylist } from "@/functions/CompanyFunctions";
 import { GetAllProblems } from "@/functions/ProblemFunctions";
 import {
@@ -258,8 +258,8 @@ const ProblemFilters = () => {
    useEffect(() => {
       const fetchData = async () => {
          try {
-            const tagsRes = await getAllTags();
-            setTopics && setTopics(tagsRes.data.tags);
+            const topicsRes = await getAllTopics();
+            setTopics && setTopics(topicsRes.data.topics);
 
             const companiesRes = await getAllCompanylist();
             setCompanies && setCompanies(companiesRes.data.companies);

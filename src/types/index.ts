@@ -21,7 +21,7 @@ export type ProblemsProp = {
    frontEndId?: string;
    difficulty: string;
    description: string | null;
-   tags?: string[];
+   topics?: string[];
    companies?: string[];
    PlatformLinks?: any[];
 };

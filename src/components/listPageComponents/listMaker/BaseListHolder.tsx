@@ -161,9 +161,9 @@ const BaseListHolder: React.FC<{
                            </li>
                         </ul>
                         <ul className="mt-1 flex cursor-default">
-                           {problem?.tags && (
+                           {problem?.topics && (
                               <TruncateTags
-                                 tags={problem.tags}
+                                 tags={problem.topics}
                                  maxWidth={350}
                                  ulCss="relative w-full flex rounded-sm  transition-all ease-linear z-[5] "
                                  liCss="relative rounded-full bg-secod1 text-xs  mr-[4px] px-1 whitespace-nowrap hover:text-prim1"
