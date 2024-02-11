@@ -120,7 +120,7 @@ const CalenderBase: React.FC = () => {
    return (
       <div
          ref={gridRef}
-         className="w-full h-full md:w-[65%] lg:w-[70%] 2xl:w-[75%] font-baloo text-white p-4 rounded-lg"
+         className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 p-4 rounded-lg"
       >
          <div className="h-[7%] flex justify-between items-center mb-4">
             <button onClick={() => changeMonth(-1)} className="text-xl">

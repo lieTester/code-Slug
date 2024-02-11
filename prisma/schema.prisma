@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  id                String          @id @default(uuid())
+  id                String           @id @default(uuid())
   username          String
-  email             String          @unique
+  email             String           @unique
   profile           String
   // Other user details
   Note              Note[]
   userLists         List[]
-  Event             Event[]
+  WeeklyCalendar    WeeklyCalendar[]
   comments          Comment[]
   userProblemStatus ProblemStatus[]
 }
@@ -31,7 +31,7 @@ model Problem {
   description       String?
   difficulty        String
   // Other problem details
-  tags              Tag[]            @relation("ProblemTags")
+  topics            Topic[]          @relation("ProblemTags")
   lists             List[]
   Note              Note[]
   Comment           Comment[]
@@ -40,12 +40,13 @@ model Problem {
   userProblemStatus ProblemStatus[]
 }
 
-model Tag {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
+model Topic {
+  id       Int              @id @default(autoincrement())
+  name     String           @unique
   slug     String
   // Other tag details
-  problems Problem[] @relation("ProblemTags")
+  problems Problem[]        @relation("ProblemTags")
+  days     TopicToWeekDay[]
 }
 
 model Company {
@@ -120,18 +121,31 @@ model Note {
   @@unique([userId, problemId], name: "UserProblemStatusUnique")
 }
 
-// Define the Event table
-model Event {
-  id          String   @id @default(uuid())
-  title       String
-  description String?
-  start       DateTime
-  end         DateTime
-  location    String?
-  // ... add other event-related fields as needed
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  // Define a relation to the user who owns the event
-  owner       User     @relation(fields: [ownerId], references: [id])
-  ownerId     String
+model WeeklyCalendar {
+  id        String    @id @default(uuid())
+  title     String // Title or description of the calendar
+  owner     User      @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  days      WeekDay[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model WeekDay {
+  id               Int              @id @default(autoincrement())
+  name             String // E.g., "Monday", "Tuesday", etc.
+  date             DateTime
+  weeklyCalendarId String
+  weeklyCalendar   WeeklyCalendar   @relation(fields: [weeklyCalendarId], references: [id])
+  topics           TopicToWeekDay[]
+}
+
+// Join table for many-to-many relationship between WeekDay and Topic
+model TopicToWeekDay {
+  topicId   Int
+  weekDayId Int
+  topics    Topic   @relation(fields: [topicId], references: [id])
+  weekDay   WeekDay @relation(fields: [weekDayId], references: [id])
+
+  @@id([topicId, weekDayId]) // Composite primary key
 }
