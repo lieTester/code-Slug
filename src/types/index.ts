@@ -49,3 +49,16 @@ export type companieProp = {
    name: string;
    slug: string;
 };
+export type calendarsProp = {
+   id: string;
+   title: string;
+   days: {
+      id: number;
+      name: string;
+      count?: number;
+      topics?: { id: number; name: string }[];
+   }[];
+};
+export type viewCalendarDataProp = {
+   [key: string]: { id: number; name: string; topics: any[] };
+};

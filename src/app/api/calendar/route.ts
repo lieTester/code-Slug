@@ -99,11 +99,23 @@ const getWeekDaysAndTopics = async (userId: string, weekCalendarId: string) => {
             },
          },
       });
-      const formattedWeekDays = weekDays.map((day) => ({
-         id: day.id,
-         name: day.name.split("~")[0], // Split by '~' and take the first part
-         topics: day.topics, // The count of topics
-      }));
+      interface WeekDay {
+         id: number;
+         name: string;
+         topics: any[]; // Adjust this type to match the actual structure of `topics`
+      }
+      const formattedWeekDays = weekDays.reduce(
+         (acc: { [key: string]: WeekDay }, day) => {
+            const key: string = day.name.split("~")[0]; // Split by '~' and take the first part for the key
+            acc[key] = {
+               id: day.id,
+               name: key, // Since we've already split, we can reuse 'key'
+               topics: day.topics, // Include topics directly
+            };
+            return acc;
+         },
+         {}
+      );
       return NextResponse.json({ status: 200, formattedWeekDays });
    } catch (error) {
       console.error(error);
@@ -152,6 +164,64 @@ const linkTopics = async (
       return NextResponse.json({ status: 500, error });
    }
 };
+const deleteWeekCalendar = async (userId: string, weekCalendarId: string) => {
+   try {
+      // Step 1: Check if the WeeklyCalendar belongs to the user
+      const calendar = await prisma.weeklyCalendar.findUnique({
+         where: { id: weekCalendarId },
+         include: { owner: true }, // Include the owner for the check
+      });
+
+      if (!calendar) {
+         return NextResponse.json({
+            status: 404,
+            error: "WeeklyCalendar not found.",
+         });
+      }
+
+      if (calendar.ownerId !== userId) {
+         return NextResponse.json({
+            status: 403,
+            error: "You do not have permission to delete this calendar.",
+         });
+      }
+
+      // Step 2: Fetch linked WeekDay entries
+      const weekDays = await prisma.weekDay.findMany({
+         where: { weeklyCalendarId: weekCalendarId },
+         include: { topics: true },
+      });
+
+      // Step 3: Delete related TopicToWeekDay relationships and WeekDay entries
+      await Promise.all(
+         weekDays.map(async (day) => {
+            // Delete TopicToWeekDay relationships
+            await prisma.topicToWeekDay.deleteMany({
+               where: { weekDayId: day.id },
+            });
+
+            // Delete the WeekDay entry
+            await prisma.weekDay.delete({
+               where: { id: day.id },
+            });
+         })
+      );
+
+      // Step 4: Delete the WeeklyCalendar itself
+      await prisma.weeklyCalendar.delete({
+         where: { id: weekCalendarId },
+      });
+
+      // Step 5: Respond with success
+      return NextResponse.json({
+         status: 204,
+         message: "Calendar and associated data deleted successfully.",
+      });
+   } catch (error) {
+      console.error(error);
+      return NextResponse.json({ status: 500, error: "Internal Server Error" });
+   }
+};
 
 const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {};
 const postHandlerRequests = async (req: NextRequest, res: NextResponse) => {
@@ -166,6 +236,8 @@ const postHandlerRequests = async (req: NextRequest, res: NextResponse) => {
             return linkTopics(data?.userId, data?.weekDayId, data?.topics);
          case "getWeekDaysAndTopics":
             return getWeekDaysAndTopics(data?.userId, data?.weekCalendarId);
+         case "deleteWeekCalendar":
+            return deleteWeekCalendar(data?.userId, data?.weekCalendarId);
 
          default:
             break;

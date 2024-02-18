@@ -7,50 +7,122 @@ import {
    MdFileUpload,
    MdVisibilityOff,
 } from "react-icons/md";
-import Image from "next/image";
 
 // component
-import CalWeekBanner1 from "./calSubComponents/CalWeekBanner1";
-import CalWeekBanner2 from "./calSubComponents/CalWeekBanner2";
+import CalWeekBanner1 from "@/components/calendarPageComponents/calSubComponents/CalWeekBanner1";
+import CalWeekBanner2 from "@/components/calendarPageComponents/calSubComponents/CalWeekBanner2";
+import AddTopicInWeekDay from "@/components/calendarPageComponents/calSubComponents/AddTopicInWeekDay";
+import { DotLoader } from "@/components/commonComponents/Loaders";
+//function
 import {
    createWeekCalendar,
+   deleteWeekCalendar,
    getAllUserCalendars,
    getWeekDaysAndTopics,
 } from "@/functions/CalendarFunctions";
+//session
 import { SessionContext } from "@/context/SessionContext";
-import { DotLoader } from "../commonComponents/Loaders";
 
-type calendarsProp = {
-   id: string;
-   title: string;
-   days: {
-      id: number;
-      name: string;
-      count?: number;
-      topics?: { id: number; name: string }[];
-   }[];
-};
+//types
+import { calendarsProp, viewCalendarDataProp } from "@/types/index";
 
 const CalendarWeeklyPlans: React.FC = () => {
-   // session context ////////////////////////////////////////////////////////
+   // session context //////////////////////////////////////////////////////
    const sessionContext = useContext(SessionContext);
    const session = sessionContext?.session;
 
+   // calendar states //////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////
+   // all calendar of user plus default details
    const [calendars, setCalendars] = useState<calendarsProp[]>();
-   const [currentCalendarData, setCurrentCalendarData] = useState<
-      calendarsProp["days"] | null
-   >(null);
-   const [calendarDetailsLoader, setCalendarDetailsLoader] =
-      useState<boolean>(false);
-   const [selectedCalendar, setSelectedCalendar] = useState<{
+   // view weekCalendar details of selected calendar
+   const [viewCalendarData, setViewCalendarData] =
+      useState<viewCalendarDataProp | null>(null);
+   const [viewCalendarDataLoader, setViewCalendarDataLoader] = useState<{
       id?: string;
-      name: string;
-   }>({ id: "", name: "" });
+      name?: string;
+      loader: boolean;
+   }>({ loader: false });
+
+   // data to delete calendar
+   const [calendarToDelete, setCalendarToDelete] = useState<{
+      id?: string;
+      name?: string;
+      loader: boolean;
+      visiblity: boolean;
+   }>({ visiblity: false, loader: false });
+
+   // new calendar
+   const [newCalendatDetail, setNewCalendatDetail] = useState<{
+      name?: string;
+      loader: boolean;
+      visiblity: boolean;
+   }>({ visiblity: false, loader: false });
+
+   // open close the popup window for create and delete block of calendar
    const [open, setOpen] = useState<boolean>(false);
 
-   const [isCreate, setIsCreate] = useState<boolean>(true);
+   //
+   const [openWeekDayCalendar, setOpenWeekDayCalendar] = useState<{
+      day?: string;
+      open: boolean;
+      color?: string;
+      banner?: number;
+      hoverColor?: string;
+   }>({ open: false });
 
+   // block createion details for week days
+   const weekDaysSettings: {
+      banner: number;
+      color: string;
+      hoverColor: string;
+      day: string;
+   }[] = [
+      {
+         banner: 1,
+         day: "Monday",
+         color: "text-red-500",
+         hoverColor: "group-hover:text-red-300",
+      },
+      {
+         banner: 2,
+         day: "Tuesday",
+         color: "before:bg-blue-200",
+         hoverColor: "group-hover:text-blue-200",
+      },
+      {
+         banner: 1,
+         day: "Wednesday",
+         color: "text-gray-600",
+         hoverColor: "group-hover:text-gray-400",
+      },
+      {
+         banner: 2,
+         day: "Thursday",
+         color: "before:bg-pink-200",
+         hoverColor: "group-hover:text-pink-200",
+      },
+      {
+         banner: 1,
+         day: "Friday",
+         color: "text-green-800",
+         hoverColor: "group-hover:text-green-400",
+      },
+      {
+         banner: 2,
+         day: "Saturday",
+         color: "before:bg-blue-800",
+         hoverColor: "group-hover:text-blue-800",
+      },
+      {
+         banner: 1,
+         day: "Sunday",
+         color: "text-yellow-700",
+         hoverColor: "group-hover:text-yellow-300",
+      },
+   ];
    // calendar functions //////////////////////////////////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
    const fetchData = async () => {
       await getAllUserCalendars(session?.user?.id).then((res) => {
          console.log(res);
@@ -60,30 +132,50 @@ const CalendarWeeklyPlans: React.FC = () => {
 
    const showDeleteCalendar = async (id: string, name: string) => {
       setOpen(true);
-      setIsCreate(false);
-      setSelectedCalendar(() => {
-         return { id, name };
+      setCalendarToDelete((prev) => {
+         return { ...prev, id, name, visiblity: true };
       });
    };
    const showCreateCalendar = async () => {
       setOpen(true);
-      setIsCreate(true);
+      setNewCalendatDetail((prev) => {
+         return { ...prev, visiblity: true };
+      });
    };
 
    const manageCreateOrDeleteWeekCalender = async (type: string) => {
       try {
          if (type === "delete") {
+            setCalendarToDelete((prev) => {
+               return { ...prev, loader: true };
+            });
+            calendarToDelete?.id &&
+               (await deleteWeekCalendar(
+                  session?.user?.id,
+                  calendarToDelete?.id
+               ));
          } else if (type === "create") {
-            await createWeekCalendar(session?.user?.id, selectedCalendar?.name);
+            setNewCalendatDetail((prev) => {
+               return { ...prev, loader: true };
+            });
+            newCalendatDetail?.name &&
+               (await createWeekCalendar(
+                  session?.user?.id,
+                  newCalendatDetail?.name
+               ));
          }
       } catch (error) {
          console.error(error);
       } finally {
-         fetchData().then(() => onClose());
+         fetchData().then(() => {
+            onClose();
+         });
       }
    };
    const onClose = () => {
       setOpen(false);
+      setCalendarToDelete({ visiblity: false, loader: false });
+      setNewCalendatDetail({ visiblity: false, loader: false });
    };
 
    useEffect(() => {
@@ -95,15 +187,15 @@ const CalendarWeeklyPlans: React.FC = () => {
             <span className="w-full h-[45px] p-2 pl-4 block bg-backg2 font-sofiaPro font-extrabold text-red-300 text-lg">
                Weekly Calendar Plans :
             </span>
-            <div className="w-full  h-[calc(100%-45px)] flex flex-wrap p-2  space-x-2 overflow-y-auto [&>*]:h-[55px] [&>*]:border-[2px] [&>*]:border-bordr1">
+            <div className="w-full  h-[calc(100%-45px)] flex flex-wrap p-2 overflow-y-auto [&>*]:mr-1 [&>*]:mb-1  [&>*]:h-[55px] [&>*]:border-[2px] [&>*]:border-bordr1">
                {calendars?.map((calendar) => {
                   return (
                      <ul
                         key={calendar?.id}
-                        className="relative w-fit  flex min-w-[220px] max-w-[350px] p-1 cursor-alias rounded-md overflow-hidden  z-10 before:z-[-1] before:absolute before:w-full before:h-full before:bg-white before:bg-opacity-20 before:blur-xl  "
+                        className="relative w-fit  flex min-w-[220px] max-w-[350px] p-1  rounded-md overflow-hidden  z-10 before:z-[-1] before:absolute before:w-full before:h-full before:bg-white before:bg-opacity-20 before:blur-xl  "
                      >
                         <li className="relative w-full pb-4">
-                           <span className=" font-sofiaPro font- ml-[2px]">
+                           <span className=" font-sofiaPro font- ml-[2px] capitalize">
                               {calendar?.title}
                            </span>
                            <ul className=" top-6 w-full flex space-x-[2px] text-xs text-prim2 [&>*]:bg-backg1 [&>*]:px-1 [&>*]:text-center [&>*]:rounded-md">
@@ -127,24 +219,26 @@ const CalendarWeeklyPlans: React.FC = () => {
                            <button
                               title={"Display Calendar Details"}
                               onClick={async () => {
-                                 setSelectedCalendar((prev) => {
-                                    return { ...prev, id: calendar.id };
+                                 setViewCalendarDataLoader({
+                                    id: calendar.id,
+                                    loader: true,
                                  });
-                                 setCalendarDetailsLoader(true);
                                  await getWeekDaysAndTopics(
                                     session?.user?.id,
                                     calendar?.id
                                  ).then((res) => {
-                                    console.log(res);
-                                    setCurrentCalendarData(
-                                       res?.formattedWeekDays
-                                    );
-                                    setCalendarDetailsLoader(false);
+                                    setViewCalendarData(res?.formattedWeekDays);
+                                    setViewCalendarDataLoader((prev) => {
+                                       return {
+                                          ...prev,
+                                          loader: false,
+                                       };
+                                    });
                                  });
                               }}
                               className="text-blue-300 text-xl w-full px-1"
                            >
-                              {selectedCalendar?.id !== calendar.id ? (
+                              {viewCalendarDataLoader?.id !== calendar.id ? (
                                  <FaDisplay />
                               ) : (
                                  <MdVisibilityOff />
@@ -152,6 +246,9 @@ const CalendarWeeklyPlans: React.FC = () => {
                            </button>
                            <button
                               title={"Delete Calendar"}
+                              onClick={() =>
+                                 showDeleteCalendar(calendar.id, calendar.title)
+                              }
                               className="text-red-700 text-2xl w-full px-1 "
                            >
                               <MdDeleteOutline />
@@ -167,6 +264,7 @@ const CalendarWeeklyPlans: React.FC = () => {
                   <MdAddChart />
                </button>
             </div>
+            {/* Ui block for confirmation to delete and create Calendar */}
             <div
                className={`${
                   open ? "fixed" : "hidden"
@@ -176,15 +274,16 @@ const CalendarWeeklyPlans: React.FC = () => {
                   onClick={onClose}
                   className="absolute w-full h-full backdrop-blur-md backdrop-filter  "
                ></div>
+               {/* Delete Calendar block */}
                <div
                   className={`${
-                     isCreate ? "hidden" : "block"
+                     calendarToDelete?.visiblity ? "block" : "hidden"
                   } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-2xl font-extrabold mx-auto bg-backg2`}
                >
                   <div className="w-fit mx-auto">
                      Are You Sure You want to{" "}
                      <span className="text-hard">delete </span>
-                     {selectedCalendar?.name}?
+                     {calendarToDelete?.name}?
                   </div>
                   <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1">
                      <button
@@ -195,30 +294,32 @@ const CalendarWeeklyPlans: React.FC = () => {
                      </button>
                      <button
                         onClick={() => {
-                           manageCreateOrDeleteWeekCalender("delete");
+                           !calendarToDelete?.loader &&
+                              manageCreateOrDeleteWeekCalender("delete");
                         }}
                         className="text-easy border-[2px] border-secod3"
                      >
-                        Ok
+                        {calendarToDelete?.loader ? <DotLoader /> : "Ok"}
                      </button>
                   </div>
                </div>
+               {/* Create Calendar block */}
                <div
                   className={`${
-                     isCreate ? "block" : "hidden"
+                     newCalendatDetail?.visiblity ? "block" : "hidden"
                   } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-2xl font-extrabold mx-auto bg-backg2`}
                >
                   <label htmlFor="">Enter Calendar Name:</label>
                   <input
                      type="text"
                      className="w-full mx-auto bg-transparent border-[2px] border-secod1 p-1 outline-none text-red-200"
-                     value={selectedCalendar ? selectedCalendar.name : ""}
+                     value={
+                        newCalendatDetail?.name ? newCalendatDetail.name : ""
+                     }
                      onChange={(e) => {
-                        setSelectedCalendar(
-                           (prev: { id?: string; name: string }) => {
-                              return { ...prev, name: e.target.value };
-                           }
-                        );
+                        setNewCalendatDetail((prev) => {
+                           return { ...prev, name: e.target.value };
+                        });
                      }}
                   />
 
@@ -231,11 +332,12 @@ const CalendarWeeklyPlans: React.FC = () => {
                      </button>
                      <button
                         onClick={() => {
-                           manageCreateOrDeleteWeekCalender("create");
+                           !newCalendatDetail?.loader &&
+                              manageCreateOrDeleteWeekCalender("create");
                         }}
                         className="text-easy border-[2px] border-secod3"
                      >
-                        Ok
+                        {newCalendatDetail?.loader ? <DotLoader /> : "Ok"}
                      </button>
                   </div>
                </div>
@@ -243,92 +345,89 @@ const CalendarWeeklyPlans: React.FC = () => {
          </div>
          <div
             className={`w-full ${
-               calendarDetailsLoader && "h-[70%]"
+               viewCalendarDataLoader?.loader && "h-[70%]"
             }  py-4 [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg`}
          >
             {/* {if we want a scroll in above div css we can put h-[70%],pr-2  and overflow-y-auto} */}
-            {calendarDetailsLoader ? (
+            {viewCalendarDataLoader?.loader ? (
                <DotLoader />
             ) : (
-               <div className="gap-4 w-full columns-2 md:columns-1 lg:columns-3  space-y-4  [&>*]:break-inside-avoid [&>*]:overflow-hidden">
-                  {currentCalendarData && (
-                     <>
-                        <CalWeekBanner1
-                           color="text-red-500"
-                           hoverColor="group-hover:text-red-300"
-                           day="Mon"
-                        >
-                           <ul className="w-full flex  flex-wrap justify-stretch space-x-2 [&>*]:my-1">
-                              {currentCalendarData[0]?.topics &&
-                                 currentCalendarData[0]?.topics.map((topic) => {
-                                    return (
-                                       <li
-                                          key={topic?.id}
-                                          className={` flex items-center justify-between rounded-sm text-[13px] bg-secod3`}
-                                       >
-                                          <span className="mx-1 mt-[1px]">
-                                             {topic?.name}
-                                          </span>
-                                          <AiOutlineCloseCircle
-                                             className="text-prim2 cursor-pointer hover:text-prim1 "
-                                             onClick={() => {}}
-                                          />
-                                       </li>
-                                    );
-                                 })}
-                           </ul>
-                        </CalWeekBanner1>
-
-                        <CalWeekBanner2
-                           color="before:bg-blue-200"
-                           hoverColor="="
-                           day="Tue"
-                        >
-                           <div>Your content </div>
-                        </CalWeekBanner2>
-                        <CalWeekBanner1
-                           color="text-gray-600"
-                           hoverColor="group-hover:text-gray-400"
-                           day="Wed"
-                        >
-                           <div>Your content </div>
-                        </CalWeekBanner1>
-
-                        <CalWeekBanner2
-                           color="before:bg-pink-200"
-                           hoverColor="="
-                           day="Thu"
-                        >
-                           <div>Your content </div>
-                        </CalWeekBanner2>
-                        <CalWeekBanner1
-                           color="text-green-800"
-                           hoverColor="group-hover:text-green-400"
-                           day="Fri"
-                        >
-                           <div>Your content </div>
-                        </CalWeekBanner1>
-
-                        <CalWeekBanner2
-                           color="before:bg-blue-800"
-                           hoverColor="="
-                           day="Sat"
-                        >
-                           <div>Your content </div>
-                        </CalWeekBanner2>
-                        <CalWeekBanner1
-                           color="text-yellow-700"
-                           hoverColor="group-hover:text-yellow-300"
-                           day="Sun"
-                        >
-                           <div>Your content </div>
-                        </CalWeekBanner1>
-                     </>
-                  )}
+               <div className="gap-4 w-full columns-1 sm:columns-2 md:columns-1 lg:columns-2 xl:columns-3  space-y-4  [&>*]:break-inside-avoid [&>*]:overflow-hidden">
+                  {viewCalendarData &&
+                     weekDaysSettings?.map((day, index) => {
+                        if (day.banner === 1) {
+                           return (
+                              <CalWeekBanner1
+                                 key={index}
+                                 color={day.color}
+                                 hoverColor={day.hoverColor}
+                                 day={day.day}
+                                 setOpen={setOpenWeekDayCalendar}
+                              >
+                                 <ul className="w-full flex  flex-wrap justify-stretch space-x-2 [&>*]:my-1">
+                                    {viewCalendarData[day.day]?.topics.map(
+                                       (topic) => {
+                                          return (
+                                             <li
+                                                key={topic?.id}
+                                                className={` flex items-center justify-between rounded-sm text-[13px] bg-secod3`}
+                                             >
+                                                <span className="mx-1 mt-[1px]">
+                                                   {topic?.name}
+                                                </span>
+                                                <AiOutlineCloseCircle
+                                                   className="text-prim2 cursor-pointer hover:text-prim1 "
+                                                   onClick={() => {}}
+                                                />
+                                             </li>
+                                          );
+                                       }
+                                    )}
+                                 </ul>
+                              </CalWeekBanner1>
+                           );
+                        }
+                        return (
+                           <CalWeekBanner2
+                              key={index}
+                              color={day.color}
+                              hoverColor={day.hoverColor}
+                              day={day.day}
+                              setOpen={setOpenWeekDayCalendar}
+                           >
+                              <ul className="w-full flex  flex-wrap justify-stretch space-x-2 [&>*]:my-1">
+                                 {viewCalendarData["Tuesday"]?.topics.map(
+                                    (topic) => {
+                                       return (
+                                          <li
+                                             key={topic?.id}
+                                             className={` flex items-center justify-between rounded-sm text-[13px] bg-secod3`}
+                                          >
+                                             <span className="mx-1 mt-[1px]">
+                                                {topic?.name}
+                                             </span>
+                                             <AiOutlineCloseCircle
+                                                className="text-prim2 cursor-pointer hover:text-prim1 "
+                                                onClick={() => {}}
+                                             />
+                                          </li>
+                                       );
+                                    }
+                                 )}
+                              </ul>
+                           </CalWeekBanner2>
+                        );
+                     })}
                </div>
             )}
          </div>
+
          {/* Section of Edit and Add */}
+         <AddTopicInWeekDay
+            weekDaySettings={openWeekDayCalendar}
+            setWeekDaySettings={setOpenWeekDayCalendar}
+            weekCalendarId={viewCalendarDataLoader?.id || ""}
+         />
       </section>
    );
 };

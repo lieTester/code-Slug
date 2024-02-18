@@ -76,3 +76,23 @@ export const getWeekDaysAndTopics = async (
       throw error;
    }
 };
+
+export const deleteWeekCalendar = async (
+   userId: string,
+   weekCalendarId: string
+) => {
+   try {
+      const res = await axios.post(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
+         {
+            type: "deleteWeekCalendar",
+            userId,
+            weekCalendarId,
+         }
+      );
+      return res.data;
+   } catch (error) {
+      console.error("Error fetching weekdays and topics:", error);
+      throw error;
+   }
+};
