@@ -1,5 +1,5 @@
 import { Session } from "next-auth";
-import { ReactNode } from "react";
+import { ReactNode, SetStateAction } from "react";
 
 export type AuthCredType = {
    clientId: string;
@@ -62,3 +62,41 @@ export type calendarsProp = {
 export type viewCalendarDataProp = {
    [key: string]: { id: number; name: string; topics: any[] };
 };
+export type AddTopicInWeekDay = {
+   weekDaySettings: {
+      day?: string;
+      dayId?: number;
+      open: boolean;
+      color?: string;
+      banner?: number;
+      hoverColor?: string;
+   };
+   setWeekDaySettings: React.Dispatch<
+      SetStateAction<{
+         day?: string;
+         dayId?: number;
+         open: boolean;
+         color?: string;
+         banner?: number;
+         hoverColor?: string;
+      }>
+   >;
+   weekCalendarId: string;
+};
+
+export interface CalWeekBannerProps extends ChildrenProp {
+   day: string;
+   dayId: number;
+   color: string;
+   hoverColor: string;
+   setOpen: React.Dispatch<
+      SetStateAction<{
+         day?: string;
+         dayId?: number;
+         open: boolean;
+         color?: string;
+         banner?: number;
+         hoverColor?: string;
+      }>
+   >;
+}

@@ -56,6 +56,22 @@ export const linkTopics = async (
       throw error;
    }
 };
+export const weekDayIdTopics = async (userId: string, weekDayId: number) => {
+   try {
+      const res = await axios.post(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
+         {
+            type: "weekDayIdTopics",
+            userId,
+            weekDayId,
+         }
+      );
+      return res.data;
+   } catch (error) {
+      console.error("Error linking topics:", error);
+      throw error;
+   }
+};
 
 export const getWeekDaysAndTopics = async (
    userId: string,

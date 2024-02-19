@@ -66,6 +66,7 @@ const CalendarWeeklyPlans: React.FC = () => {
    const [openWeekDayCalendar, setOpenWeekDayCalendar] = useState<{
       day?: string;
       open: boolean;
+      dayId?: number;
       color?: string;
       banner?: number;
       hoverColor?: string;
@@ -125,7 +126,7 @@ const CalendarWeeklyPlans: React.FC = () => {
    ////////////////////////////////////////////////////////////////////////////
    const fetchData = async () => {
       await getAllUserCalendars(session?.user?.id).then((res) => {
-         console.log(res);
+         // console.log(res);
          setCalendars(res?.formattedCalendars);
       });
    };
@@ -357,15 +358,51 @@ const CalendarWeeklyPlans: React.FC = () => {
                      weekDaysSettings?.map((day, index) => {
                         if (day.banner === 1) {
                            return (
-                              <CalWeekBanner1
-                                 key={index}
+                              viewCalendarData[day.day] && (
+                                 <CalWeekBanner1
+                                    key={viewCalendarData[day.day].id}
+                                    day={day.day}
+                                    color={day.color}
+                                    hoverColor={day.hoverColor}
+                                    setOpen={setOpenWeekDayCalendar}
+                                    dayId={viewCalendarData[day.day].id}
+                                 >
+                                    <ul className="w-full flex  flex-wrap justify-stretch space-x-2 [&>*]:my-1">
+                                       {viewCalendarData[day.day]?.topics.map(
+                                          (topic) => {
+                                             return (
+                                                <li
+                                                   key={topic?.id}
+                                                   className={` flex items-center justify-between rounded-sm text-[13px] bg-secod3`}
+                                                >
+                                                   <span className="mx-1 mt-[1px]">
+                                                      {topic?.name}
+                                                   </span>
+                                                   <AiOutlineCloseCircle
+                                                      className="text-prim2 cursor-pointer hover:text-prim1 "
+                                                      onClick={() => {}}
+                                                   />
+                                                </li>
+                                             );
+                                          }
+                                       )}
+                                    </ul>
+                                 </CalWeekBanner1>
+                              )
+                           );
+                        }
+                        return (
+                           viewCalendarData[day.day] && (
+                              <CalWeekBanner2
+                                 key={viewCalendarData[day.day].id}
+                                 day={day.day}
                                  color={day.color}
                                  hoverColor={day.hoverColor}
-                                 day={day.day}
                                  setOpen={setOpenWeekDayCalendar}
+                                 dayId={viewCalendarData[day.day].id}
                               >
                                  <ul className="w-full flex  flex-wrap justify-stretch space-x-2 [&>*]:my-1">
-                                    {viewCalendarData[day.day]?.topics.map(
+                                    {viewCalendarData["Tuesday"]?.topics.map(
                                        (topic) => {
                                           return (
                                              <li
@@ -375,47 +412,13 @@ const CalendarWeeklyPlans: React.FC = () => {
                                                 <span className="mx-1 mt-[1px]">
                                                    {topic?.name}
                                                 </span>
-                                                <AiOutlineCloseCircle
-                                                   className="text-prim2 cursor-pointer hover:text-prim1 "
-                                                   onClick={() => {}}
-                                                />
                                              </li>
                                           );
                                        }
                                     )}
                                  </ul>
-                              </CalWeekBanner1>
-                           );
-                        }
-                        return (
-                           <CalWeekBanner2
-                              key={index}
-                              color={day.color}
-                              hoverColor={day.hoverColor}
-                              day={day.day}
-                              setOpen={setOpenWeekDayCalendar}
-                           >
-                              <ul className="w-full flex  flex-wrap justify-stretch space-x-2 [&>*]:my-1">
-                                 {viewCalendarData["Tuesday"]?.topics.map(
-                                    (topic) => {
-                                       return (
-                                          <li
-                                             key={topic?.id}
-                                             className={` flex items-center justify-between rounded-sm text-[13px] bg-secod3`}
-                                          >
-                                             <span className="mx-1 mt-[1px]">
-                                                {topic?.name}
-                                             </span>
-                                             <AiOutlineCloseCircle
-                                                className="text-prim2 cursor-pointer hover:text-prim1 "
-                                                onClick={() => {}}
-                                             />
-                                          </li>
-                                       );
-                                    }
-                                 )}
-                              </ul>
-                           </CalWeekBanner2>
+                              </CalWeekBanner2>
+                           )
                         );
                      })}
                </div>

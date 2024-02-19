@@ -1,31 +1,17 @@
-import React, { SetStateAction } from "react";
-import { ChildrenProp } from "@/types";
+import React from "react";
+import { CalWeekBannerProps } from "@/types";
 
-interface CalWeekBanner1Props extends ChildrenProp {
-   color: string;
-   hoverColor: string;
-   day: string;
-   setOpen: React.Dispatch<
-      SetStateAction<{
-         day?: string;
-         open: boolean;
-         color?: string;
-         banner?: number;
-         hoverColor?: string;
-      }>
-   >;
-}
-
-const CalWeekBanner2: React.FC<CalWeekBanner1Props> = ({
-   children,
-   color,
-   hoverColor,
+const CalWeekBanner2: React.FC<CalWeekBannerProps> = ({
    day,
+   dayId,
+   color,
    setOpen,
+   children,
+   hoverColor,
 }) => {
    return (
       <ul
-         onClick={() => setOpen({ color, hoverColor, day, open: true })}
+         onClick={() => setOpen({ color, hoverColor, day, dayId, open: true })}
          className="relative  bg-transparent rounded-md  space-y-4 cursor-pointer before:absolute before:w-full before:h-full before:bg-white before:bg-opacity-5 before:blur-sm border-[2px] border-bordr1 group"
       >
          <li

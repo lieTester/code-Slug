@@ -164,6 +164,43 @@ const linkTopics = async (
       return NextResponse.json({ status: 500, error });
    }
 };
+const weekDayIdTopics = async (userId: string, weekDayId: number) => {
+   try {
+      // Find the WeekDay and ensure it belongs to the user's calendar
+      const weekDay = await prisma.weekDay.findFirst({
+         where: {
+            id: weekDayId,
+            weeklyCalendar: {
+               ownerId: userId, // Ensure the WeekDay belongs to a calendar owned by the user
+            },
+         },
+         include: {
+            topics: {
+               include: {
+                  topics: true, // Include the Topic details
+               },
+            },
+         },
+      });
+
+      if (!weekDay) {
+         return NextResponse.json({
+            status: 403,
+            error: "You do not have access to this WeekDay or it does not exist",
+         });
+      }
+
+      // Step 3: Return the topics associated with the weekday
+      return NextResponse.json({
+         status: 200,
+         message: "Linked Topics of the weekday",
+         weekDay,
+      });
+   } catch (error) {
+      console.error(error);
+      return NextResponse.json({ status: 500, error });
+   }
+};
 const deleteWeekCalendar = async (userId: string, weekCalendarId: string) => {
    try {
       // Step 1: Check if the WeeklyCalendar belongs to the user
@@ -238,6 +275,8 @@ const postHandlerRequests = async (req: NextRequest, res: NextResponse) => {
             return getWeekDaysAndTopics(data?.userId, data?.weekCalendarId);
          case "deleteWeekCalendar":
             return deleteWeekCalendar(data?.userId, data?.weekCalendarId);
+         case "weekDayIdTopics":
+            return weekDayIdTopics(data?.userId, data?.weekCalendarId);
 
          default:
             break;
