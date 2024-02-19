@@ -29,7 +29,7 @@ function ListSideBar() {
 
    // filter Context
    const filtersContext = useContext(FiltersContext);
-   const { setQueryParams } = useQueryParams();
+   const { setQueryParams, removeQueryParams } = useQueryParams();
 
    const lists = filtersContext?.lists;
    const setLists = filtersContext?.setLists;
@@ -241,6 +241,3 @@ function ListSideBar() {
 }
 
 export default ListSideBar;
-function removeQueryParams(query: Record<string, string>) {
-   throw new Error("Function not implemented.");
-}
