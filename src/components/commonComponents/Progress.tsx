@@ -72,15 +72,15 @@ const ProblemsProgress = () => {
       <>
          {loading ? (
             <div className="w-full h-fit bg-backg2 p-4 rounded-md shadow-md mb-4">
-               <h2 className="w-[100%] h-7 mb-3 animate-pulse rounded-md bg-front1"></h2>
+               <h2 className="w-[100%] h-5 mb-3 animate-pulse rounded-md bg-slate-700"></h2>
                <div className="flex  justify-between items-center">
                   <div className="w-[40%] max-h-[100px] max-w-[100px]">
-                     <div className="w-[100px] h-[100px] rounded-full animate-pulse bg-front1"></div>
+                     <div className="w-[100px] h-[100px] rounded-full animate-pulse bg-slate-700"></div>
                   </div>
-                  <ul className="min-w-[40%] h-[90px] flex flex-col [&>li]:my-auto [&>li]:bg-front1">
-                     <li className="w-[50%] h-5 animate-pulse rounded-full mb-2"></li>
-                     <li className="w-[80%] h-5 animate-pulse rounded-full mb-2"></li>
-                     <li className="w-[60%] h-5 animate-pulse rounded-full mb-2"></li>
+                  <ul className="min-w-[40%] h-[90px] flex flex-col [&>li]:my-auto [&>li]:bg-slate-700">
+                     <li className="w-[60%] h-4 animate-pulse rounded-full mb-2"></li>
+                     <li className="w-[90%] h-4 animate-pulse rounded-full mb-2"></li>
+                     <li className="w-[70%] h-4 animate-pulse rounded-full mb-2"></li>
                   </ul>
                </div>
             </div>

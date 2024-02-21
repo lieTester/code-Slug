@@ -4,10 +4,10 @@ const ListLandingNewListCreaterSkeleton = () => {
    const my_div = (
       <div className="flex items-center justify-between animate-pulse ">
          <div>
-            <div className="h-2.5 bg-front1 rounded-full  w-24 mb-2.5"></div>
-            <div className="w-32 h-2 bg-front1 rounded-full "></div>
+            <div className="h-2.5 bg-slate-700 rounded-full  w-24 mb-2.5"></div>
+            <div className="w-32 h-2 bg-slate-700 rounded-full "></div>
          </div>
-         <div className="h-2.5 bg-front1 rounded-full  w-12"></div>
+         <div className="h-2.5 bg-slate-700 rounded-full  w-12"></div>
       </div>
    );
    const newListCreater = [];
