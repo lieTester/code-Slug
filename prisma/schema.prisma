@@ -86,13 +86,14 @@ model CompanyProblem {
 }
 
 model ProblemStatus {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   userId    String
   problemId Int
   status    String
+  updatedAt DateTime @default(now()) @updatedAt
   // Other status details
-  user      User    @relation(fields: [userId], references: [id])
-  problem   Problem @relation(fields: [problemId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  problem   Problem  @relation(fields: [problemId], references: [id])
 
   @@unique([userId, problemId], name: "UserProblemStatusUnique")
 }

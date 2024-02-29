@@ -1,7 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import useQueryParams from "@/hook/useQueryParams";
+import { useSearchParams } from "next/navigation";
 
 const CalederSidebar: React.FC = () => {
+   //
+   const { setQueryParams } = useQueryParams();
+
    // Explicitly set the ref type to HTMLDivElement
    const parentRef = useRef<HTMLDivElement>(null);
    const childRef = useRef<HTMLDivElement>(null);
@@ -52,9 +57,12 @@ const CalederSidebar: React.FC = () => {
                   <li className="text-sm font-thin text-prim2 ">
                      All solved and attemptes
                   </li>
-                  <li className="relative text-sm font-thin  mt-3 bg-white text-secod2 inline-block p-1 rounded-md  !mr-auto cursor-pointer transition-transform duration-100 hover:scale-110 ">
+                  <button
+                     onClick={() => setQueryParams({ block: "" })}
+                     className="relative text-sm font-thin  mt-3 bg-white text-secod2 inline-block p-1 rounded-md  !mr-auto cursor-pointer transition-transform duration-100 hover:scale-110 "
+                  >
                      Check out
-                  </li>
+                  </button>
                </ul>
             </ul>
             <ul
@@ -75,9 +83,14 @@ const CalederSidebar: React.FC = () => {
                   <li className="text-sm font-thin text-prim2 mt-1">
                      Aplly plan to timely practice Data & Structure
                   </li>
-                  <li className="relative text-sm font-thin  mt-3 bg-white text-secod2 inline-block p-1 rounded-md  !mr-auto cursor-pointer transition-transform duration-100 hover:scale-110">
+                  <button
+                     onClick={() =>
+                        setQueryParams({ block: "create-edit-weekcalendar" })
+                     }
+                     className="relative text-sm font-thin  mt-3 bg-white text-secod2 inline-block p-1 rounded-md  !mr-auto cursor-pointer transition-transform duration-100 hover:scale-110 "
+                  >
                      Check out
-                  </li>
+                  </button>
                </ul>
             </ul>
             <ul
@@ -99,9 +112,12 @@ const CalederSidebar: React.FC = () => {
                      Set your weekly plans to consistently solve every Data &
                      Structure
                   </li>
-                  <li className="relative text-sm font-thin  mt-3 bg-white text-secod2 inline-block p-1 rounded-md  !mr-auto cursor-pointer transition-transform duration-100 hover:scale-110">
+                  <button
+                     onClick={() => setQueryParams({ block: "weekly-plan" })}
+                     className="relative text-sm font-thin  mt-3 bg-white text-secod2 inline-block p-1 rounded-md  !mr-auto cursor-pointer transition-transform duration-100 hover:scale-110 "
+                  >
                      Check out
-                  </li>
+                  </button>
                </ul>
             </ul>
          </div>
