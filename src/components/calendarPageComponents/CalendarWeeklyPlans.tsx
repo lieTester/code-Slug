@@ -25,6 +25,7 @@ import { SessionContext } from "@/context/SessionContext";
 
 //types
 import { calendarsProp, viewCalendarDataProp } from "@/types/index";
+import AllUserCalendarSkeleton from "../skeleton/calenderlanding/CalendarWeeklyPlans/AllUserCalendarSkeleton";
 
 const CalendarWeeklyPlans: React.FC = () => {
    // session context //////////////////////////////////////////////////////
@@ -35,6 +36,7 @@ const CalendarWeeklyPlans: React.FC = () => {
    /////////////////////////////////////////////////////////////////////////
    // all calendar of user plus default details
    const [calendars, setCalendars] = useState<calendarsProp[]>();
+   const [calendarsLoader, setCalendarsLoader] = useState<boolean>(true);
    // view weekCalendar details of selected calendar
    const [viewCalendarData, setViewCalendarData] =
       useState<viewCalendarDataProp | null>(null);
@@ -125,10 +127,14 @@ const CalendarWeeklyPlans: React.FC = () => {
    // calendar functions //////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////
    const fetchData = async () => {
-      await getAllUserCalendars(session?.user?.id).then((res) => {
-         // console.log(res);
-         setCalendars(res?.formattedCalendars);
-      });
+      await getAllUserCalendars(session?.user?.id)
+         .then((res) => {
+            // console.log(res);
+            setCalendars(res?.formattedCalendars);
+         })
+         .then((res) => {
+            setCalendarsLoader(false);
+         });
    };
 
    const showDeleteCalendar = async (id: string, name: string) => {
@@ -189,80 +195,87 @@ const CalendarWeeklyPlans: React.FC = () => {
                Weekly Calendar Plans :
             </span>
             <div className="w-full  h-[calc(100%-45px)] flex flex-wrap p-2 overflow-y-auto [&>*]:mr-1 [&>*]:mb-1  [&>*]:h-[55px] [&>*]:border-[2px] [&>*]:border-bordr1">
-               {calendars?.map((calendar) => {
-                  return (
-                     <ul
-                        key={calendar?.id}
-                        className="relative w-fit  flex min-w-[220px] max-w-[350px] p-1  rounded-md overflow-hidden  z-10 before:z-[-1] before:absolute before:w-full before:h-full before:bg-white before:bg-opacity-20 before:blur-xl  "
-                     >
-                        <li className="relative w-full pb-4">
-                           <span className=" font-sofiaPro font- ml-[2px] capitalize">
-                              {calendar?.title}
-                           </span>
-                           <ul className=" top-6 w-full flex space-x-[2px] text-xs text-prim2 [&>*]:bg-backg1 [&>*]:px-1 [&>*]:text-center [&>*]:rounded-md">
-                              {calendar?.days?.map((day) => {
-                                 if (day?.count === 0) return;
-                                 return (
-                                    <li key={day?.id}>
-                                       {day.name.slice(0, 2)}
-                                    </li>
-                                 );
-                              })}
-                           </ul>
-                        </li>
-                        <li className=" [&>*]:rounded-full flex">
-                           <button
-                              title={"Apply Calendar"}
-                              className="text-green-500 text-2xl w-full px-1"
-                           >
-                              <MdFileUpload />
-                           </button>
-                           <button
-                              title={"Display Calendar Details"}
-                              onClick={async () => {
-                                 setViewCalendarDataLoader({
-                                    id: calendar.id,
-                                    loader: true,
-                                 });
-                                 await getWeekDaysAndTopics(
-                                    session?.user?.id,
-                                    calendar?.id
-                                 ).then((res) => {
-                                    setViewCalendarData(res?.formattedWeekDays);
-                                    setViewCalendarDataLoader((prev) => {
-                                       return {
-                                          ...prev,
-                                          loader: false,
-                                       };
+               {calendarsLoader ? (
+                  <AllUserCalendarSkeleton />
+               ) : (
+                  calendars?.map((calendar) => {
+                     return (
+                        <ul
+                           key={calendar?.id}
+                           className="relative w-fit  flex min-w-[220px] max-w-[350px] p-1  rounded-md overflow-hidden  backdrop-brightness-[.6] backdrop-blur-3xl  "
+                        >
+                           <li className="relative w-full pb-4">
+                              <span className=" font-sofiaPro font- ml-[2px] capitalize">
+                                 {calendar?.title}
+                              </span>
+                              <ul className=" top-6 w-full flex space-x-[2px] text-xs text-prim2 ">
+                                 {calendar?.days?.map((day) => {
+                                    if (day?.count === 0) return;
+                                    return (
+                                       <li
+                                          key={day?.id}
+                                          className="bg-secod1 px-1 text-center rounded-md hover:text-white cursor-default"
+                                       >
+                                          {day.name.slice(0, 2)}
+                                       </li>
+                                    );
+                                 })}
+                              </ul>
+                           </li>
+                           <li className=" [&>*]:rounded-full flex">
+                              <button
+                                 title={"Display Calendar Details"}
+                                 onClick={async () => {
+                                    setViewCalendarDataLoader({
+                                       id: calendar.id,
+                                       loader: true,
                                     });
-                                 });
-                              }}
-                              className="text-blue-300 text-xl w-full px-1"
-                           >
-                              {viewCalendarDataLoader?.id !== calendar.id ? (
-                                 <FaDisplay />
-                              ) : (
-                                 <MdVisibilityOff />
-                              )}
-                           </button>
-                           <button
-                              title={"Delete Calendar"}
-                              onClick={() =>
-                                 showDeleteCalendar(calendar.id, calendar.title)
-                              }
-                              className="text-red-700 text-2xl w-full px-1 "
-                           >
-                              <MdDeleteOutline />
-                           </button>
-                        </li>
-                     </ul>
-                  );
-               })}
+                                    await getWeekDaysAndTopics(
+                                       session?.user?.id,
+                                       calendar?.id
+                                    ).then((res) => {
+                                       setViewCalendarData(
+                                          res?.formattedWeekDays
+                                       );
+                                       setViewCalendarDataLoader((prev) => {
+                                          return {
+                                             ...prev,
+                                             loader: false,
+                                          };
+                                       });
+                                    });
+                                 }}
+                                 className="text-blue-300 text-xl w-full px-1"
+                              >
+                                 {viewCalendarDataLoader?.id !== calendar.id ? (
+                                    <FaDisplay />
+                                 ) : (
+                                    <MdVisibilityOff />
+                                 )}
+                              </button>
+                              <button
+                                 title={"Delete Calendar"}
+                                 onClick={() =>
+                                    showDeleteCalendar(
+                                       calendar.id,
+                                       calendar.title
+                                    )
+                                 }
+                                 className="text-red-700 text-2xl w-full px-1 "
+                              >
+                                 <MdDeleteOutline />
+                              </button>
+                           </li>
+                        </ul>
+                     );
+                  })
+               )}
                <button
-                  className="relative overflow-hidden w-[55px] bg-slate-500 p-1 rounded-full flex justify-center items-center text-2xl "
+                  title="Create new Weekly Calendar"
+                  className="relative overflow-hidden w-[55px] p-1 rounded-full flex justify-center items-center text-2xl backdrop-brightness-[.6] backdrop-blur-3xl group"
                   onClick={showCreateCalendar}
                >
-                  <MdAddChart />
+                  <MdAddChart className="group-hover:hover:scale-125 transform transition-transform duration-100" />
                </button>
             </div>
             {/* Ui block for confirmation to delete and create Calendar */}
@@ -367,7 +380,10 @@ const CalendarWeeklyPlans: React.FC = () => {
                                     setOpen={setOpenWeekDayCalendar}
                                     dayId={viewCalendarData[day.day].id}
                                  >
-                                    <ul className="w-full flex  flex-wrap justify-stretch space-x-2 [&>*]:my-1">
+                                    <ul
+                                       key={viewCalendarData[day.day].id}
+                                       className="w-full flex  flex-wrap justify-stretch [&>*]:mr-2 [&>*]:my-1"
+                                    >
                                        {viewCalendarData[day.day]?.topics.map(
                                           (topic) => {
                                              return (
@@ -378,10 +394,6 @@ const CalendarWeeklyPlans: React.FC = () => {
                                                    <span className="mx-1 mt-[1px]">
                                                       {topic?.name}
                                                    </span>
-                                                   <AiOutlineCloseCircle
-                                                      className="text-prim2 cursor-pointer hover:text-prim1 "
-                                                      onClick={() => {}}
-                                                   />
                                                 </li>
                                              );
                                           }
@@ -401,8 +413,11 @@ const CalendarWeeklyPlans: React.FC = () => {
                                  setOpen={setOpenWeekDayCalendar}
                                  dayId={viewCalendarData[day.day].id}
                               >
-                                 <ul className="w-full flex  flex-wrap justify-stretch space-x-2 [&>*]:my-1">
-                                    {viewCalendarData["Tuesday"]?.topics.map(
+                                 <ul
+                                    key={viewCalendarData[day.day].id}
+                                    className="w-full flex  flex-wrap justify-stretch [&>*]:mr-2 [&>*]:my-1"
+                                 >
+                                    {viewCalendarData[day.day]?.topics.map(
                                        (topic) => {
                                           return (
                                              <li
