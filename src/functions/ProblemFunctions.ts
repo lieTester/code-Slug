@@ -57,9 +57,32 @@ export const addUpdateProblemStatus = async (
    if (id) {
       const response = await axios.post(
          process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/`,
-         { id, status, problemID }
+         { type: "updateUserProblemStatus", id, status, problemID }
       );
 
       return response;
+   }
+};
+export const fetchUserProblemStatuses = async ({
+   userId,
+   year,
+   month,
+}: {
+   userId: string;
+   year: number;
+   month: number;
+}) => {
+   try {
+      const response = await axios.post(
+         process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/`,
+         { type: "fetchUserProblemStatusForMonth", userId, year, month }
+      );
+
+      return response.data;
+   } catch (error) {
+      return {
+         msg: "fetchUserProblemStatuses failed in problemfunctions",
+         error,
+      };
    }
 };

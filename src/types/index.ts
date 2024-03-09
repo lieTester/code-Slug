@@ -40,7 +40,7 @@ export type listProp = {
    isPublic: boolean;
 };
 export type topicProp = {
-   id: string;
+   id: number;
    name: string;
    slug: string;
 };
@@ -60,7 +60,11 @@ export type calendarsProp = {
    }[];
 };
 export type viewCalendarDataProp = {
-   [key: string]: { id: number; name: string; topics: any[] };
+   [key: string]: {
+      id: number;
+      name: string;
+      topics: { id: number; name: string }[];
+   };
 };
 export type AddTopicInWeekDay = {
    weekDaySettings: {
@@ -100,3 +104,14 @@ export interface CalWeekBannerProps extends ChildrenProp {
       }>
    >;
 }
+
+export type StatusByDate = {
+   [date: string]: {
+      [status: string]: {
+         problemId: number; // or number
+         problemTitle: string;
+         status: string;
+         updatedAt: Date;
+      }[];
+   };
+};
