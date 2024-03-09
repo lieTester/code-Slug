@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 import { SessionProvider } from "@/context/SessionContext";
 import CalendarLanding from "@/pages/CalendarLanding";
+import CalendarLandingSkeleton from "@/components/skeleton/calenderlanding/CalendarLandingSkeleton";
 
 export default function ListHome() {
    const { data: session } = useSession();
@@ -19,7 +20,11 @@ export default function ListHome() {
    return (
       <main className="relative w-screen h-screen ">
          <SessionProvider>
-            {session && <CalendarLanding session={session} />}
+            {!session ? (
+               <CalendarLandingSkeleton />
+            ) : (
+               <CalendarLanding session={session} />
+            )}
          </SessionProvider>
       </main>
    );

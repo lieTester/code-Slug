@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 function CalendarLandingSideBarSkeleton() {
    const block = (
-      <ul className="relative w-full rounded-md overflow-hidden bg-backg2">
+      <div className="relative w-full rounded-md overflow-hidden bg-backg2">
          <div className="shadow rounded-md px-4 py-2 max-w-sm w-full mx-auto animate-pulse">
             <div className="animate-pulse flex space-x-4">
                <div className="flex-1 space-y-3 py-1">
@@ -21,7 +21,7 @@ function CalendarLandingSideBarSkeleton() {
             </div>
             <div className="h-4 mt-2 bg-slate-700 rounded w-[40%]"></div>
          </div>
-      </ul>
+      </div>
    );
 
    let sideBlocks = [];
@@ -29,7 +29,9 @@ function CalendarLandingSideBarSkeleton() {
    return (
       <section className="relative w-full md:h-full md:w-[40%] lg:w-[30%] 2xl:w-[25%] mr-[10px] text-prim1 mb-4">
          <div className="relative w-full [&>*]:mb-2 [&>*]:pb-2 animate-pulse">
-            {sideBlocks.map((block) => block)}
+            {sideBlocks.map((block, index) => {
+               return <div key={index}>{block}</div>;
+            })}
          </div>
       </section>
    );

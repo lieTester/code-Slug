@@ -1,5 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
-import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { BsCheck2Circle } from "react-icons/bs";
+import {
+   IoIosCodeWorking,
+   IoMdArrowDropleft,
+   IoMdArrowDropright,
+} from "react-icons/io";
+// context
+import { SessionContext } from "@/context/SessionContext";
+// function
+import { fetchUserProblemStatuses } from "@/functions/ProblemFunctions";
+// types
+import { StatusByDate } from "@/types";
 
 type CalendarCell = {
    date: Date;
@@ -7,7 +18,13 @@ type CalendarCell = {
 };
 
 const CalenderBase: React.FC = () => {
+   // session context
+   const sessionContext = useContext(SessionContext);
+   const session = sessionContext?.session;
+   // states and variables
    const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+   const [problemStatusesOfMonth, setproblemStatusesOfMonth] =
+      useState<StatusByDate>({});
    const [presentMonth] = useState<Date>(new Date());
    const gridRef = useRef<HTMLDivElement | null>(null);
    const [hoveredElements, setHoveredElements] = useState<HTMLElement[]>([]);
@@ -19,6 +36,7 @@ const CalenderBase: React.FC = () => {
       angles.push(Math.PI * i);
    }
 
+   // function for calendar base calculation
    const getDaysInMonth = (date: Date): CalendarCell[] => {
       const month = date.getMonth();
       const year = date.getFullYear();
@@ -55,10 +73,6 @@ const CalenderBase: React.FC = () => {
       getDaysInMonth(currentMonth)
    );
 
-   useEffect(() => {
-      setDays(getDaysInMonth(currentMonth));
-   }, [currentMonth]);
-
    const changeMonth = (offset: number) => {
       const newMonth = new Date(
          currentMonth.setMonth(currentMonth.getMonth() + offset)
@@ -72,6 +86,23 @@ const CalenderBase: React.FC = () => {
       });
       setHoveredElements([]);
    };
+   const fetchUserProblemsMonthStaus = async () => {
+      await fetchUserProblemStatuses({
+         userId: session?.user?.id,
+         month: currentMonth?.getMonth() + 1, //In JavaScript, Date.getMonth() returns a zero-based index for the month, meaning:
+         year: currentMonth?.getFullYear(),
+      }).then((res) => {
+         setproblemStatusesOfMonth(res.monthStatus);
+      });
+   };
+   // useEffects
+   useEffect(() => {
+      setDays(getDaysInMonth(currentMonth));
+      session?.user?.id && fetchUserProblemsMonthStaus();
+   }, [currentMonth]);
+   useEffect(() => {
+      session?.user?.id && fetchUserProblemsMonthStaus();
+   }, [session?.user?.id]);
 
    useEffect(() => {
       const handleMouseMove = (e: MouseEvent) => {
@@ -143,7 +174,7 @@ const CalenderBase: React.FC = () => {
             {days.map((day, index) => (
                <div
                   key={index}
-                  className={`relative day-btn z-10  after:rounded-sm hover:border-white border-transparent border-[3px] after:-z-10 after:absolute after:top-0 after:left-0 after:w-full after:h-full ${
+                  className={`relative overflow-hidden z-10  after:rounded-sm hover:border-white border-transparent border-[3px] after:-z-10 after:absolute after:top-0 after:left-0 after:w-full after:h-full ${
                      day.date.getDate() === presentMonth.getDate() &&
                      currentMonth.getMonth() === presentMonth.getMonth() &&
                      currentMonth.getFullYear() === presentMonth.getFullYear()
@@ -155,6 +186,48 @@ const CalenderBase: React.FC = () => {
                         : "after:bg-opacity-20"
                   }`}
                >
+                  <ul className="absolute w-[50%] flex top-0 right-0 text-xs ">
+                     <li>
+                        {problemStatusesOfMonth[`${day.date.getDate()}`]?.[
+                           "solved"
+                        ]?.length && (
+                           <BsCheck2Circle className="text-easy mt-[1px] mr-1 cursor-pointer hover:text-prim1 " />
+                        )}
+                     </li>
+                     <li>
+                        {
+                           problemStatusesOfMonth[`${day.date.getDate()}`]?.[
+                              "solved"
+                           ]?.length
+                        }
+                     </li>
+                     <li className="mx-[2px] truncate">
+                        {problemStatusesOfMonth[`${day.date.getDate()}`]?.[
+                           "solved"
+                        ]?.length && "solved"}
+                     </li>
+                  </ul>
+                  <ul className="absolute w-[70%] flex bottom-0 left-0 text-xs ">
+                     <li>
+                        {problemStatusesOfMonth[`${day.date.getDate()}`]?.[
+                           "attempted"
+                        ]?.length && (
+                           <IoIosCodeWorking className="text-medium mt-[1px] mr-1 cursor-pointer hover:text-prim1 " />
+                        )}
+                     </li>
+                     <li>
+                        {
+                           problemStatusesOfMonth[`${day.date.getDate()}`]?.[
+                              "attempted"
+                           ]?.length
+                        }
+                     </li>
+                     <li className="mx-[2px] truncate">
+                        {problemStatusesOfMonth[`${day.date.getDate()}`]?.[
+                           "attempted"
+                        ]?.length && "attempted"}
+                     </li>
+                  </ul>
                   {day.date.getDate()}
                </div>
             ))}

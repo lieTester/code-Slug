@@ -1,13 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AiOutlineCloseCircle } from "react-icons/ai";
 import { FaDisplay } from "react-icons/fa6";
-import {
-   MdAddChart,
-   MdDeleteOutline,
-   MdFileUpload,
-   MdVisibilityOff,
-} from "react-icons/md";
-
+import { MdAddChart, MdDeleteOutline } from "react-icons/md";
+import { TbRefresh } from "react-icons/tb";
 // component
 import CalWeekBanner1 from "@/components/calendarPageComponents/calSubComponents/CalWeekBanner1";
 import CalWeekBanner2 from "@/components/calendarPageComponents/calSubComponents/CalWeekBanner2";
@@ -127,6 +121,7 @@ const CalendarWeeklyPlans: React.FC = () => {
    // calendar functions //////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////
    const fetchData = async () => {
+      setCalendarsLoader(true);
       await getAllUserCalendars(session?.user?.id)
          .then((res) => {
             // console.log(res);
@@ -191,8 +186,16 @@ const CalendarWeeklyPlans: React.FC = () => {
    return (
       <section className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1  rounded-lg">
          <div className="w-full h-[30%] rounded-t-lg overflow-y-auto border-[2px] border-secod1">
-            <span className="w-full h-[45px] p-2 pl-4 block bg-backg2 font-sofiaPro font-extrabold text-red-300 text-lg">
-               Weekly Calendar Plans :
+            <span className="w-full h-[45px] flex justify-between  p-2 pl-4  bg-backg2 font-sofiaPro font-extrabold text-red-300 text-lg">
+               <label htmlFor="">Weekly Calendar Plans :</label>
+               <button
+                  onClick={() => {
+                     fetchData();
+                  }}
+                  className="font-extrabold text-2xl"
+               >
+                  <TbRefresh />
+               </button>
             </span>
             <div className="w-full  h-[calc(100%-45px)] flex flex-wrap p-2 overflow-y-auto [&>*]:mr-1 [&>*]:mb-1  [&>*]:h-[55px] [&>*]:border-[2px] [&>*]:border-bordr1">
                {calendarsLoader ? (
@@ -250,7 +253,7 @@ const CalendarWeeklyPlans: React.FC = () => {
                                  {viewCalendarDataLoader?.id !== calendar.id ? (
                                     <FaDisplay />
                                  ) : (
-                                    <MdVisibilityOff />
+                                    <TbRefresh />
                                  )}
                               </button>
                               <button
