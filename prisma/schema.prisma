@@ -11,16 +11,17 @@ datasource db {
 }
 
 model User {
-  id                String           @id @default(uuid())
-  username          String
-  email             String           @unique
-  profile           String
+  id                    String           @id @default(uuid())
+  username              String
+  email                 String           @unique
+  profile               String
+  appliedWeeklyCalendar String? // This makes the column nullable Selected calendar column
   // Other user details
-  Note              Note[]
-  userLists         List[]
-  WeeklyCalendar    WeeklyCalendar[]
-  comments          Comment[]
-  userProblemStatus ProblemStatus[]
+  Note                  Note[]
+  userLists             List[]
+  WeeklyCalendar        WeeklyCalendar[]
+  comments              Comment[]
+  userProblemStatus     ProblemStatus[]
 }
 
 model Problem {
