@@ -16,11 +16,11 @@ import { FiltersContext } from "@/context/FiltersContext";
 import { ProblemContext } from "@/context/ProblemsContext";
 import { listProp } from "@/types";
 import { GetAllProblems } from "@/functions/ProblemFunctions";
+import { DotLoader } from "../commonComponents/Loaders";
 
 function ListSideBar() {
    // problem context ///////////////////////////////////////////////////////
    const problemContext = useContext(ProblemContext);
-   const currentListProblems = problemContext?.currentListProblems;
    const setFilterdProblems = problemContext?.setFilterdProblems;
    const setCurrentListProblems = problemContext?.setCurrentListProblems;
    // session context ////////////////////////////////////////////////////////
@@ -39,6 +39,7 @@ function ListSideBar() {
    const [selectedList, setSelectedList] = useState<{
       id: string;
       name: string;
+      loader?: boolean;
    }>({ id: "", name: "" });
    const [open, setOpen] = useState<boolean>(false);
 
@@ -65,12 +66,15 @@ function ListSideBar() {
       });
    };
 
-   const manageEditOrDeleteList = (type: string) => {
+   const manageEditOrDeleteList = async (type: string) => {
       try {
+         setSelectedList((prev) => {
+            return { ...prev, loader: true };
+         });
          if (type === "delete") {
-            deleteList(session?.user?.id, selectedList?.id);
+            await deleteList(session?.user?.id, selectedList?.id);
          } else if (type === "edit") {
-            updateListName(
+            await updateListName(
                session?.user?.id,
                selectedList?.id,
                selectedList?.name
@@ -84,7 +88,7 @@ function ListSideBar() {
          const matchingList = lists?.find(
             ({ id }: listProp) => id === selectedList?.id
          );
-         fetchData().then(async () => {
+         await fetchData().then(async () => {
             if (type === "edit" && matchingList?.name === filterValues?.list) {
                // above if condition of lists?.map is for if in filterValues we have
                // same list selected which we renamed then we do below step else nothing
@@ -117,7 +121,7 @@ function ListSideBar() {
                }
             }
             onClose();
-            setSelectedList({ id: "", name: "" });
+            setSelectedList({ id: "", name: "", loader: false });
          });
       }
    };
@@ -178,38 +182,39 @@ function ListSideBar() {
             <div
                className={`${
                   isEdit ? "hidden" : "block"
-               } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-2xl font-extrabold mx-auto bg-backg2`}
+               } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-xl font-sofiaPro font-semibold mx-auto bg-black bg-opacity-25 backdrop-brightness-[.7] backdrop-blur-md`}
             >
                <div className="w-fit mx-auto">
                   Are You Sure You want to{" "}
                   <span className="text-hard">delete </span>
-                  {selectedList?.name}?
+                  {selectedList?.name} ?
                </div>
-               <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1">
+               <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1 [&>*]:rounded-md">
                   <button
                      onClick={onClose}
-                     className="text-hard border-[2px] border-secod3"
+                     className="w-24 text-hard border-[2px] border-secod1"
                   >
                      Cancel
                   </button>
                   <button
                      onClick={() => {
-                        manageEditOrDeleteList("delete");
+                        !selectedList?.loader &&
+                           manageEditOrDeleteList("delete");
                      }}
-                     className="text-easy border-[2px] border-secod3"
+                     className="w-24 text-easy border-[2px] border-secod1"
                   >
-                     Ok
+                     {selectedList?.loader ? <DotLoader /> : "Ok"}
                   </button>
                </div>
             </div>
             <div
                className={`${
                   isEdit ? "block" : "hidden"
-               } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-2xl font-extrabold mx-auto bg-backg2`}
+               } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-xl font-sofiaPro font-semibold mx-auto bg-black bg-opacity-25 backdrop-brightness-[.7] backdrop-blur-md`}
             >
                <input
                   type="text"
-                  className="w-full mx-auto bg-transparent border-[2px] border-secod1 p-1 outline-none text-red-200"
+                  className="w-full mx-auto bg-transparent rounded-md font-normal   p-1 px-2 outline-none text-prim1 border-[2px] border-secod1"
                   value={selectedList ? selectedList.name : ""}
                   onChange={(e) => {
                      setSelectedList((prev: { id: string; name: string }) => {
@@ -218,20 +223,20 @@ function ListSideBar() {
                   }}
                />
 
-               <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1">
+               <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1 [&>*]:rounded-md">
                   <button
                      onClick={onClose}
-                     className="text-hard border-[2px] border-secod3"
+                     className="w-24 text-hard border-[2px] border-secod1"
                   >
                      Cancel
                   </button>
                   <button
                      onClick={() => {
-                        manageEditOrDeleteList("edit");
+                        !selectedList?.loader && manageEditOrDeleteList("edit");
                      }}
-                     className="text-easy border-[2px] border-secod3"
+                     className="w-24 text-easy border-[2px] border-secod1"
                   >
-                     Ok
+                     {selectedList?.loader ? <DotLoader /> : "Ok"}
                   </button>
                </div>
             </div>

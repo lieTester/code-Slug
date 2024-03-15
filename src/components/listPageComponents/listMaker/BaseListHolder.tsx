@@ -17,11 +17,10 @@ import {
 } from "@/functions/ListFunctions";
 // context
 import { ProblemContext } from "@/context/ProblemsContext";
-import { Session } from "inspector";
 import { SessionContext } from "@/context/SessionContext";
 import { FiltersContext } from "@/context/FiltersContext";
-import { GetAllProblems } from "@/functions/ProblemFunctions";
 import { applyFilter } from "@/functions/FilterFunctions";
+import { DotLoader } from "@/components/commonComponents/Loaders";
 
 const BaseListHolder: React.FC<{
    baseProblemList: ProblemsProp[];
@@ -45,6 +44,7 @@ const BaseListHolder: React.FC<{
    const [selectedProblem, setSelectedProblem] = useState<{
       id?: number;
       name?: string;
+      loader?: boolean;
    }>({});
    const [open, setOpen] = useState<boolean>(false);
    const onClose = () => {
@@ -53,11 +53,44 @@ const BaseListHolder: React.FC<{
    // filter Context
    const filtersContext = useContext(FiltersContext);
 
-   const lists = filtersContext?.lists;
-   const setLists = filtersContext?.setLists;
    const filterValues = filtersContext?.filterValues;
-   const setFilterValues = filtersContext?.setFilterValues;
 
+   const deleteProblemFromCurrentSelectedList = async () => {
+      try {
+         setSelectedProblem((prev) => {
+            return { ...prev, loader: true };
+         });
+         currentListDetail?.id &&
+            selectedProblem?.id &&
+            removeProblemFromList(
+               session?.user?.id,
+               currentListDetail.id,
+               selectedProblem.id
+            ).then(async (res) => {
+               if (
+                  setCurrentListProblems &&
+                  setFilterdProblems &&
+                  currentListDetail?.id
+               ) {
+                  const { currentList } = await getSelectList(
+                     currentListDetail.id,
+                     session?.user?.id
+                  );
+                  setCurrentListProblems(currentList);
+                  await applyFilter(filterValues, currentList).then(
+                     ({ filteredProblemsList }) => {
+                        setFilterdProblems &&
+                           setFilterdProblems(filteredProblemsList);
+                     }
+                  );
+               }
+               setSelectedProblem({});
+               onClose();
+            });
+      } catch (error) {
+         console.log(error);
+      }
+   };
    ////////////////////////////////////////////////////////////////////////
    //////////////////////////////// main functions////////////////////////////////
    ////////////////////////////////////////////////////////////////////////
@@ -199,53 +232,29 @@ const BaseListHolder: React.FC<{
                className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-lg "
             ></div>
             <div
-               className={` min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-2xl font-extrabold mx-auto bg-backg2`}
+               className={` min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-xl font-sofiaPro font-semibold mx-auto bg-black bg-opacity-25 backdrop-brightness-[.7] backdrop-blur-md`}
             >
                <div className="w-fit mx-auto">
                   Are You Sure You want to{" "}
                   <span className="text-hard">Unlink </span>
-                  {selectedProblem?.name}?
+                  {selectedProblem?.name} ?
                </div>
-               <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1">
+               <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1 [&>*]:rounded-md">
                   <button
                      onClick={onClose}
-                     className="text-hard border-[2px] border-secod3"
+                     className="w-24 text-hard border-[2px] border-secod1"
                   >
                      Cancel
                   </button>
+
                   <button
                      onClick={() => {
-                        currentListDetail?.id &&
-                           selectedProblem?.id &&
-                           removeProblemFromList(
-                              session?.user?.id,
-                              currentListDetail.id,
-                              selectedProblem.id
-                           ).then(async (res) => {
-                              if (
-                                 setCurrentListProblems &&
-                                 setFilterdProblems &&
-                                 currentListDetail?.id
-                              ) {
-                                 const { currentList } = await getSelectList(
-                                    currentListDetail.id,
-                                    session?.user?.id
-                                 );
-                                 setCurrentListProblems(currentList);
-                                 await applyFilter(
-                                    filterValues,
-                                    currentList
-                                 ).then(({ filteredProblemsList }) => {
-                                    setFilterdProblems &&
-                                       setFilterdProblems(filteredProblemsList);
-                                 });
-                              }
-                              onClose();
-                           });
+                        !selectedProblem?.loader &&
+                           deleteProblemFromCurrentSelectedList();
                      }}
-                     className="text-easy border-[2px] border-secod3"
+                     className="w-24 text-easy border-[2px] border-secod1"
                   >
-                     Ok
+                     {selectedProblem?.loader ? <DotLoader /> : "Ok"}
                   </button>
                </div>
             </div>
