@@ -10,6 +10,7 @@ import CalendarBase from "@/components/calendarPageComponents/CalendarBase";
 import CalendarWeeklyPlans from "@/components/calendarPageComponents/CalendarWeeklyPlans";
 import { useSearchParams } from "next/navigation";
 import useQueryParams from "@/hook/useQueryParams";
+import CalendarApplyWeeklyPlan from "@/components/calendarPageComponents/CalendarApplyWeeklyPlan";
 
 const CalenderLanding: FC<SessionProp> = ({ session }) => {
    // session context
@@ -26,8 +27,10 @@ const CalenderLanding: FC<SessionProp> = ({ session }) => {
    }, [session]);
    const getMainNav = () => {
       switch (viewNavigation) {
-         case "weekly-plan":
+         case "create-edit-weekly-plans":
             return <CalendarWeeklyPlans />;
+         case "apply-weekly-plan":
+            return <CalendarApplyWeeklyPlan />;
          default:
             return <CalendarBase />;
       }
@@ -39,7 +42,7 @@ const CalenderLanding: FC<SessionProp> = ({ session }) => {
    return (
       <>
          <section className="w-screen min-h-screen h-full pt-20 py-10  overflow-y-auto">
-            <div className="w-[95%] h-full lg:w-[90%] 2xl:w-[80%] md:flex justify-between mx-auto font-baloo">
+            <div className="w-[95%] min-h-full max-h-fit lg:w-[90%] 2xl:w-[80%] md:flex justify-between mx-auto font-baloo">
                <CalendarSideBar />
                {getMainNav()}
             </div>

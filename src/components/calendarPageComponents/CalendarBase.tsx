@@ -17,18 +17,21 @@ type CalendarCell = {
    isInCurrentMonth: boolean;
 };
 
-const CalenderBase: React.FC = () => {
+const CalendarBase: React.FC = () => {
    // session context
    const sessionContext = useContext(SessionContext);
    const session = sessionContext?.session;
    // states and variables
    const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+   const [problemStatusesOfMonthLoader, setproblemStatusesOfMonthLoader] =
+      useState<boolean>(true);
    const [problemStatusesOfMonth, setproblemStatusesOfMonth] =
       useState<StatusByDate>({});
    const [presentMonth] = useState<Date>(new Date());
    const gridRef = useRef<HTMLDivElement | null>(null);
    const [hoveredElements, setHoveredElements] = useState<HTMLElement[]>([]);
 
+   // calendar var for styling and creation///////////////////////////////////////
    const offset = 79;
    const borderWidth = 3;
    const angles: number[] = [];
@@ -36,7 +39,7 @@ const CalenderBase: React.FC = () => {
       angles.push(Math.PI * i);
    }
 
-   // function for calendar base calculation
+   // function for calendar base creation//////////////////////////////////////////
    const getDaysInMonth = (date: Date): CalendarCell[] => {
       const month = date.getMonth();
       const year = date.getFullYear();
@@ -86,13 +89,18 @@ const CalenderBase: React.FC = () => {
       });
       setHoveredElements([]);
    };
+
+   // fetch problens solved or attempted for showing month selection
    const fetchUserProblemsMonthStaus = async () => {
+      setproblemStatusesOfMonthLoader(true);
+      setproblemStatusesOfMonth({});
       await fetchUserProblemStatuses({
          userId: session?.user?.id,
          month: currentMonth?.getMonth() + 1, //In JavaScript, Date.getMonth() returns a zero-based index for the month, meaning:
          year: currentMonth?.getFullYear(),
       }).then((res) => {
          setproblemStatusesOfMonth(res.monthStatus);
+         setproblemStatusesOfMonthLoader(false);
       });
    };
    // useEffects
@@ -151,9 +159,9 @@ const CalenderBase: React.FC = () => {
    return (
       <div
          ref={gridRef}
-         className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 p-4 rounded-lg"
+         className="w-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 px-4 rounded-lg"
       >
-         <div className="h-[7%] flex justify-between items-center mb-4">
+         <div className="h-[7%] flex justify-between items-center ">
             <button onClick={() => changeMonth(-1)} className="text-xl">
                <IoMdArrowDropleft />
             </button>
@@ -166,68 +174,79 @@ const CalenderBase: React.FC = () => {
             </button>
          </div>
          <div className="grid grid-cols-7 gap-[2px] h-[93%]">
-            {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
-               <div key={day} className="text-center h-full">
+            {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+               <div key={day} className=" flex justify-center items-center  ">
                   {day}
                </div>
             ))}
             {days.map((day, index) => (
                <div
                   key={index}
-                  className={`relative overflow-hidden z-10  after:rounded-sm hover:border-white border-transparent border-[3px] after:-z-10 after:absolute after:top-0 after:left-0 after:w-full after:h-full ${
-                     day.date.getDate() === presentMonth.getDate() &&
-                     currentMonth.getMonth() === presentMonth.getMonth() &&
-                     currentMonth.getFullYear() === presentMonth.getFullYear()
-                        ? "bg-secod1 border-[#a0aec0]"
-                        : `after:bg-blue-950`
-                  } after:backdrop-filter after:backdrop-blur-sm py-2 text-center h-full flex items-center justify-center ${
+                  // the day-btn and win-btn-active are classes for mouse-hover animation
+                  // after is for better designability
+                  // py-3 so the the above divs of week should get less height and design look better
+                  className={`relative py-3 flex items-center justify-center day-btn overflow-hidden z-10 border-transparent border-[3px]   after:-z-10 after:absolute after:top-0 after:left-0 after:inset-0 after:rounded-sm 
+                     ${
+                        day.date.getDate() === presentMonth.getDate() &&
+                        currentMonth.getMonth() === presentMonth.getMonth() &&
+                        currentMonth.getFullYear() ===
+                           presentMonth.getFullYear()
+                           ? "bg-secod1 border-[#a0aec0] win-btn-active "
+                           : `after:bg-blue-950`
+                     } ${
                      day.isInCurrentMonth
                         ? "after:bg-opacity-50"
-                        : "after:bg-opacity-20"
+                        : "after:bg-opacity-20  "
                   }`}
                >
-                  <ul className="absolute w-[50%] flex top-0 right-0 text-xs ">
-                     <li>
-                        {problemStatusesOfMonth[`${day.date.getDate()}`]?.[
-                           "solved"
-                        ]?.length && (
-                           <BsCheck2Circle className="text-easy mt-[1px] mr-1 cursor-pointer hover:text-prim1 " />
-                        )}
-                     </li>
-                     <li>
-                        {
-                           problemStatusesOfMonth[`${day.date.getDate()}`]?.[
-                              "solved"
-                           ]?.length
-                        }
-                     </li>
-                     <li className="mx-[2px] truncate">
-                        {problemStatusesOfMonth[`${day.date.getDate()}`]?.[
-                           "solved"
-                        ]?.length && "solved"}
-                     </li>
-                  </ul>
-                  <ul className="absolute w-[70%] flex bottom-0 left-0 text-xs ">
-                     <li>
-                        {problemStatusesOfMonth[`${day.date.getDate()}`]?.[
-                           "attempted"
-                        ]?.length && (
-                           <IoIosCodeWorking className="text-medium mt-[1px] mr-1 cursor-pointer hover:text-prim1 " />
-                        )}
-                     </li>
-                     <li>
-                        {
-                           problemStatusesOfMonth[`${day.date.getDate()}`]?.[
-                              "attempted"
-                           ]?.length
-                        }
-                     </li>
-                     <li className="mx-[2px] truncate">
-                        {problemStatusesOfMonth[`${day.date.getDate()}`]?.[
-                           "attempted"
-                        ]?.length && "attempted"}
-                     </li>
-                  </ul>
+                  {problemStatusesOfMonthLoader && day.isInCurrentMonth ? (
+                     <ul
+                        className={`absolute inset-0 top-0 right-0  animate-pulse bg-blue-950 z-[-9] `}
+                     ></ul>
+                  ) : (
+                     <>
+                        <ul className="absolute w-[50%] flex top-0 right-0 text-xs ">
+                           <li className="flex">
+                              {problemStatusesOfMonth[
+                                 `${day.date.getDate()}`
+                              ]?.["solved"]?.length && (
+                                 <BsCheck2Circle className="text-easy mt-[1px] mr-1 cursor-pointer  " />
+                              )}
+
+                              {
+                                 problemStatusesOfMonth[
+                                    `${day.date.getDate()}`
+                                 ]?.["solved"]?.length
+                              }
+                           </li>
+                           <li className="mx-[2px] truncate">
+                              {problemStatusesOfMonth[
+                                 `${day.date.getDate()}`
+                              ]?.["solved"]?.length && "solved"}
+                           </li>
+                        </ul>
+                        <ul className="absolute w-[70%] flex bottom-0 left-0 text-xs ">
+                           <li className="flex">
+                              {problemStatusesOfMonth[
+                                 `${day.date.getDate()}`
+                              ]?.["attempted"]?.length && (
+                                 <IoIosCodeWorking className="text-medium mt-[1px] mr-1 cursor-pointer  " />
+                              )}
+
+                              {
+                                 problemStatusesOfMonth[
+                                    `${day.date.getDate()}`
+                                 ]?.["attempted"]?.length
+                              }
+                           </li>
+                           <li className="mx-[2px] truncate">
+                              {problemStatusesOfMonth[
+                                 `${day.date.getDate()}`
+                              ]?.["attempted"]?.length && "attempted"}
+                           </li>
+                        </ul>
+                     </>
+                  )}
                   {day.date.getDate()}
                </div>
             ))}
@@ -236,4 +255,4 @@ const CalenderBase: React.FC = () => {
    );
 };
 
-export default CalenderBase;
+export default CalendarBase;

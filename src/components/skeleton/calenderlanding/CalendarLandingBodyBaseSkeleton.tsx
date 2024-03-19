@@ -8,7 +8,6 @@ type CalendarCell = {
 
 const CalendarLandingBodyBaseSkeleton: React.FC = () => {
    const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
-   const gridRef = useRef<HTMLDivElement | null>(null);
 
    const angles: number[] = [];
    for (let i = 0; i <= 2; i += 0.25) {
@@ -51,15 +50,8 @@ const CalendarLandingBodyBaseSkeleton: React.FC = () => {
       getDaysInMonth(currentMonth)
    );
 
-   useEffect(() => {
-      setDays(getDaysInMonth(currentMonth));
-   }, [currentMonth]);
-
    return (
-      <div
-         ref={gridRef}
-         className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 p-4 rounded-lg"
-      >
+      <div className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 p-4 rounded-lg">
          <div className="h-[7%] flex justify-between items-center mb-4 animate-pulse">
             <span className="bg-slate-800 w-6 rounded-full h-6"></span>
             <span className="w-[150px] bg-slate-800  h-6 rounded-sm"></span>

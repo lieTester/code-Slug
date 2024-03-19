@@ -85,7 +85,7 @@ const CalederSidebar: React.FC = () => {
                   </li>
                   <button
                      onClick={() =>
-                        setQueryParams({ block: "create-edit-weekcalendar" })
+                        setQueryParams({ block: "apply-weekly-plan" })
                      }
                      className="relative text-sm font-thin  mt-3 bg-white text-secod2 inline-block p-1 rounded-md  !mr-auto cursor-pointer transition-transform duration-100 hover:scale-110 "
                   >
@@ -113,7 +113,11 @@ const CalederSidebar: React.FC = () => {
                      Structure
                   </li>
                   <button
-                     onClick={() => setQueryParams({ block: "weekly-plan" })}
+                     onClick={() =>
+                        setQueryParams({
+                           block: "create-edit-weekly-plans",
+                        })
+                     }
                      className="relative text-sm font-thin  mt-3 bg-white text-secod2 inline-block p-1 rounded-md  !mr-auto cursor-pointer transition-transform duration-100 hover:scale-110 "
                   >
                      Check out

@@ -4,7 +4,7 @@ import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 const Calendar: React.FC = () => {
    const [currentDate, setCurrentDate] = useState(new Date());
 
-   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+   const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
    const months = [
       "January",
       "February",
@@ -64,7 +64,7 @@ const Calendar: React.FC = () => {
                </span>
             </div>
          </div>
-         <div className="grid grid-cols-7 gap-2 mt-2">
+         <div className="grid grid-cols-7 grid-rows-7 gap-2 mt-2">
             {days.map((day) => (
                <div key={day} className="text-center font-medium text-prim2">
                   {day}

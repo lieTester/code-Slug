@@ -31,6 +31,10 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
 
    const fetchInitialTopics = async () => {
       const topicsRes = await getAllTopics();
+      topicsRes.data.topics.sort((a: topicProp, b: topicProp) =>
+         a.name.localeCompare(b.name)
+      );
+
       setTopics(topicsRes.data.topics);
    };
 

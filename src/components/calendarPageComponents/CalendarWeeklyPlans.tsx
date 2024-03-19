@@ -174,6 +174,21 @@ const CalendarWeeklyPlans: React.FC = () => {
          });
       }
    };
+   const displayCalendarDetails = async ({ id }: { id: string }) => {
+      setViewCalendarDataLoader({
+         id,
+         loader: true,
+      });
+      await getWeekDaysAndTopics(session?.user?.id, id).then((res) => {
+         setViewCalendarData(res?.formattedWeekDays);
+         setViewCalendarDataLoader((prev) => {
+            return {
+               ...prev,
+               loader: false,
+            };
+         });
+      });
+   };
    const onClose = () => {
       setOpen(false);
       setCalendarToDelete({ visiblity: false, loader: false });
@@ -184,7 +199,7 @@ const CalendarWeeklyPlans: React.FC = () => {
       fetchData();
    }, []);
    return (
-      <section className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1  rounded-lg">
+      <section className="w-full  md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1  rounded-lg ">
          <div className="w-full h-[30%] rounded-t-lg overflow-y-auto border-[2px] border-secod1">
             <span className="w-full h-[45px] flex justify-between  p-2 pl-4  bg-backg2 font-sofiaPro font-extrabold text-red-300 text-lg">
                <label htmlFor="">Weekly Calendar Plans :</label>
@@ -228,26 +243,9 @@ const CalendarWeeklyPlans: React.FC = () => {
                            <li className=" [&>*]:rounded-full flex">
                               <button
                                  title={"Display Calendar Details"}
-                                 onClick={async () => {
-                                    setViewCalendarDataLoader({
-                                       id: calendar.id,
-                                       loader: true,
-                                    });
-                                    await getWeekDaysAndTopics(
-                                       session?.user?.id,
-                                       calendar?.id
-                                    ).then((res) => {
-                                       setViewCalendarData(
-                                          res?.formattedWeekDays
-                                       );
-                                       setViewCalendarDataLoader((prev) => {
-                                          return {
-                                             ...prev,
-                                             loader: false,
-                                          };
-                                       });
-                                    });
-                                 }}
+                                 onClick={() =>
+                                    displayCalendarDetails({ id: calendar?.id })
+                                 }
                                  className="text-blue-300 text-xl w-full px-1"
                               >
                                  {viewCalendarDataLoader?.id !== calendar.id ? (
@@ -289,23 +287,23 @@ const CalendarWeeklyPlans: React.FC = () => {
             >
                <div
                   onClick={onClose}
-                  className="absolute w-full h-full backdrop-blur-md backdrop-filter  "
+                  className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-lg "
                ></div>
                {/* Delete Calendar block */}
                <div
                   className={`${
                      calendarToDelete?.visiblity ? "block" : "hidden"
-                  } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-2xl font-extrabold mx-auto bg-backg2`}
+                  } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-xl font-sofiaPro font-semibold mx-auto bg-black bg-opacity-50 backdrop-brightness-[.7] backdrop-blur-md`}
                >
                   <div className="w-fit mx-auto">
                      Are You Sure You want to{" "}
                      <span className="text-hard">delete </span>
                      {calendarToDelete?.name}?
                   </div>
-                  <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1">
+                  <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1 [&>*]:rounded-md">
                      <button
                         onClick={onClose}
-                        className="text-hard border-[2px] border-secod3"
+                        className="w-24 text-hard border-[2px] border-secod1"
                      >
                         Cancel
                      </button>
@@ -314,7 +312,7 @@ const CalendarWeeklyPlans: React.FC = () => {
                            !calendarToDelete?.loader &&
                               manageCreateOrDeleteWeekCalender("delete");
                         }}
-                        className="text-easy border-[2px] border-secod3"
+                        className="w-24 text-easy border-[2px] border-secod1"
                      >
                         {calendarToDelete?.loader ? <DotLoader /> : "Ok"}
                      </button>
@@ -324,12 +322,14 @@ const CalendarWeeklyPlans: React.FC = () => {
                <div
                   className={`${
                      newCalendatDetail?.visiblity ? "block" : "hidden"
-                  } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-2xl font-extrabold mx-auto bg-backg2`}
+                  } min-w-[30%] py-10 px-8 rounded-md  text-prim2 z-[100] text-xl font-sofiaPro font-semibold mx-auto bg-black bg-opacity-50 backdrop-brightness-[.7] backdrop-blur-md`}
                >
-                  <label htmlFor="">Enter Calendar Name:</label>
+                  <label htmlFor="" className="font-normal ">
+                     Enter Calendar Name:
+                  </label>
                   <input
                      type="text"
-                     className="w-full mx-auto bg-transparent border-[2px] border-secod1 p-1 outline-none text-red-200"
+                     className="w-full mx-auto bg-transparent rounded-md font-normal   p-1 px-2 outline-none text-prim1 border-[2px] border-secod1"
                      value={
                         newCalendatDetail?.name ? newCalendatDetail.name : ""
                      }
@@ -340,10 +340,10 @@ const CalendarWeeklyPlans: React.FC = () => {
                      }}
                   />
 
-                  <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1">
+                  <div className="mt-4 flex justify-around [&>*]:px-2 [&>*]:py-1 [&>*]:rounded-md">
                      <button
                         onClick={onClose}
-                        className="text-hard border-[2px] border-secod3"
+                        className="w-24 text-hard border-[2px] border-secod1"
                      >
                         Cancel
                      </button>
@@ -352,7 +352,7 @@ const CalendarWeeklyPlans: React.FC = () => {
                            !newCalendatDetail?.loader &&
                               manageCreateOrDeleteWeekCalender("create");
                         }}
-                        className="text-easy border-[2px] border-secod3"
+                        className="w-24 text-easy border-[2px] border-secod1"
                      >
                         {newCalendatDetail?.loader ? <DotLoader /> : "Ok"}
                      </button>
@@ -363,9 +363,9 @@ const CalendarWeeklyPlans: React.FC = () => {
          <div
             className={`w-full ${
                viewCalendarDataLoader?.loader && "h-[70%]"
-            }  py-4 [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg`}
+            }  py-4 `}
          >
-            {/* {if we want a scroll in above div css we can put h-[70%],pr-2  and overflow-y-auto} */}
+            {/* {if we want a scroll in above div css we can put h-[70%],pr-2  and overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg */}
             {viewCalendarDataLoader?.loader ? (
                <DotLoader />
             ) : (
