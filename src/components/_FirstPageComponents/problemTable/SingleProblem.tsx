@@ -12,32 +12,32 @@ const SingleProblem = ({
    onClose: (value: boolean) => void;
    problem: ProblemsProp | undefined;
 }) => {
-   const difficultyColor = (val: String | undefined) => {
+   const difficultyColor = ({ val }: { val: String | undefined }) => {
       if (val === "Easy") return "text-easy";
       else if (val === "Medium") return "text-medium";
       return "text-hard";
    };
-   const statusColor = (val: String | undefined) => {
+   const statusColor = ({ val }: { val: String | undefined }) => {
       if (val === "solved") return "text-easy";
       else if (val === "attempted") return "text-medium";
       return "text-prim1";
    };
-   const giveMyStatus = (status: string) => {
+   const giveMyStatus = ({ status }: { status: string }) => {
       if (status === "solved")
          return (
             <BsCheck2Circle
-               className={`mr-1 text-[18px]  ${statusColor(status)}`}
+               className={`mr-1 text-[18px]  ${statusColor({ val: status })}`}
             />
          );
       else if (status === "attempted")
          return (
             <IoIosCodeWorking
-               className={`mr-1 text-[20px]  ${statusColor(status)}`}
+               className={`mr-1 text-[20px]  ${statusColor({ val: status })}`}
             />
          );
       return (
          <BsCalendarMinus
-            className={`mr-1 text-[15px] ${statusColor(status)}`}
+            className={`mr-1 text-[15px] ${statusColor({ val: status })}`}
          />
       );
    };
@@ -67,17 +67,19 @@ const SingleProblem = ({
                   {problem?.id + ". " + problem?.title}
                </h1>
                <ul className="flex mb-2 [&>*]:mr-4">
-                  <li className={difficultyColor(problem?.difficulty)}>
+                  <li className={difficultyColor({ val: problem?.difficulty })}>
                      {problem?.difficulty}
                   </li>
                   <li
                      className={
-                        statusColor(problem?.status) + " flex items-center"
+                        statusColor({ val: problem?.status }) +
+                        " flex items-center"
                      }
                   >
-                     {problem?.status && giveMyStatus(problem?.status)}
                      {problem?.status &&
-                        giveMyStatus(problem?.status) &&
+                        giveMyStatus({ status: problem?.status })}
+                     {problem?.status &&
+                        giveMyStatus({ status: problem?.status }) &&
                         problem?.status?.charAt(0).toUpperCase() +
                            problem?.status?.slice(1)}
                   </li>

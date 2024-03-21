@@ -4,40 +4,48 @@ import { IoIosCodeWorking } from "react-icons/io";
 ////////////////////////////////////////////////////////////////////////
 //////////////////////////////// UTILS
 ////////////////////////////////////////////////////////////////////////
-export const difficultyColor = (val: String) => {
+export const difficultyColor = ({ val }: { val: String }) => {
    if (val === "Easy") return "text-easy";
    else if (val === "Medium") return "text-medium";
    return "text-hard";
 };
-export const statusColor = (val: String) => {
+export const statusColor = ({ val }: { val: String }) => {
    if (val === "solved") return "text-easy";
    else if (val === "attempted") return "text-medium";
    return "text-prim1";
 };
 
-export const giveMyStatus = (status: string) => {
+export const giveMyStatus = ({ status }: { status: string }) => {
    if (status === "solved")
       return (
          <BsCheck2Circle
-            className={`mr-1 text-[18px]  ${statusColor(status)}`}
+            className={`mr-1 text-[18px]  ${statusColor({ val: status })}`}
          />
       );
    else if (status === "attempted")
       return (
          <IoIosCodeWorking
-            className={`mr-1 text-[20px]  ${statusColor(status)}`}
+            className={`mr-1 text-[20px]  ${statusColor({ val: status })}`}
          />
       );
-   return <BsCalendarMinus className={`mr-1  ${statusColor(status)}`} />;
+   return (
+      <BsCalendarMinus className={`mr-1  ${statusColor({ val: status })}`} />
+   );
 };
 
-export const handleDrop = (
-   e: React.DragEvent<HTMLDivElement>,
-   targetList: ProblemsProp[],
-   setTargetList: React.Dispatch<React.SetStateAction<ProblemsProp[]>>,
-   previousList: ProblemsProp[],
-   setPreviousList: React.Dispatch<React.SetStateAction<ProblemsProp[]>>
-) => {
+export const handleDrop = ({
+   e,
+   targetList,
+   setTargetList,
+   previousList,
+   setPreviousList,
+}: {
+   e: React.DragEvent<HTMLDivElement>;
+   targetList: ProblemsProp[];
+   setTargetList: React.Dispatch<React.SetStateAction<ProblemsProp[]>>;
+   previousList: ProblemsProp[];
+   setPreviousList: React.Dispatch<React.SetStateAction<ProblemsProp[]>>;
+}) => {
    e.preventDefault();
    const droppedProblem = JSON.parse(
       e.dataTransfer.getData("text/plain")

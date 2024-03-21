@@ -98,13 +98,13 @@ const NewListCreator: React.FC<{
       <div
          className="relative w-full bg-black/10 h-[48%] mt-[10px] border-bordr1 border-[1px] rounded-sm overflow-hidden"
          onDrop={(e) => {
-            handleDrop(
+            handleDrop({
                e,
-               newProblemList,
-               setNewProblemList,
-               baseProblemList,
-               setBaseProblemList
-            );
+               targetList: newProblemList,
+               setTargetList: setNewProblemList,
+               previousList: baseProblemList,
+               setPreviousList: setBaseProblemList,
+            });
          }}
          onDragOver={(e) => {
             e.preventDefault();
@@ -133,19 +133,19 @@ const NewListCreator: React.FC<{
                            </h1>
                            <li className="flex items-center">
                               <span
-                                 className={`${difficultyColor(
-                                    problem.difficulty
-                                 )} mx-2`}
+                                 className={`${difficultyColor({
+                                    val: problem.difficulty,
+                                 })} mx-2`}
                               >
                                  {problem.difficulty}
                               </span>
                               <span
-                                 className={`${statusColor(
-                                    problem.status || ""
-                                 )} `}
+                                 className={`${statusColor({
+                                    val: problem.status || "",
+                                 })} `}
                               >
                                  {problem?.status &&
-                                    giveMyStatus(problem?.status)}
+                                    giveMyStatus({ status: problem?.status })}
                               </span>
                            </li>
                         </ul>

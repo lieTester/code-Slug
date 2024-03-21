@@ -143,13 +143,13 @@ const BaseListHolder: React.FC<{
          <div
             className="w-full pointer-events-auto h-[50%] overflow-y-auto  [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg2    "
             onDrop={(e) => {
-               handleDrop(
+               handleDrop({
                   e,
-                  baseProblemList,
-                  setBaseProblemList,
-                  newProblemList,
-                  setNewProblemList
-               );
+                  targetList: baseProblemList,
+                  setTargetList: setBaseProblemList,
+                  previousList: newProblemList,
+                  setPreviousList: setNewProblemList,
+               });
             }}
             onDragOver={(e) => {
                e.preventDefault();
@@ -179,19 +179,19 @@ const BaseListHolder: React.FC<{
                            </h1>
                            <li className="flex items-center">
                               <span
-                                 className={`${difficultyColor(
-                                    problem.difficulty
-                                 )} mx-2`}
+                                 className={`${difficultyColor({
+                                    val: problem.difficulty,
+                                 })} mx-2`}
                               >
                                  {problem.difficulty}
                               </span>
                               <span
-                                 className={`${statusColor(
-                                    problem.status || ""
-                                 )} `}
+                                 className={`${statusColor({
+                                    val: problem.status || "",
+                                 })} `}
                               >
                                  {problem?.status &&
-                                    giveMyStatus(problem?.status)}
+                                    giveMyStatus({ status: problem?.status })}
                               </span>
                            </li>
                         </ul>
