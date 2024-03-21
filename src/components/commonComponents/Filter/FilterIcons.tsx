@@ -6,7 +6,15 @@ import { IoIosCodeWorking } from "react-icons/io";
 
 const FilterIcons: React.FC<{
    filterValues: filterProp | undefined;
-   fireFilter: (category: string, value: string) => void;
+   fireFilter: ({
+      category,
+      value,
+      id,
+   }: {
+      category: string;
+      value: string;
+      id?: any;
+   }) => void;
 }> = ({ filterValues, fireFilter }) => {
    const difficultyColor = (val: String) => {
       if (val === "Easy") return "text-easy";
@@ -45,7 +53,7 @@ const FilterIcons: React.FC<{
             <AiOutlineCloseCircle
                className="text-prim2 cursor-pointer hover:text-prim1 "
                onClick={() => {
-                  if (fireFilter) fireFilter(category, value);
+                  if (fireFilter) fireFilter({ category, value });
                }}
             />
          </li>

@@ -1,4 +1,12 @@
-export const searchFilter = async (value: string, sortedList: any) => {
+import { filterProp, ProblemsProp } from "@/types";
+
+export const searchFilter = async ({
+   value,
+   sortedList,
+}: {
+   value: string;
+   sortedList: any;
+}) => {
    // Filter the items based on the search term and sort by title
    sortedList = sortedList
       .filter((item: any) =>
@@ -9,10 +17,13 @@ export const searchFilter = async (value: string, sortedList: any) => {
    return { sortedList };
 };
 
-export const applyFilter = async (
-   filterValues: any,
-   filteredProblemsList: any
-) => {
+export const applyFilter = async ({
+   filterValues,
+   filteredProblemsList,
+}: {
+   filterValues: filterProp;
+   filteredProblemsList: ProblemsProp[];
+}) => {
    // console.log(filterValues);
    if (filterValues?.topics) {
       filterValues.topics.forEach((value: string) => {
@@ -38,7 +49,7 @@ export const applyFilter = async (
    }
    if (filterValues?.status) {
       filteredProblemsList = filteredProblemsList.filter((problem: any) => {
-         if (problem.status === filterValues?.status.toLowerCase()) {
+         if (problem.status === filterValues?.status?.toLowerCase()) {
             return problem;
          }
       });
@@ -51,21 +62,25 @@ export const applyFilter = async (
       });
    }
    if (filterValues?.search) {
-      const { sortedList } = await searchFilter(
-         filterValues?.search,
-         filteredProblemsList
-      );
+      const { sortedList } = await searchFilter({
+         value: filterValues?.search,
+         sortedList: filteredProblemsList,
+      });
       // console.log(sortedList);
       filteredProblemsList = sortedList;
    }
    return { filteredProblemsList };
 };
 
-export const addFilter = async (
-   category: string,
-   value: string,
-   filterValues: any
-) => {
+export const addFilter = async ({
+   category,
+   value,
+   filterValues,
+}: {
+   category: string;
+   value: string;
+   filterValues: filterProp;
+}) => {
    filterValues = filterValues === undefined ? {} : filterValues;
 
    if (category === "topics") {
@@ -94,18 +109,22 @@ export const addFilter = async (
    return { filterValues };
 };
 
-export const removeFilter = async (
-   category: string,
-   value: string,
-   filterValues: any
-) => {
+export const removeFilter = async ({
+   category,
+   value,
+   filterValues,
+}: {
+   category: string;
+   value: string;
+   filterValues: filterProp;
+}) => {
    // console.log(category, value);
    if (category === "topics") {
-      filterValues.topics = filterValues.topics.filter(
+      filterValues.topics = filterValues?.topics?.filter(
          (item: string) => item !== value
       );
    } else if (category === "companies") {
-      filterValues.companies = filterValues.companies.filter(
+      filterValues.companies = filterValues?.companies?.filter(
          (item: string) => item !== value
       );
    } else if (

@@ -77,12 +77,14 @@ const BaseListHolder: React.FC<{
                      session?.user?.id
                   );
                   setCurrentListProblems(currentList);
-                  await applyFilter(filterValues, currentList).then(
-                     ({ filteredProblemsList }) => {
+                  filterValues &&
+                     (await applyFilter({
+                        filterValues,
+                        filteredProblemsList: currentList,
+                     }).then(({ filteredProblemsList }) => {
                         setFilterdProblems &&
                            setFilterdProblems(filteredProblemsList);
-                     }
-                  );
+                     }));
                }
                setSelectedProblem({});
                onClose();

@@ -27,11 +27,12 @@ export type ProblemsProp = {
 };
 
 export type filterProp = {
-   status?: string;
-   dificulty?: string;
    list?: string;
-   companies?: string[];
+   status?: string;
+   search?: string;
    topics?: string[];
+   difficulty?: string;
+   companies?: string[];
 };
 export type listProp = {
    id: string;

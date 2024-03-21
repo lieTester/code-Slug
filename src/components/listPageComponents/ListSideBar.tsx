@@ -92,7 +92,12 @@ function ListSideBar() {
             if (type === "edit" && matchingList?.name === filterValues?.list) {
                // above if condition of lists?.map is for if in filterValues we have
                // same list selected which we renamed then we do below step else nothing
-               addFilter("list", selectedList?.name, filterValues);
+               filterValues &&
+                  (await addFilter({
+                     category: "list",
+                     value: selectedList?.name,
+                     filterValues,
+                  }));
                const query: Record<string, string> = {};
                query["list"] = selectedList?.name;
                setQueryParams(query);
@@ -110,7 +115,7 @@ function ListSideBar() {
                removeQueryParams(query);
                setFilterValues &&
                   setFilterValues((res) => {
-                     return { ...res, list: "selectedList?.name" };
+                     return { ...res, list: "" };
                   });
                const { problemCollection } = await GetAllProblems(
                   session?.user?.id
