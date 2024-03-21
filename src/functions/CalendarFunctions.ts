@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getAllUserCalendars = async (userId: string) => {
+export const getAllUserCalendars = async ({ userId }: { userId: string }) => {
    try {
       const res = await axios.post(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
@@ -17,7 +17,13 @@ export const getAllUserCalendars = async (userId: string) => {
    }
 };
 
-export const createWeekCalendar = async (userId: string, cal: string) => {
+export const createWeekCalendar = async ({
+   userId,
+   cal,
+}: {
+   userId: string;
+   cal: string;
+}) => {
    try {
       const res = await axios.post(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
@@ -34,11 +40,15 @@ export const createWeekCalendar = async (userId: string, cal: string) => {
    }
 };
 
-export const linkTopics = async (
-   userId: string,
-   weekDayId: number,
-   topics: number[]
-) => {
+export const linkTopics = async ({
+   userId,
+   weekDayId,
+   topics,
+}: {
+   userId: string;
+   weekDayId: number;
+   topics: number[];
+}) => {
    try {
       const res = await axios.post(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
@@ -55,7 +65,13 @@ export const linkTopics = async (
       throw error;
    }
 };
-export const weekDayIdTopics = async (userId: string, weekDayId: number) => {
+export const weekDayIdTopics = async ({
+   userId,
+   weekDayId,
+}: {
+   userId: string;
+   weekDayId: number;
+}) => {
    try {
       const res = await axios.post(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
@@ -72,10 +88,13 @@ export const weekDayIdTopics = async (userId: string, weekDayId: number) => {
    }
 };
 
-export const getWeekDaysAndTopics = async (
-   userId: string,
-   weekCalendarId: string
-) => {
+export const getWeekDaysAndTopics = async ({
+   userId,
+   weekCalendarId,
+}: {
+   userId: string;
+   weekCalendarId: string;
+}) => {
    try {
       const res = await axios.post(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
@@ -92,10 +111,13 @@ export const getWeekDaysAndTopics = async (
    }
 };
 
-export const deleteWeekCalendar = async (
-   userId: string,
-   weekCalendarId: string
-) => {
+export const deleteWeekCalendar = async ({
+   userId,
+   weekCalendarId,
+}: {
+   userId: string;
+   weekCalendarId: string;
+}) => {
    try {
       const res = await axios.post(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,

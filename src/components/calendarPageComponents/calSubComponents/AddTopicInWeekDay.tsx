@@ -40,10 +40,10 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
 
    const fetchLinkedTopics = async () => {
       if (weekDaySettings?.dayId) {
-         const linkedTopicsRes = await weekDayIdTopics(
-            session?.user?.id,
-            weekDaySettings?.dayId
-         );
+         const linkedTopicsRes = await weekDayIdTopics({
+            weekDayId: weekDaySettings?.dayId,
+            userId: session?.user?.id,
+         });
 
          const linkedTopics = linkedTopicsRes.topics?.reduce(
             (acc: { [key: number]: boolean }, topic: topicProp) => {
@@ -73,7 +73,11 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
             .filter((key) => newLinkedTopics[Number(key)]) // Only include topics marked as true
             .map(Number);
 
-         await linkTopics(session.user.id, weekDaySettings.dayId, totalTopics);
+         await linkTopics({
+            userId: session.user.id,
+            weekDayId: weekDaySettings.dayId,
+            topics: totalTopics,
+         });
 
          setNewTopicsUploadLoader(false);
       }

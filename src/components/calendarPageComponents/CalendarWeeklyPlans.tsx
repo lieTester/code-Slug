@@ -152,19 +152,19 @@ const CalendarWeeklyPlans: React.FC = () => {
                return { ...prev, loader: true };
             });
             calendarToDelete?.id &&
-               (await deleteWeekCalendar(
-                  session?.user?.id,
-                  calendarToDelete?.id
-               ));
+               (await deleteWeekCalendar({
+                  userId: session?.user?.id,
+                  weekCalendarId: calendarToDelete?.id,
+               }));
          } else if (type === "create") {
             setNewCalendatDetail((prev) => {
                return { ...prev, loader: true };
             });
             newCalendatDetail?.name &&
-               (await createWeekCalendar(
-                  session?.user?.id,
-                  newCalendatDetail?.name
-               ));
+               (await createWeekCalendar({
+                  userId: session?.user?.id,
+                  cal: newCalendatDetail?.name,
+               }));
          }
       } catch (error) {
          console.error(error);
@@ -179,7 +179,10 @@ const CalendarWeeklyPlans: React.FC = () => {
          id,
          loader: true,
       });
-      await getWeekDaysAndTopics(session?.user?.id, id).then((res) => {
+      await getWeekDaysAndTopics({
+         userId: session?.user?.id,
+         weekCalendarId: id,
+      }).then((res) => {
          setViewCalendarData(res?.formattedWeekDays);
          setViewCalendarDataLoader((prev) => {
             return {
