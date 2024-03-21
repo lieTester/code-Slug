@@ -2,7 +2,13 @@ type Tag = {
    name: string;
 };
 
-export const calculateVisibleTagsCount = (tags: string[], maxWidth: number) => {
+export const calculateVisibleTagsCount = ({
+   tags,
+   maxWidth,
+}: {
+   tags: string[];
+   maxWidth: number;
+}) => {
    let visibleWidth = 0;
    const remainingTags = [...tags]; // Create a copy of the tags array
 

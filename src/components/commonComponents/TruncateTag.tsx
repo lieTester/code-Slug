@@ -12,10 +12,10 @@ function TruncateTags({
    ulCss: string;
    liCss: string;
 }) {
-   const { visibleCount, remainingCount } = calculateVisibleTagsCount(
+   const { visibleCount, remainingCount } = calculateVisibleTagsCount({
       tags,
-      maxWidth
-   );
+      maxWidth,
+   });
 
    return (
       <ul className={ulCss}>
