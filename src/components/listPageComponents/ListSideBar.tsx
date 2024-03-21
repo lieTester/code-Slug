@@ -46,7 +46,7 @@ function ListSideBar() {
    const [isEdit, setIsEdit] = useState<boolean>(true);
    // get lists according to user presense
    const fetchData = async () => {
-      const listsRes = await getAllLists(session?.user?.id);
+      const listsRes = await getAllLists({ userId: session?.user?.id });
 
       if (listsRes?.data?.lists && setLists) setLists(listsRes.data.lists);
    };

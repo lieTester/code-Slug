@@ -66,7 +66,11 @@ const ProblemTableBase: React.FC = () => {
       // console.log(id);
       toggleStatusVisibility(id, false);
       if (session?.user) {
-         addUpdateProblemStatus(id, session.user?.email, status).then((res) => {
+         addUpdateProblemStatus({
+            problemID: id,
+            userId: session.user?.email,
+            status: status,
+         }).then((res) => {
             arrangeStatus(); // user logged in we want to show correct data as databse
          });
       } else {

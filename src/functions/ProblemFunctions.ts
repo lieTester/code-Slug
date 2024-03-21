@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
 import { ProblemsProp } from "@/types/index";
 import axios from "axios";
-export const GetAllProblems = async (id: string | null) => {
+export const GetAllProblems = async ({ userId }: { userId: string | null }) => {
    const response = await axios.get("/api/problem/", {
       method: "GET",
    });
@@ -11,8 +10,8 @@ export const GetAllProblems = async (id: string | null) => {
    }
 
    let problemCollection: ProblemsProp[] = await response.data.data;
-   if (id) {
-      const res = await getUserProblemsStatus(id);
+   if (userId) {
+      const res = await getUserProblemsStatus({ userId });
 
       if (res?.problemStatus) {
          problemCollection = problemCollection.map((problem) => {
@@ -29,10 +28,10 @@ export const GetAllProblems = async (id: string | null) => {
    return { problemCollection };
 };
 
-export const getUserProblemsStatus = async (id: string) => {
-   if (id) {
+export const getUserProblemsStatus = async ({ userId }: { userId: string }) => {
+   if (userId) {
       const response = await axios.get(
-         process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/${id}`
+         process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/${userId}`
       );
       const problemStatus: any = response?.data?.problems.map(
          (problem: any) => {
@@ -49,15 +48,19 @@ export const getUserProblemsStatus = async (id: string) => {
    }
 };
 
-export const addUpdateProblemStatus = async (
-   problemID: number,
-   id: string,
-   status: string
-) => {
-   if (id) {
+export const addUpdateProblemStatus = async ({
+   problemID,
+   userId,
+   status,
+}: {
+   problemID: number;
+   userId: string;
+   status: string;
+}) => {
+   if (userId) {
       const response = await axios.post(
          process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/`,
-         { type: "updateUserProblemStatus", id, status, problemID }
+         { type: "updateUserProblemStatus", userId, status, problemID }
       );
 
       return response;

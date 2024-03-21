@@ -48,18 +48,18 @@ const getAllProblems = async (req: NextRequest, res: NextResponse) => {
 };
 
 const updateUserProblemStatus = async ({
-   id,
+   userId,
    status,
    problemID,
 }: {
-   id: string;
+   userId: string;
    status: string;
    problemID: number;
 }) => {
    try {
       // to double check if the user id is correct
       const user = await prisma.user.findFirst({
-         where: { email: id },
+         where: { email: userId },
       });
       if (user) {
          const problemStatus = await prisma.problemStatus.findUnique({
@@ -196,13 +196,13 @@ const postRequestsForProblems = async (req: NextRequest, res: NextResponse) => {
       const data = await req.json();
       switch (data.type) {
          case "updateUserProblemStatus":
-            return updateUserProblemStatus({
-               id: data.id,
+            return await updateUserProblemStatus({
+               userId: data.userId,
                status: data.status,
                problemID: data.problemID,
             });
          case "fetchUserProblemStatusForMonth":
-            return fetchUserProblemStatusForMonth({
+            return await fetchUserProblemStatusForMonth({
                userId: data.userId,
                year: data.year,
                month: data.month,

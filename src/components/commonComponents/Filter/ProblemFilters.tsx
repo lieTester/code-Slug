@@ -114,7 +114,7 @@ const ProblemFilters = () => {
             });
             currentList = result.currentList;
          } else {
-            const { problemCollection } = await GetAllProblems(id);
+            const { problemCollection } = await GetAllProblems({ userId: id });
             currentList = problemCollection;
          }
 
@@ -281,7 +281,9 @@ const ProblemFilters = () => {
 
             if (session !== undefined && currentListProblems?.length === 0) {
                // get lists according to user presense
-               const listsRes = await getAllLists(session?.user?.id);
+               const listsRes = await getAllLists({
+                  userId: session?.user?.id,
+               });
                setLists && setLists(listsRes.data.lists);
 
                // get filters values from url

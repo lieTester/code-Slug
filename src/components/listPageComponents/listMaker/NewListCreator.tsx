@@ -50,7 +50,7 @@ const NewListCreator: React.FC<{
 
    useEffect(() => {
       const collectUserLists = async () => {
-         await getAllLists(session?.user?.id).then((res) => {
+         await getAllLists({ userId: session?.user?.id }).then((res) => {
             setUserLists(res.data.lists);
             // console.log(res.data.lists);
          });

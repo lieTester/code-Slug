@@ -28,7 +28,7 @@ export const getSelectList = async ({
    }
    let currentList: ProblemsProp[] = await response.data.data;
    if (userId) {
-      const res = await getUserProblemsStatus(userId);
+      const res = await getUserProblemsStatus({ userId });
 
       if (res?.problemStatus) {
          currentList = currentList.map((problem) => {
