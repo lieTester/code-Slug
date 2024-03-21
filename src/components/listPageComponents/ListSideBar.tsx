@@ -72,13 +72,16 @@ function ListSideBar() {
             return { ...prev, loader: true };
          });
          if (type === "delete") {
-            await deleteList(session?.user?.id, selectedList?.id);
+            await deleteList({
+               userId: session?.user?.id,
+               listId: selectedList?.id,
+            });
          } else if (type === "edit") {
-            await updateListName(
-               session?.user?.id,
-               selectedList?.id,
-               selectedList?.name
-            );
+            await updateListName({
+               userId: session?.user?.id,
+               listId: selectedList?.id,
+               listName: selectedList?.name,
+            });
          }
       } catch (error) {
          console.error(error);

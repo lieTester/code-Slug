@@ -108,10 +108,10 @@ const ProblemFilters = () => {
          let currentList: ProblemsProp[] = [];
 
          if (currentListId) {
-            const result = await getSelectList(
-               currentListId,
-               session?.user?.id
-            );
+            const result = await getSelectList({
+               listId: currentListId,
+               userId: session?.user?.id,
+            });
             currentList = result.currentList;
          } else {
             const { problemCollection } = await GetAllProblems(id);
@@ -197,10 +197,10 @@ const ProblemFilters = () => {
                   return { ...prev, ...filterValues };
                });
             if (category === "list") {
-               const { currentList } = await getSelectList(
-                  id,
-                  session?.user?.id
-               );
+               const { currentList } = await getSelectList({
+                  listId: id,
+                  userId: session?.user?.id,
+               });
                processFilters(filterValues, currentList);
                if (setCurrentListProblems && setFilterdProblems) {
                   setCurrentListProblems(currentList);

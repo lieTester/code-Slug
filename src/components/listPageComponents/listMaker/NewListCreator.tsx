@@ -79,7 +79,7 @@ const NewListCreator: React.FC<{
          setListCreationProgress(true);
          setListName("");
          await createNewList({
-            id: session?.user?.id,
+            userId: session?.user?.id,
             listName,
             currentList: newProblemList,
          })

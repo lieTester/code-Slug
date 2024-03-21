@@ -62,20 +62,20 @@ const BaseListHolder: React.FC<{
          });
          currentListDetail?.id &&
             selectedProblem?.id &&
-            removeProblemFromList(
-               session?.user?.id,
-               currentListDetail.id,
-               selectedProblem.id
-            ).then(async (res) => {
+            removeProblemFromList({
+               userId: session?.user?.id,
+               listId: currentListDetail.id,
+               problemId: selectedProblem.id,
+            }).then(async (res) => {
                if (
                   setCurrentListProblems &&
                   setFilterdProblems &&
                   currentListDetail?.id
                ) {
-                  const { currentList } = await getSelectList(
-                     currentListDetail.id,
-                     session?.user?.id
-                  );
+                  const { currentList } = await getSelectList({
+                     listId: currentListDetail.id,
+                     userId: session?.user?.id,
+                  });
                   setCurrentListProblems(currentList);
                   filterValues &&
                      (await applyFilter({
