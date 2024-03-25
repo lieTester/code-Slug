@@ -10,7 +10,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
    const { setQueryParams } = useQueryParams();
 
    // Calculate the range of page numbers to display (5 pages)
-   currentPage = Math.ceil(currentPage % (totalPages + 1));
+   currentPage = Math.max(1, Math.min(currentPage, totalPages));
    let pageRange = Array.from(
       { length: 5 },
       (_, index) => currentPage - 2 + index

@@ -12,10 +12,18 @@ export default function useQueryParams<T = {}>() {
       Object.entries(params).forEach(([key, value]) => {
          if (value !== undefined) {
             if (key === "topics" || key === "companies") {
-               const existingValue = urlSearchParams.get(key) || "";
-               if (existingValue) value = `${existingValue}~${value}`;
+               const existingValuesArr: string[] =
+                  urlSearchParams.get(key)?.split("~") || [];
+
+               // Only add the new value if it does not already exist in the array
+               if (!existingValuesArr.includes(value)) {
+                  existingValuesArr.push(value); // Add the new value
+               }
+
+               urlSearchParams.set(key, String(existingValuesArr.join("~"))); // Join the array back into a string
+            } else {
+               urlSearchParams.set(key, String(value));
             }
-            urlSearchParams.set(key, String(value));
          }
       });
 
@@ -36,6 +44,7 @@ export default function useQueryParams<T = {}>() {
                const newValue = arr.filter((item: string) =>
                   value.localeCompare(item)
                );
+
                if (newValue.length > 0) {
                   urlSearchParams.set(key, String(newValue.join("~")));
                } else {

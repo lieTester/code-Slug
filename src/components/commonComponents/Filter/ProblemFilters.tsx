@@ -85,17 +85,13 @@ const ProblemFilters = () => {
       // to show pagination propperly
       if (currentList.length || goAhead) {
          const totalPages = Math.ceil(currentList?.length / page.pageSize);
-         const currPage = pageNumber || page.currPage || 1;
-         // ||1 is most important because in case we have empty list after filter so we shown pagination ccorrectly
-         // but because list is empty currPage%(ttlPages+1) make it currPage:0
-         // and below useEffect to slice problem will not work for it to work properly currPage:1 is minimum criteria
-         // and as next time list will be having lenght>0 then over setProblemSetLoading will only call
-         // after useEffect slice and setProblemSetLoading will call from main.tsx file
+         const currPage = pageNumber || page.currPage;
          setPage &&
             setPage((prev: any) => {
                return {
                   ...prev,
-                  currPage: currPage % (totalPages + 1),
+                  // currPage: currPage % (totalPages + 1),
+                  currPage: Math.max(1, Math.min(currPage, totalPages)),
                   totalPages: totalPages,
                };
             });

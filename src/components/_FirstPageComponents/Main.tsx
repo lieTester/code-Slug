@@ -27,7 +27,6 @@ const ProblemTable: React.FC = () => {
          // console.log("main->", problemSetLoading, filterdProblems);
          setTimeout(() => {
             setProblemSetLoading({ loading: false });
-            console.log("worked");
          }, 300); // Check if problems array is not empty
       }
    }, [filterdProblems]);
