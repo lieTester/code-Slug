@@ -10,6 +10,12 @@ const getProblemsInList = async (
 ) => {
    try {
       const listId = params.list;
+      if (!listId) {
+         return NextResponse.json({
+            status: 400,
+            message: "List ID  are required",
+         });
+      }
       const currentList = await prisma.list.findFirst({
          where: {
             id: listId,
@@ -59,39 +65,79 @@ const getProblemsInList = async (
    }
 };
 
-const createNewListForUser = async (
-   userId: string,
-   currentList: ProblemsProp[],
-   list: string
-) => {
+const createNewListForUser = async ({
+   list,
+   userId,
+   currentList,
+}: {
+   list: string;
+   userId: string;
+   currentList: ProblemsProp[];
+}) => {
+   // Basic input validation
+   if (!userId || !list || !currentList || !currentList.length) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID, List name, and at least one problem are required",
+      });
+   }
+
    try {
+      // Check if the user exists
       const isUser = await prisma.user.findUnique({ where: { id: userId } });
-      if (isUser) {
-         const newList = await prisma.list.create({
-            data: {
-               name: list,
-               slug: list.toLowerCase().replace(/ /g, "-"),
-               isPublic: false,
-               userId: userId,
-               problems: {
-                  connect: currentList.map((problem: ProblemsProp) => ({
-                     id: problem.id,
-                  })),
-               },
-            },
+      if (!isUser) {
+         return NextResponse.json({
+            status: 404,
+            message: "User not found, please try again",
          });
       }
-      return NextResponse.json({ status: 200, msg: "successfully created" });
+
+      // Create the new list and connect the provided problems
+      const newList = await prisma.list.create({
+         data: {
+            name: list,
+            slug: list.toLowerCase().replace(/ /g, "-"),
+            isPublic: false,
+            userId: userId,
+            problems: {
+               connect: currentList.map((problem: ProblemsProp) => ({
+                  id: problem.id,
+               })),
+            },
+         },
+      });
+
+      return NextResponse.json({
+         status: 200,
+         message: "List successfully created",
+         data: newList,
+      });
    } catch (error) {
-      console.log(error);
+      // Log the error for debugging
+      console.error("Error creating list:", error);
+
       return NextResponse.json({
          status: 500,
+         message: "Internal server error",
          params: { userId, list, currentList },
-         error,
       });
    }
 };
-const deleteListForUser = async (userId: string, listId: string) => {
+
+const deleteListForUser = async ({
+   userId,
+   listId,
+}: {
+   userId: string;
+   listId: string;
+}) => {
+   // Basic input validation
+   if (!userId || !listId) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID and List ID are required",
+      });
+   }
    try {
       const isUser = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -134,11 +180,22 @@ const deleteListForUser = async (userId: string, listId: string) => {
       );
    }
 };
-const unlinkProblemFromList = async (
-   userId: string,
-   listId: string,
-   problemId: number
-) => {
+const unlinkProblemFromList = async ({
+   userId,
+   listId,
+   problemId,
+}: {
+   userId: string;
+   listId: string;
+   problemId: number;
+}) => {
+   // Basic input validation
+   if (!userId || !listId || !problemId) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID, List ID and  Problem Id are required",
+      });
+   }
    try {
       const isUser = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -154,16 +211,18 @@ const unlinkProblemFromList = async (
          include: { user: true }, // Include user to check ownership
       });
 
-      if (!list || list.isPublic) {
+      if (!list) {
          return NextResponse.json(
             { error: "List not found or is Public" },
             { status: 404 }
          );
       }
 
-      if (list.userId !== userId) {
+      if (list.isPublic || list.userId !== userId) {
          return NextResponse.json(
-            { error: "Not authorized to delete this list" },
+            {
+               error: `Either isPublic or Not authorized User to unlink problem: ${problemId} from list: ${listId}`,
+            },
             { status: 403 }
          );
       }
@@ -188,16 +247,27 @@ const unlinkProblemFromList = async (
    }
 };
 
-const updateUsersListName = async (
-   userId: string,
-   listName: string,
-   listId: string
-) => {
+const updateUsersListName = async ({
+   userId,
+   listName,
+   listId,
+}: {
+   userId: string;
+   listName: string;
+   listId: string;
+}) => {
+   // Basic input validation
+   if (!userId || !listId || !listName) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID, List ID and  listName are required",
+      });
+   }
    try {
       const isUser = await prisma.user.findUnique({ where: { id: userId } });
       if (!isUser) {
          return NextResponse.json(
-            { error: "User ID not provided" },
+            { error: "User ID don't exist or provided" },
             { status: 400 }
          );
       }
@@ -207,16 +277,18 @@ const updateUsersListName = async (
          include: { user: true }, // Include user to check ownership
       });
 
-      if (!list || list.isPublic) {
+      if (!list) {
          return NextResponse.json(
             { error: "List not found or is Public" },
             { status: 404 }
          );
       }
 
-      if (list.userId !== userId) {
+      if (list.isPublic || list.userId !== userId) {
          return NextResponse.json(
-            { error: "Not authorized to delete this list" },
+            {
+               error: `Either isPublic or Not authorized User to update listName of : ${listId}`,
+            },
             { status: 403 }
          );
       }
@@ -247,29 +319,39 @@ const acceptPostRequestOnListsUrl = async (
       const data = await req.json();
       switch (data.type) {
          case "createNewListForUser":
-            return createNewListForUser(
-               data?.user,
-               data.currentList,
-               params.list
-            );
+            return createNewListForUser({
+               list: params.list,
+               userId: data?.user,
+               currentList: data.currentList,
+            });
          case "deleteListForUser":
-            return deleteListForUser(data?.user, params.list);
+            return deleteListForUser({
+               userId: data?.user,
+               listId: params.list,
+            });
          case "updateUsersListName":
-            return updateUsersListName(data?.user, data?.listName, params.list);
+            return updateUsersListName({
+               userId: data?.user,
+               listName: data?.listName,
+               listId: params.list,
+            });
          case "unlinkProblemFromList":
-            return unlinkProblemFromList(
-               data?.user,
-               params.list,
-               data?.problemId
-            );
+            return unlinkProblemFromList({
+               userId: data?.user,
+               listId: params.list,
+               problemId: data?.problemId,
+            });
 
          default:
-            break;
+            return NextResponse.json({
+               status: 400,
+               message: "Invalid request type",
+            });
       }
    } catch (error) {
       return NextResponse.json({
          status: 500,
-         params,
+         message: "Request error",
          error,
       });
    }

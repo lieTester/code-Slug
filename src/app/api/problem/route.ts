@@ -56,47 +56,73 @@ const updateUserProblemStatus = async ({
    status: string;
    problemID: number;
 }) => {
+   // Basic input validation
+   if (!userId || !status || !problemID) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID, Problem ID, and status are required",
+      });
+   }
+
    try {
-      // to double check if the user id is correct
+      // Check if the user exists
       const user = await prisma.user.findFirst({
          where: { email: userId },
       });
-      if (user) {
-         const problemStatus = await prisma.problemStatus.findUnique({
+      if (!user) {
+         return NextResponse.json(
+            { error: "User ID doesn't exist or is invalid" },
+            { status: 400 }
+         );
+      }
+
+      // Check if the problem exists
+      const problem = await prisma.problem.findUnique({
+         where: { id: problemID },
+      });
+      if (!problem) {
+         return NextResponse.json(
+            { error: "Problem ID doesn't exist or is invalid" },
+            { status: 400 }
+         );
+      }
+
+      // Check if the problem status already exists
+      const problemStatus = await prisma.problemStatus.findUnique({
+         where: {
+            UserProblemStatusUnique: {
+               problemId: problemID,
+               userId: user.id,
+            },
+         },
+      });
+
+      if (!problemStatus) {
+         // Create new problem status if it does not exist
+         await prisma.problemStatus.create({
+            data: {
+               status: status,
+               problemId: problemID,
+               userId: user.id,
+            },
+         });
+      } else {
+         // Update existing problem status
+         await prisma.problemStatus.update({
             where: {
                UserProblemStatusUnique: {
                   problemId: problemID,
-                  userId: user?.id,
+                  userId: user.id,
                },
             },
+            data: { status: status },
          });
-         if (problemStatus) {
-            await prisma.problemStatus.update({
-               where: {
-                  UserProblemStatusUnique: {
-                     problemId: problemID,
-                     userId: user?.id,
-                  },
-               },
-               data: { status: status },
-            });
-         } else {
-            if (user) {
-               await prisma.problemStatus.create({
-                  data: {
-                     status: status,
-                     problemId: problemID,
-                     userId: user?.id,
-                  },
-               });
-            }
-            return NextResponse.json({ status: 200 });
-         }
       }
-      return NextResponse.json({ status: 400 });
+
+      return NextResponse.json({ status: 200 });
    } catch (error) {
-      console.log(error);
-      return NextResponse.json({ status: 500, error });
+      console.error(error);
+      return NextResponse.json({ status: 500, error: "Internal Server Error" });
    }
 };
 
@@ -109,6 +135,13 @@ const fetchUserProblemStatusForMonth = async ({
    year: number;
    month: number;
 }) => {
+   // Basic input validation
+   if (!userId || !year || !month) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID, year, and month are required",
+      });
+   }
    try {
       // Step 1: Check if the user exists
       const user = await prisma.user.findUnique({
@@ -207,13 +240,18 @@ const postRequestsForProblems = async (req: NextRequest, res: NextResponse) => {
                year: data.year,
                month: data.month,
             });
-
          default:
-            break;
+            return NextResponse.json({
+               status: 400,
+               message: "Invalid request type",
+            });
       }
    } catch (error) {
-      console.log(error);
-      return NextResponse.json({ status: 500, error });
+      return NextResponse.json({
+         status: 500,
+         message: "Request error",
+         error,
+      });
    }
 };
 

@@ -1,7 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib"; // You'll need to set up Prisma
 
-const createWeekCalendar = async (userId: string, calendarName: string) => {
+// Create Week Calendar
+const createWeekCalendar = async ({
+   userId,
+   calendarName,
+}: {
+   userId: string;
+   calendarName: string;
+}) => {
+   if (!userId || !calendarName) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID and Calendar Name are required",
+      });
+   }
    try {
       // Create WeeklyCalendar and WeekDays together in a transaction
       const weekDays = [
@@ -32,8 +45,15 @@ const createWeekCalendar = async (userId: string, calendarName: string) => {
       return NextResponse.json({ status: 500, error });
    }
 };
-const getUserCalendars = async (userId: string) => {
+
+// Get User Calendars
+const getUserCalendars = async ({ userId }: { userId: string }) => {
+   if (!userId) {
+      return NextResponse.json({ status: 400, message: "User ID is required" });
+   }
+
    try {
+      // Fetch calendars for the user
       const calendars = await prisma.weeklyCalendar.findMany({
          where: {
             ownerId: userId,
@@ -52,6 +72,7 @@ const getUserCalendars = async (userId: string) => {
             },
          },
       });
+
       // Transform the data into the desired format
       const formattedCalendars = calendars.map((calendar) => ({
          id: calendar.id,
@@ -62,13 +83,34 @@ const getUserCalendars = async (userId: string) => {
             count: day._count.topics, // The count of topics
          })),
       }));
+
+      // Return the transformed data
       return NextResponse.json({ status: 200, formattedCalendars });
    } catch (error) {
-      console.error(error);
-      return NextResponse.json({ status: 500, error });
+      console.error("Error fetching calendars:", error);
+      return NextResponse.json({
+         status: 500,
+         message: "Internal Server Error",
+         error: error,
+      });
    }
 };
-const getWeekDaysAndTopics = async (userId: string, weekCalendarId: string) => {
+
+// Get WeekDays and Topics
+const getWeekDaysAndTopics = async ({
+   userId,
+   weekCalendarId,
+}: {
+   userId: string;
+   weekCalendarId: string;
+}) => {
+   if (!userId || !weekCalendarId) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID and Week Calendar ID are required",
+      });
+   }
+
    try {
       // Find the WeekDay and ensure it belongs to the user's calendar
       // Check if the calendar belongs to the user
@@ -128,11 +170,22 @@ const getWeekDaysAndTopics = async (userId: string, weekCalendarId: string) => {
       return NextResponse.json({ status: 500, error });
    }
 };
-const linkTopics = async (
-   userId: string,
-   weekDayId: number,
-   newTopics: number[]
-) => {
+// Link Topics
+const linkTopics = async ({
+   userId,
+   weekDayId,
+   newTopics,
+}: {
+   userId: string;
+   weekDayId: number;
+   newTopics: number[];
+}) => {
+   if (!userId || !weekDayId || !newTopics) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID, WeekDay ID, and Topics are required",
+      });
+   }
    try {
       // Step 1: Find the WeekDay and ensure it belongs to the user's calendar
       const weekDay = await prisma.weekDay.findFirst({
@@ -199,7 +252,20 @@ const linkTopics = async (
    }
 };
 
-const weekDayIdTopics = async (userId: string, weekDayId: number) => {
+// Fetch Topics for WeekDay
+const weekDayIdTopics = async ({
+   userId,
+   weekDayId,
+}: {
+   userId: string;
+   weekDayId: number;
+}) => {
+   if (!userId || !weekDayId) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID and WeekDay ID are required",
+      });
+   }
    try {
       const weekDay = await prisma.weekDay.findFirst({
          where: {
@@ -247,7 +313,20 @@ const weekDayIdTopics = async (userId: string, weekDayId: number) => {
    }
 };
 
-const deleteWeekCalendar = async (userId: string, weekCalendarId: string) => {
+// Delete Calendar
+const deleteWeekCalendar = async ({
+   userId,
+   weekCalendarId,
+}: {
+   userId: string;
+   weekCalendarId: string;
+}) => {
+   if (!userId || !weekCalendarId) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID and Week Calendar ID are required",
+      });
+   }
    try {
       // Step 1: Check if the WeeklyCalendar belongs to the user
       const calendar = await prisma.weeklyCalendar.findUnique({
@@ -307,27 +386,51 @@ const deleteWeekCalendar = async (userId: string, weekCalendarId: string) => {
 };
 
 const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {};
-const postHandlerRequests = async (req: NextRequest, res: NextResponse) => {
+const postHandlerRequests = async (req: NextRequest) => {
    try {
       const data = await req.json();
       switch (data.type) {
          case "getAllCalendars":
-            return getUserCalendars(data?.userId);
+            return getUserCalendars({ userId: data.userId });
          case "createWeekCalendar":
-            return createWeekCalendar(data?.userId, data?.cal);
+            return createWeekCalendar({
+               userId: data.userId,
+               calendarName: data.cal,
+            });
          case "linkTopics":
-            return linkTopics(data?.userId, data?.weekDayId, data?.topics);
+            return linkTopics({
+               userId: data.userId,
+               weekDayId: data.weekDayId,
+               newTopics: data.topics,
+            });
          case "getWeekDaysAndTopics":
-            return getWeekDaysAndTopics(data?.userId, data?.weekCalendarId);
+            return getWeekDaysAndTopics({
+               userId: data.userId,
+               weekCalendarId: data.weekCalendarId,
+            });
          case "deleteWeekCalendar":
-            return deleteWeekCalendar(data?.userId, data?.weekCalendarId);
+            return deleteWeekCalendar({
+               userId: data.userId,
+               weekCalendarId: data.weekCalendarId,
+            });
          case "weekDayIdTopics":
-            return weekDayIdTopics(data?.userId, data?.weekDayId);
-
+            return weekDayIdTopics({
+               userId: data.userId,
+               weekDayId: data.weekDayId,
+            });
          default:
-            break;
+            return NextResponse.json({
+               status: 400,
+               message: "Invalid request type",
+            });
       }
-   } catch (error) {}
+   } catch (error) {
+      return NextResponse.json({
+         status: 500,
+         message: "Request error",
+         error,
+      });
+   }
 };
 
 export { getHandlerRequests as GET, postHandlerRequests as POST };

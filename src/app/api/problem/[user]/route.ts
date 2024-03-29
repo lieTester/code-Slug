@@ -6,36 +6,44 @@ const getUserProblemsStatus = async (
    { params }: { params: { user: string } }
 ) => {
    try {
+      // Fetch user by ID
       const user = await prisma.user.findUnique({
          where: { id: params.user },
       });
-      // console.log(params.user, user);
-      // Fetch problems and related data
-      if (user) {
-         const problems = await prisma.problemStatus.findMany({
-            where: {
-               user: {
-                  id: user?.id,
-               },
-            },
-            select: {
-               problemId: true,
-               status: true,
-               problem: {
-                  select: {
-                     title: true,
-                     titleSlug: true,
-                  },
-               },
-            },
-         });
 
-         return NextResponse.json({ status: 200, problems });
+      // Check if user exists
+      if (!user) {
+         return NextResponse.json({
+            status: 404,
+            message: "User not found",
+         });
       }
-      return NextResponse.json({ status: 405, msg: "don't try" });
+
+      // Fetch problems and related data
+      const problems = await prisma.problemStatus.findMany({
+         where: {
+            userId: user.id,
+         },
+         select: {
+            problemId: true,
+            status: true,
+            problem: {
+               select: {
+                  title: true,
+                  titleSlug: true,
+               },
+            },
+         },
+      });
+
+      return NextResponse.json({ status: 200, problems });
    } catch (error) {
-      console.error(error);
-      return NextResponse.json({ status: 500, error });
+      console.error("Error fetching user problem status:", error);
+      return NextResponse.json({
+         status: 500,
+         error: "Internal Server Error",
+      });
    }
 };
+
 export { getUserProblemsStatus as GET };
