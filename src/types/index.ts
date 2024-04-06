@@ -86,7 +86,6 @@ export type AddTopicInWeekDay = {
          hoverColor?: string;
       }>
    >;
-   weekCalendarId: string;
 };
 
 export interface CalWeekBannerProps extends ChildrenProp {
@@ -104,6 +103,13 @@ export interface CalWeekBannerProps extends ChildrenProp {
          hoverColor?: string;
       }>
    >;
+}
+export interface CalFullViewProps {
+   color: string;
+   userId: string;
+   hoverColor: string;
+   weekCalendarId: string;
+   weekCalendarName: string;
 }
 
 export type StatusByDate = {

@@ -157,10 +157,7 @@ const CalendarBase: React.FC = () => {
    }, [angles, hoveredElements]);
 
    return (
-      <div
-         ref={gridRef}
-         className="w-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 px-4 rounded-lg"
-      >
+      <div ref={gridRef} className="h-full">
          <div className="h-[7%] flex justify-between items-center ">
             <button onClick={() => changeMonth(-1)} className="text-xl">
                <IoMdArrowDropleft />
@@ -187,10 +184,12 @@ const CalendarBase: React.FC = () => {
                   // py-3 so the the above divs of week should get less height and design look better
                   className={`relative py-3 flex items-center justify-center day-btn overflow-hidden z-10 border-transparent border-[3px]   after:-z-10 after:absolute after:top-0 after:left-0 after:inset-0 after:rounded-sm 
                      ${
+                        // this whole beow checks is for highliting current month and today's day highlight
                         day.date.getDate() === presentMonth.getDate() &&
                         currentMonth.getMonth() === presentMonth.getMonth() &&
                         currentMonth.getFullYear() ===
-                           presentMonth.getFullYear()
+                           presentMonth.getFullYear() &&
+                        day.isInCurrentMonth
                            ? "bg-secod1 border-[#a0aec0] win-btn-active "
                            : `after:bg-blue-950`
                      } ${

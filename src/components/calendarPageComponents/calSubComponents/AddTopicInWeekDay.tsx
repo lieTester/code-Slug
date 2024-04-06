@@ -14,7 +14,6 @@ import TopicsSkeleton from "@/components/skeleton/calenderlanding/CalendarWeekly
 const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
    weekDaySettings,
    setWeekDaySettings,
-   weekCalendarId,
 }) => {
    // session context
    const sessionContext = useContext(SessionContext);
@@ -127,7 +126,7 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
                   </span>
                   <ul className="max-h-[calc(100%-50px)] flex flex-wrap justify-evenly mt-2 overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-backg1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-front2">
                      {topics.length === 0 ? (
-                        <TopicsSkeleton />
+                        <TopicsSkeleton count={14} />
                      ) : (
                         topics?.map((topic: topicProp) => {
                            return (
@@ -169,7 +168,7 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
                   </div>
                   <ul className="max-h-[calc(100%-50px)] flex flex-wrap justify-evenly mt-2 overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-backg1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-front2">
                      {newLinkedTopicsLoader || topics.length === 0 ? (
-                        <TopicsSkeleton />
+                        <TopicsSkeleton count={14} />
                      ) : (
                         topics?.map((topic: topicProp) => {
                            if (newLinkedTopics[topic?.id]) {

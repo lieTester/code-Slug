@@ -15,9 +15,16 @@ const CalederSidebar: React.FC = () => {
       const handleResize = () => {
          if (parentRef.current && childRef.current) {
             const parentWidth = parentRef.current.offsetWidth;
-            const parentHeight = parentRef.current.offsetHeight;
             childRef.current.style.width = `${parentWidth}px `;
-            childRef.current.style.height = `${parentHeight}px `;
+
+            if (childRef.current) {
+               // Check window size and toggle the 'fixed' class
+               if (window.innerWidth >= 688) {
+                  childRef.current.classList.add("md:fixed");
+               } else {
+                  childRef.current.classList.remove("md:fixed");
+               }
+            }
          }
       };
       // Set the initial width on mount
@@ -32,15 +39,15 @@ const CalederSidebar: React.FC = () => {
 
    return (
       <section
-         className="relative w-full md:h-full md:w-[40%] lg:w-[30%] 2xl:w-[25%] mr-[10px] text-prim1 mb-4 "
+         className="relative w-full mb-4 md:h-full md:w-[40%] lg:w-[30%] 2xl:w-[25%]  text-prim1  "
          ref={parentRef}
       >
          <div
-            className="relative md:fixed w-full [&>*]:mb-2 [&>*]:pb-2 "
+            className="  pb-6  w-full [&>*]:mb-2 [&>*]:h-fit  [&>*]:pb-2 "
             ref={childRef}
          >
             <ul
-               className="relative w-[100%]  rounded-md overflow-hidden "
+               className="relative w-[100%] h-fit rounded-md !overflow-hidden "
                id="highlight1"
             >
                <li className="absolute w-full h-full z-1">

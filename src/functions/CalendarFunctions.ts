@@ -1,12 +1,16 @@
 import axios from "axios";
 
+////////////////////////////////////////////////////////////////
+// GET Request ////////////////////////////////////////////////
 export const getAllUserCalendars = async ({ userId }: { userId: string }) => {
    try {
-      const res = await axios.post(
+      const res = await axios.get(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
          {
-            type: "getAllCalendars",
-            userId,
+            params: {
+               type: "getAllCalendars",
+               userId,
+            },
          }
       );
 
@@ -16,7 +20,70 @@ export const getAllUserCalendars = async ({ userId }: { userId: string }) => {
       throw error;
    }
 };
+export const getAllUserAndPublicCalendars = async ({
+   userId,
+}: {
+   userId: string;
+}) => {
+   try {
+      const res = await axios.get(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar`,
+         {
+            params: {
+               type: "getPublicAndUserCalendars",
+               userId,
+            },
+         }
+      );
 
+      return res.data;
+   } catch (error) {
+      console.error("Error fetching user calendars:", error);
+      throw error;
+   }
+};
+export const weekDayIdTopics = async ({
+   userId,
+   weekDayId,
+}: {
+   userId: string;
+   weekDayId: number;
+}) => {
+   try {
+      const res = await axios.get(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
+         {
+            params: { type: "weekDayIdTopics", userId, weekDayId },
+         }
+      );
+      return res.data;
+   } catch (error) {
+      console.error("Error linking topics:", error);
+      throw error;
+   }
+};
+export const getWeekDaysAndTopics = async ({
+   userId,
+   weekCalendarId,
+}: {
+   userId: string;
+   weekCalendarId: string;
+}) => {
+   try {
+      const res = await axios.get(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
+         {
+            params: { type: "getWeekDaysAndTopics", userId, weekCalendarId },
+         }
+      );
+      return res.data;
+   } catch (error) {
+      console.error("Error fetching weekdays and topics:", error);
+      throw error;
+   }
+};
+////////////////////////////////////////////////////////////////
+// POST Request ////////////////////////////////////////////////
 export const createWeekCalendar = async ({
    userId,
    cal,
@@ -65,30 +132,8 @@ export const linkTopics = async ({
       throw error;
    }
 };
-export const weekDayIdTopics = async ({
-   userId,
-   weekDayId,
-}: {
-   userId: string;
-   weekDayId: number;
-}) => {
-   try {
-      const res = await axios.post(
-         `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
-         {
-            type: "weekDayIdTopics",
-            userId,
-            weekDayId,
-         }
-      );
-      return res.data;
-   } catch (error) {
-      console.error("Error linking topics:", error);
-      throw error;
-   }
-};
 
-export const getWeekDaysAndTopics = async ({
+export const assignCalendarToUser = async ({
    userId,
    weekCalendarId,
 }: {
@@ -99,7 +144,7 @@ export const getWeekDaysAndTopics = async ({
       const res = await axios.post(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar/`,
          {
-            type: "getWeekDaysAndTopics",
+            type: "assignCalendarToUser",
             userId,
             weekCalendarId,
          }
@@ -110,7 +155,6 @@ export const getWeekDaysAndTopics = async ({
       throw error;
    }
 };
-
 export const deleteWeekCalendar = async ({
    userId,
    weekCalendarId,

@@ -6,7 +6,7 @@ const CalendarWeeklyPlansBaseSkeleton = () => {
    return (
       <section className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 rounded-lg">
          {/* Header Skeleton */}
-         <div className="w-full h-[30%] rounded-t-lg overflow-y-auto border-[2px] border-secod1 animate-pulse">
+         <div className="w-full h-[200px] rounded-t-lg overflow-y-auto border-[2px] border-secod1 animate-pulse">
             <span className="w-[200px] h-[30px] my-2 ml-3 p-2 pl-4 block bg-slate-700 rounded-sm "></span>
 
             {/* Skeleton Loader for Calendar List */}
@@ -17,7 +17,7 @@ const CalendarWeeklyPlansBaseSkeleton = () => {
          </div>
 
          {/* Content Skeleton for Calendar Details */}
-         <div className="w-full h-[70%] py-4 overflow-y-auto animate-pulse">
+         <div className="w-full h-[calc(100%-200px)] py-4 overflow-y-auto animate-pulse">
             <DotLoader />
          </div>
       </section>

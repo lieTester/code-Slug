@@ -41,10 +41,12 @@ const CalenderLanding: FC<SessionProp> = ({ session }) => {
 
    return (
       <>
-         <section className="w-screen min-h-screen h-full pt-20 py-10  overflow-y-auto">
-            <div className="w-[95%] min-h-full max-h-fit lg:w-[90%] 2xl:w-[80%] md:flex justify-between mx-auto font-baloo">
+         <section className="w-screen h-full pt-20 pb-10  overflow-y-auto ">
+            <div className="w-[95%] h-full lg:w-[90%] 2xl:w-[80%] md:flex justify-between mx-auto font-baloo ">
                <CalendarSideBar />
-               {getMainNav()}
+               <div className="w-full pb-4 md:pl-4  md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-sofiaPro text-prim1 ">
+                  {getMainNav()}
+               </div>
             </div>
          </section>
       </>

@@ -122,7 +122,7 @@ const CalendarWeeklyPlans: React.FC = () => {
    ////////////////////////////////////////////////////////////////////////////
    const fetchData = async () => {
       setCalendarsLoader(true);
-      await getAllUserCalendars(session?.user?.id)
+      await getAllUserCalendars({ userId: session?.user?.id })
          .then((res) => {
             // console.log(res);
             setCalendars(res?.formattedCalendars);
@@ -202,8 +202,8 @@ const CalendarWeeklyPlans: React.FC = () => {
       fetchData();
    }, []);
    return (
-      <section className="w-full  md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1  rounded-lg ">
-         <div className="w-full h-[30%] rounded-t-lg overflow-y-auto border-[2px] border-secod1">
+      <>
+         <div className="w-full h-[200px] rounded-t-lg overflow-y-auto border-[2px] border-secod1">
             <span className="w-full h-[45px] flex justify-between  p-2 pl-4  bg-backg2 font-sofiaPro font-extrabold text-red-300 text-lg">
                <label htmlFor="">Weekly Calendar Plans :</label>
                <button
@@ -363,55 +363,20 @@ const CalendarWeeklyPlans: React.FC = () => {
                </div>
             </div>
          </div>
-         <div
-            className={`w-full ${
-               viewCalendarDataLoader?.loader && "h-[70%]"
-            }  py-4 `}
-         >
-            {/* {if we want a scroll in above div css we can put h-[70%],pr-2  and overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg */}
-            {viewCalendarDataLoader?.loader ? (
+
+         {/* {if we want a scroll in above div css we can put h-[70%],pr-2  and overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg */}
+         {viewCalendarDataLoader?.loader ? (
+            <div className="w-full h-[200px] md:min-h-[calc(100%-100px)] flex justify-center items-center  ">
                <DotLoader />
-            ) : (
-               <div className="gap-4 w-full columns-1 sm:columns-2 md:columns-1 lg:columns-2 xl:columns-3  space-y-4  [&>*]:break-inside-avoid [&>*]:overflow-hidden">
-                  {viewCalendarData &&
-                     weekDaysSettings?.map((day, index) => {
-                        if (day.banner === 1) {
-                           return (
-                              viewCalendarData[day.day] && (
-                                 <CalWeekBanner1
-                                    key={viewCalendarData[day.day].id}
-                                    day={day.day}
-                                    color={day.color}
-                                    hoverColor={day.hoverColor}
-                                    setOpen={setOpenWeekDayCalendar}
-                                    dayId={viewCalendarData[day.day].id}
-                                 >
-                                    <ul
-                                       key={viewCalendarData[day.day].id}
-                                       className="w-full flex  flex-wrap justify-stretch [&>*]:mr-2 [&>*]:my-1"
-                                    >
-                                       {viewCalendarData[day.day]?.topics.map(
-                                          (topic) => {
-                                             return (
-                                                <li
-                                                   key={topic?.id}
-                                                   className={` flex items-center justify-between rounded-sm text-[13px] bg-secod3`}
-                                                >
-                                                   <span className="mx-1 mt-[1px]">
-                                                      {topic?.name}
-                                                   </span>
-                                                </li>
-                                             );
-                                          }
-                                       )}
-                                    </ul>
-                                 </CalWeekBanner1>
-                              )
-                           );
-                        }
+            </div>
+         ) : (
+            <div className="gap-4 w-full py-5 columns-1 sm:columns-2 md:columns-1 lg:columns-2 xl:columns-3  space-y-4  [&>*]:break-inside-avoid [&>*]:overflow-hidden">
+               {viewCalendarData &&
+                  weekDaysSettings?.map((day, index) => {
+                     if (day.banner === 1) {
                         return (
                            viewCalendarData[day.day] && (
-                              <CalWeekBanner2
+                              <CalWeekBanner1
                                  key={viewCalendarData[day.day].id}
                                  day={day.day}
                                  color={day.color}
@@ -438,21 +403,52 @@ const CalendarWeeklyPlans: React.FC = () => {
                                        }
                                     )}
                                  </ul>
-                              </CalWeekBanner2>
+                              </CalWeekBanner1>
                            )
                         );
-                     })}
-               </div>
-            )}
-         </div>
+                     }
+                     return (
+                        viewCalendarData[day.day] && (
+                           <CalWeekBanner2
+                              key={viewCalendarData[day.day].id}
+                              day={day.day}
+                              color={day.color}
+                              hoverColor={day.hoverColor}
+                              setOpen={setOpenWeekDayCalendar}
+                              dayId={viewCalendarData[day.day].id}
+                           >
+                              <ul
+                                 key={viewCalendarData[day.day].id}
+                                 className="w-full flex  flex-wrap justify-stretch [&>*]:mr-2 [&>*]:my-1"
+                              >
+                                 {viewCalendarData[day.day]?.topics.map(
+                                    (topic) => {
+                                       return (
+                                          <li
+                                             key={topic?.id}
+                                             className={` flex items-center justify-between rounded-sm text-[13px] bg-secod3`}
+                                          >
+                                             <span className="mx-1 mt-[1px]">
+                                                {topic?.name}
+                                             </span>
+                                          </li>
+                                       );
+                                    }
+                                 )}
+                              </ul>
+                           </CalWeekBanner2>
+                        )
+                     );
+                  })}
+            </div>
+         )}
 
          {/* Section of Edit and Add */}
          <AddTopicInWeekDay
             weekDaySettings={openWeekDayCalendar}
             setWeekDaySettings={setOpenWeekDayCalendar}
-            weekCalendarId={viewCalendarDataLoader?.id || ""}
          />
-      </section>
+      </>
    );
 };
 

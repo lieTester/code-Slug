@@ -51,8 +51,8 @@ const CalendarLandingBodyBaseSkeleton: React.FC = () => {
    );
 
    return (
-      <div className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 p-4 rounded-lg">
-         <div className="h-[7%] flex justify-between items-center mb-4 animate-pulse">
+      <div className="w-full h-full md:w-[60%] lg:w-[70%] 2xl:w-[75%] font-baloo text-prim1 px-4 rounded-lg">
+         <div className="h-[7%] flex justify-between items-center animate-pulse">
             <span className="bg-slate-800 w-6 rounded-full h-6"></span>
             <span className="w-[150px] bg-slate-800  h-6 rounded-sm"></span>
 
@@ -64,14 +64,14 @@ const CalendarLandingBodyBaseSkeleton: React.FC = () => {
                   key={day}
                   className="flex justify-center items-center  h-full animate-pulse"
                >
-                  <span className="bg-slate-800 w-10 rounded-sm h-6"></span>
+                  <span className="bg-slate-800 w-10 rounded-sm h-4"></span>
                </div>
             ))}
             {days.map((day, index) => (
                <div
                   key={index}
-                  className={`relative day-btn z-10 after:rounded-sm  border-transparent border-[3px] after:-z-10 after:absolute after:top-0 after:left-0 after:w-full after:h-full animate-pulse
-                      after:bg-blue-950 after:backdrop-filter after:backdrop-blur-sm py-2 text-center h-full flex items-center justify-center ${
+                  className={`relative py-3 day-btn z-10  text-center h-full flex items-center justify-center border-transparent border-[3px] after:rounded-sm  after:-z-10 after:absolute after:top-0 after:left-0 after:w-full after:h-full animate-pulse
+                      after:bg-blue-950 after:backdrop-filter after:backdrop-blur-sm  ${
                          day.isInCurrentMonth
                             ? "after:bg-opacity-50"
                             : "after:bg-opacity-20"
