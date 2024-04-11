@@ -44,7 +44,6 @@ const CalFullViewComponent: React.FC<CalFullViewProps> = ({
          userId: userId,
          weekCalendarId: weekCalendarId,
       }).then((res) => {
-         console.log(res.status);
          if (res.status === 200) {
             setSendingData(false);
          }

@@ -151,10 +151,10 @@ const fetchUserProblemStatusForMonth = async ({
       });
 
       if (!user) {
-         return {
+         return NextResponse.json({
             status: 404,
             message: "User not found",
-         };
+         });
       }
 
       // Step 2: Set the date range for the given month and year
