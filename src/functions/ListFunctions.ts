@@ -11,7 +11,6 @@ export const getAllLists = async ({ userId }: { userId: string | null }) => {
             params: { type: "getAllLists", userId },
          }
       );
-      console.log(response);
       return response;
    } catch (error) {
       console.error("Failed to fetch topics:", error);
