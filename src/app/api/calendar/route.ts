@@ -12,7 +12,7 @@ const createWeekCalendar = async ({
    if (!userId || !calendarName) {
       return NextResponse.json({
          status: 400,
-         message: "User ID and Calendar Name are required",
+         error: "User ID and Calendar Name are required",
       });
    }
    try {
@@ -26,7 +26,7 @@ const createWeekCalendar = async ({
          "Saturday",
          "Sunday",
       ];
-      const calendar = await prisma.weeklyCalendar.create({
+      await prisma.weeklyCalendar.create({
          data: {
             title: calendarName,
             ownerId: userId,
@@ -39,7 +39,10 @@ const createWeekCalendar = async ({
          },
       });
 
-      return NextResponse.json({ status: 200, calendar });
+      return NextResponse.json({
+         status: 200,
+         message: "New User Calendar Created",
+      });
    } catch (error) {
       console.error(error);
       return NextResponse.json({ status: 500, error });
@@ -49,7 +52,7 @@ const createWeekCalendar = async ({
 // Get User Calendars
 const getUserCalendars = async ({ userId }: { userId: string }) => {
    if (!userId) {
-      return NextResponse.json({ status: 400, message: "User ID is required" });
+      return NextResponse.json({ status: 400, error: "User ID is required" });
    }
 
    try {
@@ -85,12 +88,15 @@ const getUserCalendars = async ({ userId }: { userId: string }) => {
       }));
 
       // Return the transformed data
-      return NextResponse.json({ status: 200, formattedCalendars });
+      return NextResponse.json({
+         status: 200,
+         message: "All User Calendars",
+         formattedCalendars,
+      });
    } catch (error) {
       console.error("Error fetching calendars:", error);
       return NextResponse.json({
          status: 500,
-         message: "Internal Server Error",
          error: error,
       });
    }
@@ -98,7 +104,7 @@ const getUserCalendars = async ({ userId }: { userId: string }) => {
 // Get Public User Calendars
 const getPublicAndUserCalendars = async ({ userId }: { userId: string }) => {
    if (!userId) {
-      return NextResponse.json({ status: 400, message: "User ID is required" });
+      return NextResponse.json({ status: 400, error: "User ID is required" });
    }
 
    try {
@@ -111,7 +117,7 @@ const getPublicAndUserCalendars = async ({ userId }: { userId: string }) => {
       if (!defaultUser) {
          return NextResponse.json({
             status: 404,
-            message: "Default user not found",
+            error: "Default user not found",
          });
       }
 
@@ -151,12 +157,15 @@ const getPublicAndUserCalendars = async ({ userId }: { userId: string }) => {
       }));
 
       // Return the transformed data
-      return NextResponse.json({ status: 200, formattedCalendars });
+      return NextResponse.json({
+         status: 200,
+         message: "All user and public calendars",
+         formattedCalendars,
+      });
    } catch (error) {
-      console.error("Error fetching calendars:", error);
+      console.error(error);
       return NextResponse.json({
          status: 500,
-         message: "Internal Server Error",
          error: error,
       });
    }
@@ -171,10 +180,9 @@ const getWeekDaysAndTopics = async ({
    weekCalendarId: string;
 }) => {
    if (!userId || !weekCalendarId) {
-      console.log(userId, weekCalendarId);
       return NextResponse.json({
          status: 400,
-         message: "User ID and Week Calendar ID are required",
+         error: "User ID and Week Calendar ID are required",
       });
    }
 
@@ -188,7 +196,7 @@ const getWeekDaysAndTopics = async ({
       if (!defaultUser) {
          return NextResponse.json({
             status: 404,
-            message: "Default user not found",
+            error: "Default user not found",
          });
       }
 
@@ -248,7 +256,11 @@ const getWeekDaysAndTopics = async ({
          };
       });
 
-      return NextResponse.json({ status: 200, formattedWeekDays });
+      return NextResponse.json({
+         status: 200,
+         message: "All Weekdays have with topics",
+         formattedWeekDays,
+      });
    } catch (error) {
       console.error(error);
       return NextResponse.json({ status: 500, error });
@@ -267,7 +279,7 @@ const linkTopics = async ({
    if (!userId || !weekDayId || !newTopics) {
       return NextResponse.json({
          status: 400,
-         message: "User ID, WeekDay ID, and Topics are required",
+         error: "User ID, WeekDay ID, and Topics are required",
       });
    }
    try {
@@ -347,7 +359,7 @@ const weekDayIdTopics = async ({
    if (!userId || !weekDayId) {
       return NextResponse.json({
          status: 400,
-         message: "User ID and WeekDay ID are required",
+         error: "User ID and WeekDay ID are required",
       });
    }
    try {
@@ -408,7 +420,7 @@ const assignCalendarToUser = async ({
    if (!userId || !weekCalendarId) {
       return NextResponse.json({
          status: 400,
-         message: "User ID and Week Calendar ID are required",
+         error: "User ID and Week Calendar ID are required",
       });
    }
 
@@ -473,7 +485,7 @@ const deleteWeekCalendar = async ({
    if (!userId || !weekCalendarId) {
       return NextResponse.json({
          status: 400,
-         message: "User ID and Week Calendar ID are required",
+         error: "User ID and Week Calendar ID are required",
       });
    }
    try {
@@ -566,7 +578,6 @@ const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {
    } catch (error) {
       return NextResponse.json({
          status: 500,
-         message: "Request error",
          error,
       });
    }
@@ -607,7 +618,6 @@ const postHandlerRequests = async (req: NextRequest) => {
    } catch (error) {
       return NextResponse.json({
          status: 500,
-         message: "Request error",
          error,
       });
    }

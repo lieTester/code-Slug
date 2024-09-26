@@ -40,7 +40,11 @@ const getAllProblems = async () => {
          };
       });
 
-      return NextResponse.json({ status: 200, data: transformedProblems });
+      return NextResponse.json({
+         status: 200,
+         message: "All problem fetched successfully",
+         data: transformedProblems,
+      });
    } catch (error) {
       console.error(error);
       return NextResponse.json({ status: 500, error });
@@ -55,7 +59,7 @@ const getUserProblemsStatus = async (
    if (!userId) {
       return NextResponse.json({
          status: 400,
-         message: "User ID is required",
+         error: "User ID is required",
       });
    }
    try {
@@ -68,7 +72,7 @@ const getUserProblemsStatus = async (
       if (!user) {
          return NextResponse.json({
             status: 404,
-            message: "User not found",
+            error: "User not found",
          });
       }
 
@@ -95,7 +99,7 @@ const getUserProblemsStatus = async (
          problems,
       });
    } catch (error) {
-      console.error("Error fetching user problem status:", error);
+      console.error(error);
       return NextResponse.json({
          status: 500,
          error: "Internal Server Error",
@@ -116,7 +120,7 @@ const updateUserProblemStatus = async ({
    if (!userId || !status || !problemID) {
       return NextResponse.json({
          status: 400,
-         message: "User ID, Problem ID, and status are required",
+         error: "User ID, Problem ID, and status are required",
       });
    }
 
@@ -135,7 +139,7 @@ const updateUserProblemStatus = async ({
       if (!problem)
          return NextResponse.json({
             status: 404,
-            message: "Problem not found",
+            error: "Problem not found",
          });
 
       // Check if the problem status already exists
@@ -193,7 +197,7 @@ const fetchUserProblemStatusForMonth = async ({
    if (!userId || !year || !month) {
       return NextResponse.json({
          status: 400,
-         message: "User ID, year, and month are required",
+         error: "User ID, year, and month are required",
       });
    }
    try {
@@ -207,7 +211,7 @@ const fetchUserProblemStatusForMonth = async ({
       if (!user) {
          return NextResponse.json({
             status: 404,
-            message: "User not found",
+            error: "User not found",
          });
       }
 
@@ -307,7 +311,6 @@ const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {
    } catch (error) {
       return NextResponse.json({
          status: 500,
-         message: "Request error",
          error,
       });
    }
@@ -332,7 +335,6 @@ const postRequestsForProblems = async (req: NextRequest, res: NextResponse) => {
    } catch (error) {
       return NextResponse.json({
          status: 500,
-         message: "Request error",
          error,
       });
    }

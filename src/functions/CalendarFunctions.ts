@@ -17,7 +17,7 @@ export const getAllUserCalendars = async ({ userId }: { userId: string }) => {
       return res.data;
    } catch (error) {
       console.error("Error fetching user calendars:", error);
-      throw error;
+      return { error: "Error fetching user calendars" };
    }
 };
 export const getAllUserAndPublicCalendars = async ({
@@ -39,7 +39,7 @@ export const getAllUserAndPublicCalendars = async ({
       return res.data;
    } catch (error) {
       console.error("Error fetching user calendars:", error);
-      throw error;
+      return { error: "Error fetching user calendars" };
    }
 };
 export const weekDayIdTopics = async ({
@@ -59,7 +59,7 @@ export const weekDayIdTopics = async ({
       return res.data;
    } catch (error) {
       console.error("Error linking topics:", error);
-      throw error;
+      return { error: "Error linking topics" };
    }
 };
 export const getWeekDaysAndTopics = async ({
@@ -79,7 +79,7 @@ export const getWeekDaysAndTopics = async ({
       return res.data;
    } catch (error) {
       console.error("Error fetching weekdays and topics:", error);
-      throw error;
+      return { error: "Error fetching weekdays and topics" };
    }
 };
 ////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ export const createWeekCalendar = async ({
       return res.data;
    } catch (error) {
       console.error("Error creating week calendar:", error);
-      throw error;
+      return { error: "Error creating week calendar" };
    }
 };
 
@@ -129,7 +129,7 @@ export const linkTopics = async ({
       return res.data;
    } catch (error) {
       console.error("Error linking topics:", error);
-      throw error;
+      return { error: "Error linking topics" };
    }
 };
 
@@ -152,7 +152,7 @@ export const assignCalendarToUser = async ({
       return res.data;
    } catch (error) {
       console.error("Error fetching weekdays and topics:", error);
-      throw error;
+      return { error: "Error fetching weekdays and topics" };
    }
 };
 export const deleteWeekCalendar = async ({
@@ -174,6 +174,6 @@ export const deleteWeekCalendar = async ({
       return res.data;
    } catch (error) {
       console.error("Error fetching weekdays and topics:", error);
-      throw error;
+      return { error: "Error fetching weekdays and topics" };
    }
 };
