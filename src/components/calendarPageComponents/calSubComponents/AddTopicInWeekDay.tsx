@@ -29,30 +29,38 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
       useState<boolean>(true);
 
    const fetchInitialTopics = async () => {
-      const topicsRes = await getAllTopics();
-      topicsRes.data.topics.sort((a: topicProp, b: topicProp) =>
-         a.name.localeCompare(b.name)
-      );
+      try {
+         const topicsRes = await getAllTopics();
+         topicsRes.data.topics.sort((a: topicProp, b: topicProp) =>
+            a.name.localeCompare(b.name)
+         );
 
-      setTopics(topicsRes.data.topics);
+         setTopics(topicsRes.data.topics);
+      } catch (error) {
+         console.error(error);
+      }
    };
 
    const fetchLinkedTopics = async () => {
-      if (weekDaySettings?.dayId) {
-         const linkedTopicsRes = await weekDayIdTopics({
-            weekDayId: weekDaySettings?.dayId,
-            userId: session?.user?.id,
-         });
+      try {
+         if (weekDaySettings?.dayId) {
+            const linkedTopicsRes = await weekDayIdTopics({
+               weekDayId: weekDaySettings?.dayId,
+               userId: session?.user?.id,
+            });
 
-         const linkedTopics = linkedTopicsRes.topics?.reduce(
-            (acc: { [key: number]: boolean }, topic: topicProp) => {
-               acc[topic.id] = true;
-               return acc;
-            },
-            {}
-         );
-         setNewLinkedTopics(linkedTopics || {});
-         setNewLinkedTopicsLoader(false);
+            const linkedTopics = linkedTopicsRes.topics?.reduce(
+               (acc: { [key: number]: boolean }, topic: topicProp) => {
+                  acc[topic.id] = true;
+                  return acc;
+               },
+               {}
+            );
+            setNewLinkedTopics(linkedTopics || {});
+            setNewLinkedTopicsLoader(false);
+         }
+      } catch (error) {
+         console.error(error);
       }
    };
 
@@ -66,19 +74,23 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
 
    // Handle applying topic changes
    const applyTopicChangeToWeekDay = async () => {
-      if (weekDaySettings?.dayId && session?.user?.id) {
-         setNewTopicsUploadLoader(true);
-         const totalTopics = Object.keys(newLinkedTopics)
-            .filter((key) => newLinkedTopics[Number(key)]) // Only include topics marked as true
-            .map(Number);
+      try {
+         if (weekDaySettings?.dayId && session?.user?.id) {
+            setNewTopicsUploadLoader(true);
+            const totalTopics = Object.keys(newLinkedTopics)
+               .filter((key) => newLinkedTopics[Number(key)]) // Only include topics marked as true
+               .map(Number);
 
-         await linkTopics({
-            userId: session.user.id,
-            weekDayId: weekDaySettings.dayId,
-            topics: totalTopics,
-         });
+            await linkTopics({
+               userId: session.user.id,
+               weekDayId: weekDaySettings.dayId,
+               topics: totalTopics,
+            });
 
-         setNewTopicsUploadLoader(false);
+            setNewTopicsUploadLoader(false);
+         }
+      } catch (error) {
+         console.error(error);
       }
    };
 

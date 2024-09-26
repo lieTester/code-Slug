@@ -5,16 +5,17 @@ import { getUserProblemsStatus } from "./ProblemFunctions";
 
 export const getAllLists = async ({ userId }: { userId: string | null }) => {
    try {
-      const res = await axios.get(
+      const response = await axios.get(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/lists/`,
          {
             params: { type: "getAllLists", userId },
          }
       );
-      return res;
+      console.log(response);
+      return response;
    } catch (error) {
       console.error("Failed to fetch topics:", error);
-      return { error: "Failed to fetch topics" };
+      throw error;
    }
 };
 
@@ -54,7 +55,7 @@ export const getSelectList = async ({
       return { currentList };
    } catch (error) {
       console.error("Failed to fetch problems of current list:", error);
-      return { error: "Failed to fetch problems of current list" };
+      throw error;
    }
 };
 
@@ -80,7 +81,7 @@ export const createNewList = async ({
       return response;
    } catch (error) {
       console.error("Failed to create new list:", error);
-      return { error: "Failed to create new list" };
+      throw error;
    }
 };
 
@@ -103,7 +104,7 @@ export const deleteList = async ({
       return response;
    } catch (error) {
       console.error("Failed to delete list:", error);
-      return { error: "Failed to delete list" };
+      throw error;
    }
 };
 export const updateListName = async ({
@@ -128,7 +129,7 @@ export const updateListName = async ({
       return response;
    } catch (error) {
       console.error("Failed to update list Name:", error);
-      return { error: "Failed to update list Name" };
+      throw error;
    }
 };
 export const removeProblemFromList = async ({
@@ -153,6 +154,6 @@ export const removeProblemFromList = async ({
       return response;
    } catch (error) {
       console.error("Failed to remove problem from list:", error);
-      return { error: "Failed to remove problem from list" };
+      throw error;
    }
 };

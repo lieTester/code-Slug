@@ -1,6 +1,5 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ProblemContext } from "@/context/ProblemsContext";
-import { SessionContext } from "@/context/SessionContext";
 
 const ProblemsProgress = () => {
    const problemContext = useContext(ProblemContext);

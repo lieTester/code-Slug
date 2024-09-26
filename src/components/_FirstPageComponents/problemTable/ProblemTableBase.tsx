@@ -64,18 +64,22 @@ const ProblemTableBase: React.FC = () => {
 
    const setStatus = async (id: number, status: string) => {
       // console.log(id);
-      toggleStatusVisibility(id, false);
-      if (session?.user) {
-         addUpdateProblemStatus({
-            problemID: id,
-            userId: session.user?.email,
-            status: status,
-         }).then((res) => {
-            arrangeStatus(); // user logged in we want to show correct data as databse
-         });
-      } else {
-         // user not logged in means potential user show them how feture work nothing gonna save in db
-         arrangeStatus();
+      try {
+         toggleStatusVisibility(id, false);
+         if (session?.user) {
+            await addUpdateProblemStatus({
+               problemID: id,
+               userId: session.user?.email,
+               status: status,
+            }).then((res) => {
+               arrangeStatus(); // user logged in we want to show correct data as databse
+            });
+         } else {
+            // user not logged in means potential user show them how feture work nothing gonna save in db
+            arrangeStatus();
+         }
+      } catch (error) {
+         console.error(error);
       }
       function arrangeStatus() {
          if (setCurrentListProblems && setFilterdProblems) {

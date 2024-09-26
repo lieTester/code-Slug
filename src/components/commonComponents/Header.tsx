@@ -1,18 +1,17 @@
 "use client";
 // react, next
-import { useContext, FC, useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 import Image from "next/image";
 // icons
-import { CiViewList, CiHome } from "react-icons/ci";
+import { CiViewList } from "react-icons/ci";
 import { SlCalender } from "react-icons/sl";
 import { TiHomeOutline } from "react-icons/ti";
 // components
 import Logo from "@/components/commonComponents/Logo";
 import Login from "@/components/commonComponents/Login";
-
-import Link from "next/link";
 
 const Header: FC<{}> = () => {
    const { data: session } = useSession();

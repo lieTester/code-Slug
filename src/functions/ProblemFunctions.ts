@@ -31,7 +31,7 @@ export const GetAllProblems = async ({ userId }: { userId: string | null }) => {
       return { problemCollection };
    } catch (error) {
       console.error("Failed to fetch problems:", error);
-      return { error: "Failed to fetch problems" };
+      throw error;
    }
 };
 
@@ -56,7 +56,7 @@ export const getUserProblemsStatus = async ({ userId }: { userId: string }) => {
       return { problemStatus };
    } catch (error) {
       console.error("Failed to fetch problems status", error);
-      return { error: "Failed to fetch problems status" };
+      throw error;
    }
 };
 
@@ -118,6 +118,7 @@ export const fetchUserProblemStatuses = async ({
          "fetchUserProblemStatuses failed in problemfunctions:",
          error
       );
+
       return {
          error: "fetchUserProblemStatuses failed in problemfunctions",
       };

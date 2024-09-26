@@ -58,7 +58,10 @@ const CalendarBase: React.FC = () => {
 
       const lastDay = new Date(year, month + 1, 0);
       for (let i = 1; i <= lastDay.getDate(); i++) {
-         days.push({ date: new Date(year, month, i), isInCurrentMonth: true });
+         days.push({
+            date: new Date(year, month, i),
+            isInCurrentMonth: true,
+         });
       }
 
       const daysAfterLast = 42 - days.length;
@@ -92,16 +95,20 @@ const CalendarBase: React.FC = () => {
 
    // fetch problens solved or attempted for showing month selection
    const fetchUserProblemsMonthStaus = async () => {
-      setproblemStatusesOfMonthLoader(true);
-      setproblemStatusesOfMonth({});
-      await fetchUserProblemStatuses({
-         userId: session?.user?.id,
-         month: currentMonth?.getMonth() + 1, //In JavaScript, Date.getMonth() returns a zero-based index for the month, meaning:
-         year: currentMonth?.getFullYear(),
-      }).then((res) => {
-         setproblemStatusesOfMonth(res.monthStatus);
-         setproblemStatusesOfMonthLoader(false);
-      });
+      try {
+         setproblemStatusesOfMonthLoader(true);
+         setproblemStatusesOfMonth({});
+         await fetchUserProblemStatuses({
+            userId: session?.user?.id,
+            month: currentMonth?.getMonth() + 1, //In JavaScript, Date.getMonth() returns a zero-based index for the month, meaning:
+            year: currentMonth?.getFullYear(),
+         }).then((res) => {
+            setproblemStatusesOfMonth(res.monthStatus);
+            setproblemStatusesOfMonthLoader(false);
+         });
+      } catch (error) {
+         console.error(error);
+      }
    };
    // useEffects
    useEffect(() => {

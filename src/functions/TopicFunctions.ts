@@ -12,6 +12,6 @@ export const getAllTopics = async () => {
       return res;
    } catch (error) {
       console.error("Failed to fetch topics:", error);
-      return { error: "Failed to fetch topics" };
+      throw error;
    }
 };

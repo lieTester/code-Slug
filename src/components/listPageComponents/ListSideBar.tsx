@@ -46,9 +46,13 @@ function ListSideBar() {
    const [isEdit, setIsEdit] = useState<boolean>(true);
    // get lists according to user presense
    const fetchData = async () => {
-      const listsRes = await getAllLists({ userId: session?.user?.id });
+      try {
+         const listsRes = await getAllLists({ userId: session?.user?.id });
 
-      if (listsRes?.data?.lists && setLists) setLists(listsRes.data.lists);
+         if (listsRes?.data?.lists && setLists) setLists(listsRes.data.lists);
+      } catch (error) {
+         console.error(error);
+      }
    };
 
    const showDeleteList = async (id: string, name: string) => {
@@ -91,46 +95,51 @@ function ListSideBar() {
          const matchingList = lists?.find(
             ({ id }: listProp) => id === selectedList?.id
          );
-         await fetchData().then(async () => {
-            if (type === "edit" && matchingList?.name === filterValues?.list) {
-               // above if condition of lists?.map is for if in filterValues we have
-               // same list selected which we renamed then we do below step else nothing
-               filterValues &&
-                  (await addFilter({
-                     category: "list",
-                     value: selectedList?.name,
-                     filterValues,
-                  }));
-               const query: Record<string, string> = {};
-               query["list"] = selectedList?.name;
-               setQueryParams(query);
+         await fetchData()
+            .then(async () => {
+               if (
+                  type === "edit" &&
+                  matchingList?.name === filterValues?.list
+               ) {
+                  // above if condition of lists?.map is for if in filterValues we have
+                  // same list selected which we renamed then we do below step else nothing
+                  filterValues &&
+                     (await addFilter({
+                        category: "list",
+                        value: selectedList?.name,
+                        filterValues,
+                     }));
+                  const query: Record<string, string> = {};
+                  query["list"] = selectedList?.name;
+                  setQueryParams(query);
 
-               setFilterValues &&
-                  setFilterValues((res) => {
-                     return { ...res, list: selectedList?.name };
-                  });
-            } else if (
-               type === "delete" &&
-               matchingList?.name === filterValues?.list
-            ) {
-               const query: Record<string, string> = {};
-               query["list"] = selectedList?.name;
-               removeQueryParams(query);
-               setFilterValues &&
-                  setFilterValues((res) => {
-                     return { ...res, list: "" };
-                  });
-               const { problemCollection } = await GetAllProblems(
-                  session?.user?.id
-               );
-               if (setCurrentListProblems && setFilterdProblems) {
-                  setCurrentListProblems(problemCollection);
-                  setFilterdProblems(problemCollection);
+                  setFilterValues &&
+                     setFilterValues((res) => {
+                        return { ...res, list: selectedList?.name };
+                     });
+               } else if (
+                  type === "delete" &&
+                  matchingList?.name === filterValues?.list
+               ) {
+                  const query: Record<string, string> = {};
+                  query["list"] = selectedList?.name;
+                  removeQueryParams(query);
+                  setFilterValues &&
+                     setFilterValues((res) => {
+                        return { ...res, list: "" };
+                     });
+                  const { problemCollection } = await GetAllProblems(
+                     session?.user?.id
+                  );
+                  if (setCurrentListProblems && setFilterdProblems) {
+                     setCurrentListProblems(problemCollection);
+                     setFilterdProblems(problemCollection);
+                  }
                }
-            }
-            onClose();
-            setSelectedList({ id: "", name: "", loader: false });
-         });
+               onClose();
+               setSelectedList({ id: "", name: "", loader: false });
+            })
+            .catch((err) => console.error(err));
       }
    };
    const onClose = () => {

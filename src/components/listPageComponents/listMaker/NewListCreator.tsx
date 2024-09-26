@@ -52,13 +52,12 @@ const NewListCreator: React.FC<{
       const collectUserLists = async () => {
          await getAllLists({ userId: session?.user?.id }).then((res) => {
             setUserLists(res.data.lists);
-            // console.log(res.data.lists);
          });
       };
       try {
          if (session?.user) collectUserLists();
       } catch (error) {
-         console.log(error);
+         console.error(error);
       }
    }, []);
 
@@ -70,28 +69,27 @@ const NewListCreator: React.FC<{
       setListNameExist(isExist);
    };
    const checkBeforeCreateNewList = async () => {
-      // console.log(
-      //    "working list already exists",
-      //    listNameExist,
-      //    listName.length
-      // );
-      if (listName.length > 0 && !listNameExist) {
-         setListCreationProgress(true);
-         setListName("");
-         await createNewList({
-            userId: session?.user?.id,
-            listName,
-            currentList: newProblemList,
-         })
-            .then((res: any) => {
-               if (res.status === 200) {
-                  router.push("/");
-               }
+      try {
+         if (listName.length > 0 && !listNameExist) {
+            setListCreationProgress(true);
+            setListName("");
+            await createNewList({
+               userId: session?.user?.id,
+               listName,
+               currentList: newProblemList,
             })
-            .catch((err) => {
-               console.log(err);
-               setListCreationProgress(false);
-            });
+               .then((res: any) => {
+                  if (res.status === 200) {
+                     router.push("/");
+                  }
+               })
+               .catch((err) => {
+                  console.log(err);
+                  setListCreationProgress(false);
+               });
+         }
+      } catch (error) {
+         console.error(error);
       }
    };
    return (

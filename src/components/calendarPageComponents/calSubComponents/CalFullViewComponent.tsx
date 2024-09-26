@@ -33,21 +33,29 @@ const CalFullViewComponent: React.FC<CalFullViewProps> = ({
       await getWeekDaysAndTopics({
          userId: userId,
          weekCalendarId: weekCalendarId,
-      }).then((res) => {
-         setViewCalendarData(res?.formattedWeekDays);
-         setViewCalendarDataLoader(false);
-      });
+      })
+         .then((res) => {
+            setViewCalendarData(res?.formattedWeekDays);
+            setViewCalendarDataLoader(false);
+         })
+         .catch((err) => {
+            console.error(err);
+         });
    };
    const assignIdToUser = async () => {
       setSendingData(true);
       assignCalendarToUser({
          userId: userId,
          weekCalendarId: weekCalendarId,
-      }).then((res) => {
-         if (res.status === 200) {
-            setSendingData(false);
-         }
-      });
+      })
+         .then((res) => {
+            if (res.status === 200) {
+               setSendingData(false);
+            }
+         })
+         .catch((err) => {
+            console.error(err);
+         });
    };
    useEffect(() => {
       displayCalendarDetails();

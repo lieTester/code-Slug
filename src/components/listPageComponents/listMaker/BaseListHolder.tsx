@@ -90,7 +90,7 @@ const BaseListHolder: React.FC<{
                onClose();
             });
       } catch (error) {
-         console.log(error);
+         console.error(error);
       }
    };
    ////////////////////////////////////////////////////////////////////////

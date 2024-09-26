@@ -63,15 +63,19 @@ const CalendarApplyWeeklyPlan: React.FC = () => {
    // calendar functions //////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////
    const fetchData = async () => {
-      setCalendarsLoader(true);
-      await getAllUserAndPublicCalendars({ userId: session?.user?.id })
-         .then((res) => {
-            // console.log(res);
-            setCalendars(res?.formattedCalendars);
-         })
-         .then((res) => {
-            setCalendarsLoader(false);
-         });
+      try {
+         setCalendarsLoader(true);
+         await getAllUserAndPublicCalendars({ userId: session?.user?.id })
+            .then((res) => {
+               // console.log(res);
+               setCalendars(res?.formattedCalendars);
+            })
+            .then((res) => {
+               setCalendarsLoader(false);
+            });
+      } catch (error) {
+         console.error(error);
+      }
    };
 
    useEffect(() => {

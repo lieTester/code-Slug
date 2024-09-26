@@ -107,10 +107,16 @@ const ProblemFilters = () => {
             const result = await getSelectList({
                listId: currentListId,
                userId: session?.user?.id,
+            }).catch((err) => {
+               throw err;
             });
             currentList = result.currentList;
          } else {
-            const { problemCollection } = await GetAllProblems({ userId: id });
+            const { problemCollection } = await GetAllProblems({
+               userId: id,
+            }).catch((err) => {
+               throw err;
+            });
             currentList = problemCollection;
          }
 
@@ -152,61 +158,73 @@ const ProblemFilters = () => {
       filterValues: any,
       currentListProblems: any
    ) => {
-      await applyFilter({
-         filterValues,
-         filteredProblemsList: currentListProblems,
-      }).then(({ filteredProblemsList }) => {
-         if (filteredProblemsList.length === 0 && setProblemSetLoading)
-            setTimeout(() => {
-               setProblemSetLoading({ loading: false });
-            }, 300);
-         // why goAhead is true here is because here if we got list 0 we should change page setup
-         // and page cannot perform if list is empty so goAhead is to tackle that scenario
-         const pageNumber = parseInt(searchParams?.get("pageno") || "1");
-         performPageSetup({
-            currentList: filteredProblemsList,
-            pageNumber,
-            goAhead: true,
+      try {
+         await applyFilter({
+            filterValues,
+            filteredProblemsList: currentListProblems,
+         }).then(({ filteredProblemsList }) => {
+            if (filteredProblemsList.length === 0 && setProblemSetLoading)
+               setTimeout(() => {
+                  setProblemSetLoading({ loading: false });
+               }, 300);
+            // why goAhead is true here is because here if we got list 0 we should change page setup
+            // and page cannot perform if list is empty so goAhead is to tackle that scenario
+            const pageNumber = parseInt(searchParams?.get("pageno") || "1");
+            performPageSetup({
+               currentList: filteredProblemsList,
+               pageNumber,
+               goAhead: true,
+            });
+            setFilterdProblems && setFilterdProblems(filteredProblemsList);
          });
-         setFilterdProblems && setFilterdProblems(filteredProblemsList);
-      });
+      } catch (error) {
+         console.error(error);
+      }
    };
    const catchFilter = async (category: string, value: string, id?: any) => {
-      if (setProblemSetLoading && category !== "search") {
-         manageFiltersInUrl({
-            type: "add",
-            category,
-            value,
-         });
-         setProblemSetLoading({ loading: true, value: category }); // to make skeleton loading animation
-      }
+      try {
+         if (setProblemSetLoading && category !== "search") {
+            manageFiltersInUrl({
+               type: "add",
+               category,
+               value,
+            });
+            setProblemSetLoading({ loading: true, value: category }); // to make skeleton loading animation
+         }
 
-      // if FiterValues is not undefined
-      filterValues &&
-         (await addFilter({
-            category,
-            value,
-            filterValues,
-         }).then(async ({ filterValues }) => {
-            setFilterValues &&
-               setFilterValues((prev) => {
-                  return { ...prev, ...filterValues };
-               });
-            if (category === "list") {
-               const { currentList } = await getSelectList({
-                  listId: id,
-                  userId: session?.user?.id,
-               });
-               processFilters(filterValues, currentList);
-               if (setCurrentListProblems && setFilterdProblems) {
-                  setCurrentListProblems(currentList);
-                  setFilterdProblems(currentList);
-               }
-            } else {
-               processFilters(filterValues, currentListProblems);
-            }
-         }));
-      removeFilterVisiblity(); // becuse on click the filter data is
+         // if FiterValues is not undefined
+         filterValues &&
+            (await addFilter({
+               category,
+               value,
+               filterValues,
+            })
+               .then(async ({ filterValues }) => {
+                  setFilterValues &&
+                     setFilterValues((prev) => {
+                        return { ...prev, ...filterValues };
+                     });
+                  if (category === "list") {
+                     const { currentList } = await getSelectList({
+                        listId: id,
+                        userId: session?.user?.id,
+                     });
+                     processFilters(filterValues, currentList);
+                     if (setCurrentListProblems && setFilterdProblems) {
+                        setCurrentListProblems(currentList);
+                        setFilterdProblems(currentList);
+                     }
+                  } else {
+                     processFilters(filterValues, currentListProblems);
+                  }
+               })
+               .catch((err) => {
+                  throw err;
+               }));
+         removeFilterVisiblity(); // becuse on click the filter data is
+      } catch (error) {
+         console.error(error);
+      }
    };
    const fireFilter = async ({
       category,
@@ -217,38 +235,44 @@ const ProblemFilters = () => {
       value: string;
       id?: any;
    }) => {
-      if (setProblemSetLoading) {
-         manageFiltersInUrl({
-            type: "remove",
-            category,
-            value,
-         });
-         setProblemSetLoading({ loading: true, value: category });
+      try {
+         if (setProblemSetLoading) {
+            manageFiltersInUrl({
+               type: "remove",
+               category,
+               value,
+            });
+            setProblemSetLoading({ loading: true, value: category });
+         }
+         filterValues &&
+            (await removeFilter({ category, value, filterValues })
+               .then(async ({ filterValues }) => {
+                  setFilterValues &&
+                     setFilterValues((prev) => {
+                        return { ...prev, ...filterValues };
+                     });
+                  if (category === "list") {
+                     await getBase(session?.user?.id)
+                        .then(({ currentList }) => {
+                           processFilters(filterValues, currentList);
+                        })
+                        .catch((error) => {
+                           throw error;
+                        });
+                     setCurrentListDetail &&
+                        setCurrentListDetail(() => {
+                           return {};
+                        });
+                  } else {
+                     processFilters(filterValues, currentListProblems);
+                  }
+               })
+               .catch((error) => {
+                  throw error;
+               }));
+      } catch (error) {
+         console.error(error);
       }
-      filterValues &&
-         (await removeFilter({ category, value, filterValues }).then(
-            async ({ filterValues }) => {
-               setFilterValues &&
-                  setFilterValues((prev) => {
-                     return { ...prev, ...filterValues };
-                  });
-               if (category === "list") {
-                  await getBase(session?.user?.id)
-                     .then(({ currentList }) => {
-                        processFilters(filterValues, currentList);
-                     })
-                     .catch((error) => {
-                        console.log(error);
-                     });
-                  setCurrentListDetail &&
-                     setCurrentListDetail(() => {
-                        return {};
-                     });
-               } else {
-                  processFilters(filterValues, currentListProblems);
-               }
-            }
-         ));
    };
 
    let debounceTimeout: any;
@@ -269,16 +293,22 @@ const ProblemFilters = () => {
    useEffect(() => {
       const fetchData = async () => {
          try {
-            const topicsRes = await getAllTopics();
+            const topicsRes = await getAllTopics().catch((error) => {
+               throw error;
+            });
             setTopics && setTopics(topicsRes.data.topics);
 
-            const companiesRes = await getAllCompanylist();
+            const companiesRes = await getAllCompanylist().catch((error) => {
+               throw error;
+            });
             setCompanies && setCompanies(companiesRes.data.companies);
 
             if (session !== undefined && currentListProblems?.length === 0) {
                // get lists according to user presense
                const listsRes = await getAllLists({
                   userId: session?.user?.id,
+               }).catch((error) => {
+                  throw error;
                });
                setLists && setLists(listsRes.data.lists);
 
@@ -323,14 +353,16 @@ const ProblemFilters = () => {
                   });
                }
 
-               await getBase(session?.user?.id, currentListId).then(
-                  ({ currentList }) => {
+               await getBase(session?.user?.id, currentListId)
+                  .then(({ currentList }) => {
                      processFilters(captureUrlFilterValue, currentList);
-                  }
-               );
+                  })
+                  .catch((error) => {
+                     throw error;
+                  });
             }
          } catch (error) {
-            console.error("Error in useEffect:", error);
+            console.error(error);
          }
       };
 

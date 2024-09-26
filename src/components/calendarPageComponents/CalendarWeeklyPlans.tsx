@@ -121,15 +121,19 @@ const CalendarWeeklyPlans: React.FC = () => {
    // calendar functions //////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////
    const fetchData = async () => {
-      setCalendarsLoader(true);
-      await getAllUserCalendars({ userId: session?.user?.id })
-         .then((res) => {
-            // console.log(res);
-            setCalendars(res?.formattedCalendars);
-         })
-         .then((res) => {
-            setCalendarsLoader(false);
-         });
+      try {
+         setCalendarsLoader(true);
+         await getAllUserCalendars({ userId: session?.user?.id }).then(
+            (res) => {
+               // console.log(res);
+               setCalendars(res?.formattedCalendars);
+
+               setCalendarsLoader(false);
+            }
+         );
+      } catch (error) {
+         console.error(error);
+      }
    };
 
    const showDeleteCalendar = async (id: string, name: string) => {
@@ -155,6 +159,8 @@ const CalendarWeeklyPlans: React.FC = () => {
                (await deleteWeekCalendar({
                   userId: session?.user?.id,
                   weekCalendarId: calendarToDelete?.id,
+               }).catch((error) => {
+                  throw error;
                }));
          } else if (type === "create") {
             setNewCalendatDetail((prev) => {
@@ -164,6 +170,8 @@ const CalendarWeeklyPlans: React.FC = () => {
                (await createWeekCalendar({
                   userId: session?.user?.id,
                   cal: newCalendatDetail?.name,
+               }).catch((error) => {
+                  throw error;
                }));
          }
       } catch (error) {
@@ -175,22 +183,30 @@ const CalendarWeeklyPlans: React.FC = () => {
       }
    };
    const displayCalendarDetails = async ({ id }: { id: string }) => {
-      setViewCalendarDataLoader({
-         id,
-         loader: true,
-      });
-      await getWeekDaysAndTopics({
-         userId: session?.user?.id,
-         weekCalendarId: id,
-      }).then((res) => {
-         setViewCalendarData(res?.formattedWeekDays);
-         setViewCalendarDataLoader((prev) => {
-            return {
-               ...prev,
-               loader: false,
-            };
+      try {
+         setViewCalendarDataLoader({
+            id,
+            loader: true,
          });
-      });
+         await getWeekDaysAndTopics({
+            userId: session?.user?.id,
+            weekCalendarId: id,
+         })
+            .then((res) => {
+               setViewCalendarData(res?.formattedWeekDays);
+               setViewCalendarDataLoader((prev) => {
+                  return {
+                     ...prev,
+                     loader: false,
+                  };
+               });
+            })
+            .catch((err) => {
+               throw err;
+            });
+      } catch (error) {
+         console.error(error);
+      }
    };
    const onClose = () => {
       setOpen(false);
