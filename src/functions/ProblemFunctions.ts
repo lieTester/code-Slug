@@ -1,37 +1,47 @@
 import { ProblemsProp } from "@/types/index";
 import axios from "axios";
 export const GetAllProblems = async ({ userId }: { userId: string | null }) => {
-   const response = await axios.get("/api/problem/", {
-      method: "GET",
-   });
+   try {
+      const response = await axios.get(
+         ` ${process.env.NEXT_PUBLIC_API_BASE_URL}/problem/`,
+         {
+            params: { type: "getAllProblems" },
+         }
+      );
 
-   if (response.status !== 200) {
-      throw new Error("Failed to fetch data");
-   }
-
-   let problemCollection: ProblemsProp[] = await response.data.data;
-   if (userId) {
-      const res = await getUserProblemsStatus({ userId });
-
-      if (res?.problemStatus) {
-         problemCollection = problemCollection.map((problem) => {
-            const item = res.problemStatus.find(
-               (item: any) => item.id === problem.id
-            );
-            if (item) return { ...problem, status: item.status };
-            return { ...problem, status: "todo" };
-         });
-         // console.log(problemCollection);
+      if (response.status !== 200) {
+         throw new Error("Failed to fetch data");
       }
-   }
 
-   return { problemCollection };
+      let problemCollection: ProblemsProp[] = await response.data.data;
+      if (userId) {
+         const res = await getUserProblemsStatus({ userId });
+
+         if (res?.problemStatus) {
+            problemCollection = problemCollection.map((problem) => {
+               const item = res.problemStatus.find(
+                  (item: any) => item.id === problem.id
+               );
+               if (item) return { ...problem, status: item.status };
+               return { ...problem, status: "todo" };
+            });
+         }
+      }
+
+      return { problemCollection };
+   } catch (error) {
+      console.error("Failed to fetch problems:", error);
+      return { error: "Failed to fetch problems" };
+   }
 };
 
 export const getUserProblemsStatus = async ({ userId }: { userId: string }) => {
-   if (userId) {
+   try {
       const response = await axios.get(
-         process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/${userId}`
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/problem/`,
+         {
+            params: { type: "getUserProblemsStatus", userId },
+         }
       );
       const problemStatus: any = response?.data?.problems.map(
          (problem: any) => {
@@ -43,8 +53,10 @@ export const getUserProblemsStatus = async ({ userId }: { userId: string }) => {
             };
          }
       );
-      // console.log(problemStatus);
       return { problemStatus };
+   } catch (error) {
+      console.error("Failed to fetch problems status", error);
+      return { error: "Failed to fetch problems status" };
    }
 };
 
@@ -57,13 +69,25 @@ export const addUpdateProblemStatus = async ({
    userId: string;
    status: string;
 }) => {
-   if (userId) {
+   try {
       const response = await axios.post(
-         process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/`,
-         { type: "updateUserProblemStatus", userId, status, problemID }
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/problem/`,
+         {
+            type: "updateUserProblemStatus",
+            userId,
+            status,
+            problemID,
+         }
       );
 
-      return response;
+      if (response.status !== 200) {
+         throw new Error("Failed to update problem status");
+      }
+
+      return response.data;
+   } catch (error) {
+      console.error("Failed to update problem status:", error);
+      return { error: "Failed to update problem status" };
    }
 };
 export const fetchUserProblemStatuses = async ({
@@ -76,16 +100,26 @@ export const fetchUserProblemStatuses = async ({
    month: number;
 }) => {
    try {
-      const response = await axios.post(
+      const response = await axios.get(
          process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/`,
-         { type: "fetchUserProblemStatusForMonth", userId, year, month }
+         {
+            params: {
+               type: "fetchUserProblemStatusForMonth",
+               userId,
+               year,
+               month,
+            },
+         }
       );
 
       return response.data;
    } catch (error) {
+      console.error(
+         "fetchUserProblemStatuses failed in problemfunctions:",
+         error
+      );
       return {
-         msg: "fetchUserProblemStatuses failed in problemfunctions",
-         error,
+         error: "fetchUserProblemStatuses failed in problemfunctions",
       };
    }
 };

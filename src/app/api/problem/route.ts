@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib"; // You'll need to set up Prisma
 
-const getAllProblems = async (req: NextRequest, res: NextResponse) => {
+const getAllProblems = async () => {
    try {
       const problems = await prisma.problem.findMany({
          include: {
@@ -47,6 +47,62 @@ const getAllProblems = async (req: NextRequest, res: NextResponse) => {
    }
 };
 
+// Fetch user's problem statuses by their ID
+const getUserProblemsStatus = async (
+   { userId }: { userId: string } // Expecting params to be passed correctly
+) => {
+   // Basic input validation
+   if (!userId) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID is required",
+      });
+   }
+   try {
+      // Fetch the user by their ID
+      const user = await prisma.user.findUnique({
+         where: { id: userId },
+      });
+
+      // If the user does not exist, return 404
+      if (!user) {
+         return NextResponse.json({
+            status: 404,
+            message: "User not found",
+         });
+      }
+
+      // Fetch problems linked to the user and related data
+      const problems = await prisma.problemStatus.findMany({
+         where: {
+            userId: user.id,
+         },
+         select: {
+            problemId: true,
+            status: true,
+            problem: {
+               select: {
+                  title: true,
+                  titleSlug: true,
+               },
+            },
+         },
+      });
+
+      return NextResponse.json({
+         status: 200,
+         message: "User problem statuses fetched successfully",
+         problems,
+      });
+   } catch (error) {
+      console.error("Error fetching user problem status:", error);
+      return NextResponse.json({
+         status: 500,
+         error: "Internal Server Error",
+      });
+   }
+};
+
 const updateUserProblemStatus = async ({
    userId,
    status,
@@ -69,23 +125,18 @@ const updateUserProblemStatus = async ({
       const user = await prisma.user.findFirst({
          where: { email: userId },
       });
-      if (!user) {
-         return NextResponse.json(
-            { error: "User ID doesn't exist or is invalid" },
-            { status: 400 }
-         );
-      }
+      if (!user)
+         return NextResponse.json({ status: 404, message: "User not found" });
 
       // Check if the problem exists
       const problem = await prisma.problem.findUnique({
          where: { id: problemID },
       });
-      if (!problem) {
-         return NextResponse.json(
-            { error: "Problem ID doesn't exist or is invalid" },
-            { status: 400 }
-         );
-      }
+      if (!problem)
+         return NextResponse.json({
+            status: 404,
+            message: "Problem not found",
+         });
 
       // Check if the problem status already exists
       const problemStatus = await prisma.problemStatus.findUnique({
@@ -119,10 +170,13 @@ const updateUserProblemStatus = async ({
          });
       }
 
-      return NextResponse.json({ status: 200 });
+      return NextResponse.json({
+         status: 200,
+         message: "Problem status updated successfully",
+      });
    } catch (error) {
       console.error(error);
-      return NextResponse.json({ status: 500, error: "Internal Server Error" });
+      return NextResponse.json({ status: 500, error: "Internal server error" });
    }
 };
 
@@ -224,21 +278,25 @@ const fetchUserProblemStatusForMonth = async ({
    }
 };
 
-const postRequestsForProblems = async (req: NextRequest, res: NextResponse) => {
+const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {
+   // getPublicAndUserCalendars;
    try {
-      const data = await req.json();
+      const { searchParams } = new URL(req.url);
+
+      // Get all parameters at once
+      const data = Object.fromEntries(searchParams.entries());
+
       switch (data.type) {
-         case "updateUserProblemStatus":
-            return await updateUserProblemStatus({
-               userId: data.userId,
-               status: data.status,
-               problemID: data.problemID,
-            });
+         case "getAllProblems":
+            return getAllProblems();
+         case "getUserProblemsStatus":
+            return getUserProblemsStatus({ userId: data.userId });
+
          case "fetchUserProblemStatusForMonth":
             return await fetchUserProblemStatusForMonth({
                userId: data.userId,
-               year: data.year,
-               month: data.month,
+               year: Number(data.year),
+               month: Number(data.month),
             });
          default:
             return NextResponse.json({
@@ -254,5 +312,30 @@ const postRequestsForProblems = async (req: NextRequest, res: NextResponse) => {
       });
    }
 };
+const postRequestsForProblems = async (req: NextRequest, res: NextResponse) => {
+   try {
+      const data = await req.json();
+      switch (data.type) {
+         case "updateUserProblemStatus":
+            return await updateUserProblemStatus({
+               userId: data.userId,
+               status: data.status,
+               problemID: data.problemID,
+            });
 
-export { getAllProblems as GET, postRequestsForProblems as POST };
+         default:
+            return NextResponse.json({
+               status: 400,
+               message: "Invalid request type",
+            });
+      }
+   } catch (error) {
+      return NextResponse.json({
+         status: 500,
+         message: "Request error",
+         error,
+      });
+   }
+};
+
+export { getHandlerRequests as GET, postRequestsForProblems as POST };
