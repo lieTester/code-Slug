@@ -105,6 +105,7 @@ const CalendarBase: React.FC = () => {
          }).then((res) => {
             setproblemStatusesOfMonth(res.monthStatus);
             setproblemStatusesOfMonthLoader(false);
+            console.log(res);
          });
       } catch (error) {
          console.error(error);
