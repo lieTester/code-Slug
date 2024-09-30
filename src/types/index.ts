@@ -20,6 +20,9 @@ export type ProblemsProp = {
    titleSlug: string;
    frontEndId?: string;
    difficulty: string;
+   like: number;
+   dislike: number;
+   isLiked?: boolean;
    description: string | null;
    topics?: string[];
    companies?: string[];

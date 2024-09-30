@@ -45,7 +45,12 @@ export const getSelectList = async ({
                const item = res.problemStatus.find(
                   (item: any) => item.id === problem.id
                );
-               if (item) return { ...problem, status: item.status };
+               if (item)
+                  return {
+                     ...problem,
+                     status: item.status,
+                     isLiked: item.like,
+                  };
                return { ...problem, status: "todo" };
             });
          }

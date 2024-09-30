@@ -84,6 +84,7 @@ const getUserProblemsStatus = async (
          select: {
             problemId: true,
             status: true,
+            like: true,
             problem: {
                select: {
                   title: true,
@@ -171,6 +172,84 @@ const updateUserProblemStatus = async ({
                },
             },
             data: { status: status },
+         });
+      }
+
+      return NextResponse.json({
+         status: 200,
+         message: "Problem status updated successfully",
+      });
+   } catch (error) {
+      console.error(error);
+      return NextResponse.json({ status: 500, error: "Internal server error" });
+   }
+};
+const updateUserProblemLikeDislike = async ({
+   userId,
+   isLiked,
+   problemID,
+}: {
+   userId: string;
+   isLiked: boolean;
+   problemID: number;
+}) => {
+   // Basic input validation
+
+   if (!userId || isLiked === null || isLiked === undefined || !problemID) {
+      return NextResponse.json({
+         status: 400,
+         error: "User ID, Problem ID, and isLiked are required",
+      });
+   }
+
+   try {
+      // Check if the user exists
+      const user = await prisma.user.findFirst({
+         where: { id: userId },
+      });
+      if (!user)
+         return NextResponse.json({ status: 404, message: "User not found" });
+
+      // Check if the problem exists
+      const problem = await prisma.problem.findUnique({
+         where: { id: problemID },
+      });
+      if (!problem)
+         return NextResponse.json({
+            status: 404,
+            error: "Problem not found",
+         });
+
+      // Check if the problem status already exists
+      const problemStatus = await prisma.problemStatus.findUnique({
+         where: {
+            UserProblemStatusUnique: {
+               problemId: problemID,
+               userId: user.id,
+            },
+         },
+      });
+
+      if (!problemStatus) {
+         // Create new problem status if it does not exist
+         await prisma.problemStatus.create({
+            data: {
+               like: isLiked,
+               status: "todo",
+               problemId: problemID,
+               userId: user.id,
+            },
+         });
+      } else {
+         // Update existing problem status
+         await prisma.problemStatus.update({
+            where: {
+               UserProblemStatusUnique: {
+                  problemId: problemID,
+                  userId: user.id,
+               },
+            },
+            data: { like: isLiked },
          });
       }
 
@@ -330,11 +409,18 @@ const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {
 const postRequestsForProblems = async (req: NextRequest, res: NextResponse) => {
    try {
       const data = await req.json();
+
       switch (data.type) {
          case "updateUserProblemStatus":
             return await updateUserProblemStatus({
                userId: data.userId,
                status: data.status,
+               problemID: data.problemID,
+            });
+         case "updateUserProblemLikeDislike":
+            return await updateUserProblemLikeDislike({
+               userId: data.userId,
+               isLiked: data.isLiked,
                problemID: data.problemID,
             });
 

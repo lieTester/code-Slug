@@ -22,7 +22,12 @@ export const GetAllProblems = async ({ userId }: { userId: string | null }) => {
                const item = res.problemStatus.find(
                   (item: any) => item.id === problem.id
                );
-               if (item) return { ...problem, status: item.status };
+               if (item)
+                  return {
+                     ...problem,
+                     status: item.status,
+                     isLiked: item.like,
+                  };
                return { ...problem, status: "todo" };
             });
          }
@@ -47,6 +52,7 @@ export const getUserProblemsStatus = async ({ userId }: { userId: string }) => {
          (problem: any) => {
             return {
                id: problem.problemId,
+               like: problem.like,
                status: problem.status,
                title: problem.problem.title,
                titleSlug: problem.problem.titleSlug,
@@ -76,6 +82,36 @@ export const addUpdateProblemStatus = async ({
             type: "updateUserProblemStatus",
             userId,
             status,
+            problemID,
+         }
+      );
+
+      if (response.status !== 200) {
+         throw new Error("Failed to update problem status");
+      }
+
+      return response.data;
+   } catch (error) {
+      console.error("Failed to update problem status:", error);
+      return { error: "Failed to update problem status" };
+   }
+};
+export const updateUserProblemLikeDislike = async ({
+   problemID,
+   userId,
+   isLiked,
+}: {
+   problemID: number;
+   userId: string;
+   isLiked: boolean;
+}) => {
+   try {
+      const response = await axios.post(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/problem/`,
+         {
+            type: "updateUserProblemLikeDislike",
+            userId,
+            isLiked,
             problemID,
          }
       );

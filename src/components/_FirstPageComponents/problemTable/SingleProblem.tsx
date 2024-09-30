@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
+import { BiDislike, BiLike, BiSolidDislike, BiSolidLike } from "react-icons/bi";
 import { ProblemsProp } from "@/types";
 import { IoIosCodeWorking } from "react-icons/io";
 import { BsCalendarMinus, BsCheck2Circle } from "react-icons/bs";
+import { updateUserProblemLikeDislike } from "@/functions/ProblemFunctions";
+import { SessionContext } from "@/context/SessionContext";
 
 const SingleProblem = ({
    open,
@@ -12,6 +15,10 @@ const SingleProblem = ({
    onClose: (value: boolean) => void;
    problem: ProblemsProp | undefined;
 }) => {
+   // session context
+   const sessionContext = useContext(SessionContext);
+   const session = sessionContext?.session;
+
    const difficultyColor = ({ val }: { val: String | undefined }) => {
       if (val === "Easy") return "text-easy";
       else if (val === "Medium") return "text-medium";
@@ -41,6 +48,27 @@ const SingleProblem = ({
          />
       );
    };
+
+   const updateUserLikeness = async ({
+      problemID,
+      isLiked,
+   }: {
+      problemID: number;
+      isLiked: boolean;
+   }) => {
+      try {
+         session?.user?.id &&
+            updateUserProblemLikeDislike({
+               problemID,
+               isLiked,
+               userId: session?.user?.id,
+            }).catch((err) => {
+               throw err;
+            });
+      } catch (error) {
+         console.error(error);
+      }
+   };
    return (
       <tr
          className={` ${
@@ -52,14 +80,14 @@ const SingleProblem = ({
             className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-lg "
          ></td>
 
-         <td className="relative w-[100%] h-full  bg-backg2 p-6 lg:rounded-lg flex justify-between  z-10">
+         <td className="relative w-[100%] h-full  bg-backg2 p-4 lg:rounded-lg flex justify-between  z-10">
             <div
                onClick={() => onClose(false)}
                className="absolute right-2 cursor-pointer top-0 lg:hidden text-white font-extrabold"
             >
                X
             </div>
-            <div className=" w-[40%] max-w-4xl flex flex-col">
+            <div className="relative w-[40%] max-w-4xl flex flex-col">
                <h1
                   title={problem?.id + ". " + problem?.title}
                   className="text-2xl font-semibold mb-2 text-prim2 font-sofiaPro"
@@ -140,6 +168,70 @@ const SingleProblem = ({
                         <code>{`[0, 1]`}</code>
                      </pre>
                   </pre>
+               </div>
+               <div className="absolute bottom-0 w-full h-[30px] flex text-prim2 p-1 bg-black bg-opacity-30 rounded-[5px] overflow-hidden ">
+                  <span className="flex h-full justify-center items-center mr-2 pl-2  bg-backg1 rounded-md overflow-hidden">
+                     {problem?.isLiked === null ||
+                     problem?.isLiked === undefined ? (
+                        <BiLike
+                           onClick={() => {
+                              problem &&
+                                 updateUserLikeness({
+                                    problemID: problem?.id,
+                                    isLiked: true,
+                                 });
+                           }}
+                           className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer"
+                        />
+                     ) : problem?.isLiked ? (
+                        <BiSolidLike className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer" />
+                     ) : (
+                        <BiLike
+                           onClick={() => {
+                              problem &&
+                                 updateUserLikeness({
+                                    problemID: problem?.id,
+                                    isLiked: true,
+                                 });
+                           }}
+                           className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer"
+                        />
+                     )}
+                     <span className="h-full  bg-opacity-10 bg-white px-2 ">
+                        {problem?.like}
+                     </span>
+                  </span>
+                  <span className="flex h-full justify-center items-center mr-2 pl-2  bg-backg1 rounded-md overflow-hidden">
+                     {problem?.isLiked === null ||
+                     problem?.isLiked === undefined ? (
+                        <BiDislike
+                           onClick={() => {
+                              problem &&
+                                 updateUserLikeness({
+                                    problemID: problem?.id,
+                                    isLiked: false,
+                                 });
+                           }}
+                           className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer"
+                        />
+                     ) : !problem?.isLiked ? (
+                        <BiSolidDislike className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer" />
+                     ) : (
+                        <BiDislike
+                           onClick={() => {
+                              problem &&
+                                 updateUserLikeness({
+                                    problemID: problem?.id,
+                                    isLiked: false,
+                                 });
+                           }}
+                           className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer"
+                        />
+                     )}
+                     <span className="h-full  bg-opacity-10 bg-white px-2 ">
+                        {problem?.dislike}
+                     </span>
+                  </span>
                </div>
             </div>
             <div className="w-[55%] bg-secod1 rounded-md p-2">
