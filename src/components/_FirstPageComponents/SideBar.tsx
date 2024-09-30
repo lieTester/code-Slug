@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { SessionContext } from "@/context/SessionContext";
 import Calendar from "@/components/commonComponents/Calender";
 import ProblemsProgress from "@/components/commonComponents/Progress";
+import WeekDayTopics from "@/components/_FirstPageComponents/problemTable/WeekDayTopics";
 
 const SideBar = () => {
    const sessionContext = useContext(SessionContext);
@@ -35,6 +36,7 @@ const SideBar = () => {
             </div>
          )}
          <ProblemsProgress />
+         <WeekDayTopics />
          <Calendar />
       </section>
    );

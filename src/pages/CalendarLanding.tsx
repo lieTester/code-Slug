@@ -1,5 +1,5 @@
 // react, next
-import { FC, useEffect, useContext, useState } from "react";
+import React, { FC, useEffect, useContext, useState } from "react";
 // types
 import { SessionProp } from "@/types/index";
 // context
@@ -9,7 +9,6 @@ import CalendarSideBar from "@/components/calendarPageComponents/CalendarSidebar
 import CalendarBase from "@/components/calendarPageComponents/CalendarBase";
 import CalendarWeeklyPlans from "@/components/calendarPageComponents/CalendarWeeklyPlans";
 import { useSearchParams } from "next/navigation";
-import useQueryParams from "@/hook/useQueryParams";
 import CalendarApplyWeeklyPlan from "@/components/calendarPageComponents/CalendarApplyWeeklyPlan";
 
 const CalenderLanding: FC<SessionProp> = ({ session }) => {

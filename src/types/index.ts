@@ -45,6 +45,12 @@ export type topicProp = {
    name: string;
    slug: string;
 };
+export type pageProp = {
+   pageSize: number;
+   currPage: number;
+   totalPages: number;
+};
+
 export type companieProp = {
    id: string;
    name: string;

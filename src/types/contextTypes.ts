@@ -3,6 +3,7 @@ import {
    companieProp,
    filterProp,
    listProp,
+   pageProp,
    ProblemsProp,
    topicProp,
 } from "@/types/index";
@@ -41,8 +42,8 @@ export type ProblemContextType = {
    setCurrentPageProblemSet: React.Dispatch<
       React.SetStateAction<ProblemsProp[]>
    >;
-   page: any;
-   setPage: React.Dispatch<React.SetStateAction<any>>;
+   page: pageProp;
+   setPage: React.Dispatch<React.SetStateAction<pageProp>>;
 };
 
 // FiltersContext.tsx

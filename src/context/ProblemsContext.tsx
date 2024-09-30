@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 import { ProblemContextType } from "@/types/contextTypes";
-import { ProblemsProp, ChildrenProp } from "@/types/index";
+import { ProblemsProp, ChildrenProp, pageProp } from "@/types/index";
 
 export const ProblemContext = createContext<ProblemContextType | undefined>(
    undefined
@@ -22,7 +22,7 @@ export const ProblemsProvider = ({ children }: ChildrenProp) => {
       id?: string;
    }>({});
 
-   const [page, setPage] = useState({
+   const [page, setPage] = useState<pageProp>({
       currPage: 1,
       pageSize: 50,
       totalPages: 1,

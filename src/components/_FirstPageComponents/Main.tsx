@@ -73,7 +73,7 @@ const ProblemTable: React.FC = () => {
                tabIndex={0}
             >
                <span className="flex items-center ">
-                  {page.pageSize} / page <IoMdArrowDropdown className="ml-2" />
+                  {page?.pageSize} / page <IoMdArrowDropdown className="ml-2" />
                </span>
                <ul className="absolute mt-3 invisible opacity-0  group-focus:visible group-focus:opacity-100 transition-[transform] [&>li]:rounded-sm [&>li:hover]:bg-secod2 [&>*]:w-[120px] left-0 bg-front2 [&>*]:px-2 p-1 h-fit rounded-md ">
                   <li

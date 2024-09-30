@@ -1,5 +1,6 @@
 "use client";
 // react, next
+import React from "react";
 import { FC, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";

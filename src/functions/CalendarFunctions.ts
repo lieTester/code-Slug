@@ -42,6 +42,24 @@ export const getAllUserAndPublicCalendars = async ({
       throw error;
    }
 };
+export const getUserTopicsOfUser = async ({ userId }: { userId: string }) => {
+   try {
+      const res = await axios.get(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/calendar`,
+         {
+            params: {
+               type: "getTodaysTopics",
+               userId,
+            },
+         }
+      );
+
+      return res.data;
+   } catch (error) {
+      console.error("Error fetching user calendars:", error);
+      throw error;
+   }
+};
 export const weekDayIdTopics = async ({
    userId,
    weekDayId,

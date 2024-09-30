@@ -83,7 +83,7 @@ const ProblemFilters = () => {
 
       // will only receive goAhead when a filter func call and if filterd list is empty
       // to show pagination propperly
-      if (currentList.length || goAhead) {
+      if ((currentList.length || goAhead) && page) {
          const totalPages = Math.ceil(currentList?.length / page.pageSize);
          const currPage = pageNumber || page.currPage;
          setPage &&
@@ -370,7 +370,7 @@ const ProblemFilters = () => {
    }, [session]);
 
    useEffect(() => {
-      if (filterdProblems && setCurrentPageProblemSet) {
+      if (filterdProblems && setCurrentPageProblemSet && page) {
          const problems: any[] = filterdProblems.slice(
             (page.currPage - 1) * page.pageSize,
             page.currPage * page.pageSize
@@ -381,7 +381,7 @@ const ProblemFilters = () => {
 
    // change the problemSet according to page and filter
    useEffect(() => {
-      if (searchParams?.get("pageno") !== page.currPage) {
+      if (Number(searchParams?.get("pageno")) !== page?.currPage) {
          const pageNumber = parseInt(searchParams?.get("pageno") || "1");
          performPageSetup({ pageNumber });
       }

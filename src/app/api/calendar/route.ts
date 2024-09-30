@@ -266,6 +266,100 @@ const getWeekDaysAndTopics = async ({
       return NextResponse.json({ status: 500, error });
    }
 };
+// Get today's weekCalendat Topics of user
+const getTodaysTopics = async ({ userId }: { userId: string }) => {
+   if (!userId) {
+      return NextResponse.json({
+         status: 400,
+         error: "User ID is required",
+      });
+   }
+
+   try {
+      // Find the "default" user (assuming "default" is a username or similar field)
+      const User = await prisma.user.findFirst({
+         where: { id: userId }, // Assuming 'username' is the field that identifies the default user
+      });
+
+      if (!User) {
+         return NextResponse.json({
+            status: 404,
+            error: "User not found",
+         });
+      }
+      if (User.appliedWeeklyCalendar) {
+         const calendar = await prisma.weeklyCalendar.findFirst({
+            where: {
+               id: User.appliedWeeklyCalendar,
+            },
+         });
+         if (!calendar) {
+            return NextResponse.json({
+               status: 403,
+               error: "You do not have access to this calendar",
+            });
+         }
+         // Get today's day name (e.g., Monday, Tuesday)
+         const dayNames = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+         ];
+         const todayName = dayNames[new Date().getDay()]; // Returns current day as a string
+
+         // Fetch topics for today's weekday only
+         const todayWeekDay = await prisma.weekDay.findFirst({
+            where: {
+               weeklyCalendarId: User.appliedWeeklyCalendar,
+               name: {
+                  startsWith: todayName, // Match the weekday's name
+               },
+            },
+            include: {
+               topics: {
+                  select: {
+                     topics: true, // Include the actual topic details
+                  },
+               },
+            },
+         });
+
+         // Format the result
+         if (!todayWeekDay) {
+            return NextResponse.json({
+               status: 404,
+               message: `No topics found for ${todayName}.`,
+            });
+         }
+
+         const formattedTodayTopics = {
+            id: todayWeekDay.id,
+            name: todayWeekDay.name,
+            topics: todayWeekDay.topics.map((link) => ({
+               id: link.topics.id, // Accessing the actual topic's id
+               name: link.topics.name, // Accessing the actual topic's name
+            })),
+         };
+
+         return NextResponse.json({
+            status: 200,
+            message: `Topics for today (${todayName}) fetched successfully.`,
+            formattedTodayTopics,
+         });
+      }
+      return NextResponse.json({
+         status: 200,
+         message: "Apply a calendar if want to user features",
+      });
+   } catch (error) {
+      console.error(error);
+      return NextResponse.json({ status: 500, error });
+   }
+};
 // Link Topics
 const linkTopics = async ({
    userId,
@@ -559,6 +653,8 @@ const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {
             return getPublicAndUserCalendars({ userId: data.userId });
          case "getAllCalendars":
             return getUserCalendars({ userId: data.userId });
+         case "getTodaysTopics":
+            return getTodaysTopics({ userId: data.userId });
          case "getWeekDaysAndTopics":
             return getWeekDaysAndTopics({
                userId: data.userId,
