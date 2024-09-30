@@ -23,6 +23,9 @@ const CalProblemsOfDay: React.FC<ProblemAndTopicsOfTheDay> = ({
       "Sunday",
    ];
 
+   useEffect(() => {
+      dayProblems?.problems && setCurrentProblem(dayProblems?.problems[0]);
+   }, [dayProblems?.problems]);
    return (
       <div
          className={`${
@@ -49,11 +52,11 @@ const CalProblemsOfDay: React.FC<ProblemAndTopicsOfTheDay> = ({
          <div className="relative w-full h-full mt-20 md:mt-0 md:w-[80%] lg:w-[70%] md:h-[60%]  bg-backg2 p-4 lg:rounded-lg flex justify-between  z-10   [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg2 ">
             {dayProblems?.problems?.length === 0 ? (
                <div className="w-full  h-full flex justify-center items-center text-xl">
-                  No Data for{" "}
-                  <span className="text-medium font-bold mx-2">
+                  <span className="text-hard font-bold mx-1">No Data</span> for{" "}
+                  <span className="text-medium font-bold mx-1">
                      {daysOfWeek[dayProblems?.date?.getDay() || 0]}
                   </span>
-                  <span className="text-hard font-bold mx-2">Date </span>
+                  <span className="text-easy font-bold mx-2">Date </span>
                   {"  "}
                   {dayProblems?.date?.getDate()}
                   {" : "}
