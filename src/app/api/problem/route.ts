@@ -219,7 +219,7 @@ const fetchUserProblemStatusForMonth = async ({
       const startDate = new Date(year, month - 1, 1); // Start of the month
       const endDate = new Date(year, month, 0, 23, 59, 59); // End of the month (last second)
 
-      // Step 3: Fetch the user's problem statuses for the given month
+      // Step 3: Fetch the user's problem statuses for the given month, including topics
       const problemStatuses = await prisma.problemStatus.findMany({
          where: {
             userId: userId,
@@ -233,17 +233,25 @@ const fetchUserProblemStatusForMonth = async ({
                select: {
                   id: true,
                   title: true,
+                  topics: {
+                     select: {
+                        id: true,
+                        name: true,
+                     },
+                  },
                },
             },
          },
       });
+
       // Step 4: Format the data for the response
 
       type FormattedStatus = {
-         problemId: number; // or number
+         problemId: number;
          problemTitle: string;
          status: string;
          updatedAt: Date;
+         topics: { id: number; name: string }[]; // Include topics
       };
 
       type StatusByDate = {
@@ -258,13 +266,17 @@ const fetchUserProblemStatusForMonth = async ({
                acc[date] = {}; // Initialize the array for this date if it doesn't exist
             }
             if (!acc[date][status.status]) {
-               acc[date][status.status] = []; // Initialize the array for this date if it doesn't exist
+               acc[date][status.status] = []; // Initialize the array for this status if it doesn't exist
             }
             acc[date][status.status].push({
                problemId: status.problem.id,
                problemTitle: status.problem.title,
                status: status.status,
                updatedAt: status.updatedAt,
+               topics: status.problem.topics.map((topic) => ({
+                  id: topic.id,
+                  name: topic.name,
+               })), // Include the topics for each problem
             });
 
             return acc;

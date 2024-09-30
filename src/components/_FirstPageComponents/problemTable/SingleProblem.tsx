@@ -59,7 +59,7 @@ const SingleProblem = ({
             >
                X
             </div>
-            <div className="shadow-md w-[40%] max-w-4xl flex flex-col">
+            <div className=" w-[40%] max-w-4xl flex flex-col">
                <h1
                   title={problem?.id + ". " + problem?.title}
                   className="text-2xl font-semibold mb-2 text-prim2 font-sofiaPro"

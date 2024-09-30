@@ -1,13 +1,14 @@
-import React, { SetStateAction, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import { BsCheck2Circle } from "react-icons/bs";
 // contexts
 import { SessionContext } from "@/context/SessionContext";
 // functions
 import { getAllTopics } from "@/functions/TopicFunctions";
+import { linkTopics, weekDayIdTopics } from "@/functions/CalendarFunctions";
 // types
 import type { topicProp, AddTopicInWeekDay } from "@/types";
-import { linkTopics, weekDayIdTopics } from "@/functions/CalendarFunctions";
-import { AiOutlineCloseCircle } from "react-icons/ai";
-import { BsCheck2Circle } from "react-icons/bs";
+// components
 import { DotLoader } from "@/components/commonComponents/Loaders";
 import TopicsSkeleton from "@/components/skeleton/calenderlanding/CalendarWeeklyPlans/TopicsSkeleton";
 

@@ -93,6 +93,37 @@ export type AddTopicInWeekDay = {
       }>
    >;
 };
+export type ProblemAndTopicsOfTheDay = {
+   dayProblems: {
+      open: boolean;
+      date?: Date;
+      problems?: {
+         problemId: number;
+         problemTitle: string;
+         status: string;
+         updatedAt: Date;
+         topics: {
+            id: number;
+            name: string;
+         }[];
+      }[];
+   };
+   setDayProblems: React.Dispatch<
+      SetStateAction<{
+         open: boolean;
+         problems?: {
+            problemId: number;
+            problemTitle: string;
+            status: string;
+            updatedAt: Date;
+            topics: {
+               id: number;
+               name: string;
+            }[];
+         }[];
+      }>
+   >;
+};
 
 export interface CalWeekBannerProps extends ChildrenProp {
    day: string;
@@ -125,6 +156,7 @@ export type StatusByDate = {
          problemTitle: string;
          status: string;
          updatedAt: Date;
+         topics: { id: number; name: string }[];
       }[];
    };
 };
