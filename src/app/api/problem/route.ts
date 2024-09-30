@@ -295,7 +295,7 @@ const fetchUserProblemStatusForMonth = async ({
       }
 
       // Step 2: Set the date range for the given month and year
-      const startDate = new Date(year, month - 1, 1); // Start of the month
+      const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0)); // Start of the month
       const endDate = new Date(year, month, 0, 23, 59, 59); // End of the month (last second)
 
       // Step 3: Fetch the user's problem statuses for the given month, including topics
