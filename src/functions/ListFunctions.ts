@@ -17,6 +17,30 @@ export const getAllLists = async ({ userId }: { userId: string | null }) => {
       throw error;
    }
 };
+export const fetchUserListsWithProblemStatus = async ({
+   userId,
+   problemId,
+}: {
+   userId: string;
+   problemId: number;
+}) => {
+   try {
+      const response = await axios.get(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/lists/`,
+         {
+            params: {
+               type: "fetchOnlyUserListsWithProblemStatus",
+               userId,
+               problemId,
+            },
+         }
+      );
+      return response.data;
+   } catch (error) {
+      console.error("Failed to fetch topics:", error);
+      throw error;
+   }
+};
 
 export const getSelectList = async ({
    listId,
@@ -150,6 +174,31 @@ export const removeProblemFromList = async ({
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/lists/`,
          {
             type: "unlinkProblemFromList",
+            userId,
+            problemId,
+            listId,
+         }
+      );
+      return response;
+   } catch (error) {
+      console.error("Failed to remove problem from list:", error);
+      throw error;
+   }
+};
+export const addProblemToList = async ({
+   userId,
+   listId,
+   problemId,
+}: {
+   userId: string;
+   listId: string;
+   problemId: number;
+}) => {
+   try {
+      const response = await axios.post(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/lists/`,
+         {
+            type: "linkProblemToList",
             userId,
             problemId,
             listId,

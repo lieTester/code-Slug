@@ -42,6 +42,7 @@ export type listProp = {
    name: string;
    slug: string;
    isPublic: boolean;
+   isLinkedWithProblem?: boolean;
 };
 export type topicProp = {
    id: number;

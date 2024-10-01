@@ -52,6 +52,78 @@ const getAllLists = async ({ userId }: { userId: string }) => {
       });
    }
 };
+const fetchOnlyUserListsWithProblemStatus = async ({
+   userId,
+   problemId,
+}: {
+   userId: string;
+   problemId: number;
+}) => {
+   if (!userId) {
+      return NextResponse.json({
+         status: 400,
+         message: "UserId is required",
+      });
+   }
+
+   if (!problemId) {
+      return NextResponse.json({
+         status: 400,
+         message: "ProblemId is required",
+      });
+   }
+
+   try {
+      // Fetch the user
+      const user = await prisma.user.findUnique({
+         where: { id: userId },
+      });
+
+      if (!user) {
+         return NextResponse.json({
+            status: 404,
+            message: "User not found, please try again",
+         });
+      }
+
+      // Fetch the user's lists
+      const userLists = await prisma.list.findMany({
+         where: { userId: user.id },
+         select: {
+            id: true,
+            name: true,
+            slug: true,
+            isPublic: true,
+            problems: {
+               where: { id: problemId },
+               select: { id: true },
+            },
+         },
+      });
+
+      // Format the lists to indicate whether they are linked with the problemId
+      const formattedLists = userLists.map((list) => ({
+         id: list.id,
+         name: list.name,
+         slug: list.slug,
+         isPublic: list.isPublic,
+         isLinkedWithProblem: list.problems.length > 0, // true if the list contains the problemId
+      }));
+
+      return NextResponse.json({
+         status: 200,
+         message: "Fetched all user lists with problem status",
+         formattedLists,
+      });
+   } catch (error) {
+      console.error(error);
+      return NextResponse.json({
+         status: 500,
+         error: "Internal Server Error",
+      });
+   }
+};
+
 const getProblemsInList = async ({ listId }: { listId: string }) => {
    // Basic input validation
    if (!listId) {
@@ -139,6 +211,21 @@ const createNewListForUser = async ({
          return NextResponse.json({
             status: 404,
             message: "User not found, please try again",
+         });
+      }
+
+      // Check if the listName already exists for this user
+      const existingList = await prisma.list.findFirst({
+         where: {
+            userId: userId,
+            name: listName,
+         },
+      });
+
+      if (existingList) {
+         return NextResponse.json({
+            status: 409,
+            message: "A list with this name already exists for the user",
          });
       }
 
@@ -289,6 +376,68 @@ const unlinkProblemFromList = async ({
       return NextResponse.json({ status: 500, error: "Internal Server Error" });
    }
 };
+const linkProblemToList = async ({
+   userId,
+   listId,
+   problemId,
+}: {
+   userId: string;
+   listId: string;
+   problemId: number;
+}) => {
+   // Basic input validation
+   if (!userId || !listId || !problemId) {
+      return NextResponse.json({
+         status: 400,
+         message: "User ID, List ID and  Problem Id are required",
+      });
+   }
+   try {
+      const isUser = await prisma.user.findUnique({ where: { id: userId } });
+
+      if (!isUser) {
+         return NextResponse.json({
+            status: 400,
+            error: "User ID not provided",
+         });
+      }
+      // Check if the list exists and belongs to the user
+      const list = await prisma.list.findUnique({
+         where: { id: listId },
+         include: { user: true }, // Include user to check ownership
+      });
+
+      if (!list) {
+         return NextResponse.json({
+            status: 404,
+            error: "List not found or is Public",
+         });
+      }
+
+      if (list.isPublic || list.userId !== userId) {
+         return NextResponse.json({
+            status: 403,
+            error: `Either isPublic or Not authorized User to link problem: ${problemId} to list: ${listId}`,
+         });
+      }
+      // disconnect the problem from list
+      await prisma.list.update({
+         where: { id: listId },
+         data: {
+            problems: {
+               connect: {
+                  id: problemId,
+               },
+            },
+         },
+      });
+
+      return NextResponse.json({ message: "List updated successfully" });
+   } catch (error) {
+      console.error(error);
+      return NextResponse.json({ status: 500, error: "Internal Server Error" });
+   }
+};
 
 const updateUsersListName = async ({
    userId,
@@ -363,6 +512,11 @@ const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {
       switch (data.type) {
          case "getAllLists":
             return getAllLists({ userId: data.userId });
+         case "fetchOnlyUserListsWithProblemStatus":
+            return fetchOnlyUserListsWithProblemStatus({
+               userId: data.userId,
+               problemId: Number(data.problemId),
+            });
          case "getProblemsInList":
             return getProblemsInList({ listId: data.listId });
 
@@ -399,6 +553,12 @@ const postRequestsForProblems = async (req: NextRequest, res: NextResponse) => {
                userId: data?.userId,
                listName: data?.listName,
                listId: data?.listId,
+            });
+         case "linkProblemToList":
+            return linkProblemToList({
+               userId: data?.userId,
+               listId: data?.listId,
+               problemId: data?.problemId,
             });
          case "unlinkProblemFromList":
             return unlinkProblemFromList({

@@ -1,10 +1,21 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { BiDislike, BiLike, BiSolidDislike, BiSolidLike } from "react-icons/bi";
-import { ProblemsProp } from "@/types";
+import { LiaClipboardListSolid } from "react-icons/lia";
 import { IoIosCodeWorking } from "react-icons/io";
+import { IoChevronBackSharp } from "react-icons/io5";
 import { BsCalendarMinus, BsCheck2Circle } from "react-icons/bs";
-import { updateUserProblemLikeDislike } from "@/functions/ProblemFunctions";
+// types
+import { listProp, ProblemsProp } from "@/types";
+// contexts
 import { SessionContext } from "@/context/SessionContext";
+// functions
+import { updateUserProblemLikeDislike } from "@/functions/ProblemFunctions";
+import {
+   addProblemToList,
+   createNewList,
+   fetchUserListsWithProblemStatus,
+   removeProblemFromList,
+} from "@/functions/ListFunctions";
 
 const SingleProblem = ({
    open,
@@ -19,6 +30,28 @@ const SingleProblem = ({
    const sessionContext = useContext(SessionContext);
    const session = sessionContext?.session;
 
+   const userId = useMemo(() => session?.user?.id, [session?.user?.id]);
+   const problemId = useMemo(() => problem?.id, [problem?.id]);
+
+   const listsDropDown = useRef<HTMLDivElement>(null);
+   const [newListName, setNewListName] = useState<string>("");
+   const [lists, setLists] = useState<listProp[]>([]);
+   const [selectedList, setSelectedList] = useState<{ [key: string]: boolean }>(
+      {}
+   );
+
+   const [listsView, setListsView] = useState<{
+      block: boolean;
+      lists: boolean;
+   }>({ block: false, lists: true });
+
+   const [reactions, setReactions] = useState<{
+      isLiked: boolean | undefined | null;
+      totalDislikes: number;
+      totalLikes: number;
+   }>();
+   ////////////////////////////////////////////////////////////////
+   /// functions
    const difficultyColor = ({ val }: { val: String | undefined }) => {
       if (val === "Easy") return "text-easy";
       else if (val === "Medium") return "text-medium";
@@ -57,18 +90,166 @@ const SingleProblem = ({
       isLiked: boolean;
    }) => {
       try {
+         // show data before updating for effect
+         const totalDislikes = isLiked
+            ? Math.max(0, (reactions?.totalDislikes || 0) - 1)
+            : Math.max(0, (reactions?.totalDislikes || 0) + 1);
+         const totalLikes = isLiked
+            ? Math.max(0, (reactions?.totalLikes || 0) + 1)
+            : Math.max(0, (reactions?.totalLikes || 0) - 1);
+         setReactions({ isLiked, totalDislikes, totalLikes });
+
+         // update and get accurate data
          session?.user?.id &&
             updateUserProblemLikeDislike({
                problemID,
                isLiked,
                userId: session?.user?.id,
-            }).catch((err) => {
-               throw err;
-            });
+            })
+               .then((res) => {
+                  setReactions(res.data);
+               })
+               .catch((err) => {
+                  throw err;
+               });
       } catch (error) {
          console.error(error);
       }
    };
+
+   const fetchLists = async () => {
+      try {
+         problemId &&
+            (await fetchUserListsWithProblemStatus({
+               userId,
+               problemId: problemId,
+            })
+               .then((res) => {
+                  setSelectedList(
+                     res.formattedLists.reduce(
+                        (acc: { [key: string]: boolean }, list: listProp) => {
+                           acc[`${list.id}`] =
+                              list.isLinkedWithProblem || false;
+                           return acc;
+                        },
+                        {}
+                     )
+                  );
+                  setLists(res?.formattedLists);
+               })
+               .catch((err) => {
+                  throw err;
+               }));
+      } catch (error) {
+         console.error(error);
+      }
+   };
+
+   const handelListDropDown = (event: React.FocusEvent) => {
+      if (
+         listsDropDown.current &&
+         !listsDropDown.current.contains(event.relatedTarget)
+      ) {
+         setListsView({ block: false, lists: true });
+      }
+   };
+
+   const handelListsCalls = async ({ key }: { key: string }) => {
+      try {
+         switch (key) {
+            case "openCreateNewListBlock":
+               if (listsView.lists) {
+                  setListsView((prev) => {
+                     return { ...prev, lists: false };
+                  });
+               } else {
+                  if (userId && newListName.length >= 4 && problem) {
+                     setListsView({
+                        block: false,
+                        lists: true,
+                     });
+                     await createNewList({
+                        userId,
+                        listName: newListName,
+                        currentList: [problem],
+                     })
+                        .then(() => {
+                           fetchLists();
+                        })
+                        .catch((err) => {
+                           throw err;
+                        });
+                     setNewListName("");
+                  }
+               }
+               break;
+            case "openAllListsView":
+               setListsView((prev) => {
+                  return { ...prev, lists: true };
+               });
+               break;
+            case "toggleListBlock":
+               setListsView({
+                  block: !listsView.block,
+                  lists: true,
+               });
+               break;
+
+            default:
+               break;
+         }
+      } catch (error) {
+         console.error(error);
+      }
+   };
+
+   const handelListSelectionForProblem = async ({
+      listId,
+   }: {
+      listId: string;
+   }) => {
+      try {
+         setSelectedList((prev) => {
+            return {
+               ...prev,
+               [`${listId}`]: !selectedList[`${listId}`],
+            };
+         });
+         handelListsCalls({ key: "toggleListBlock" });
+         if (userId && problemId && listId) {
+            if (selectedList[`${listId}`]) {
+               //means user want to toggle from selection to deselect
+               await removeProblemFromList({ userId, listId, problemId }).then(
+                  () => {
+                     fetchLists();
+                  }
+               );
+            } else {
+               //means user want to toggle from deselect to selection
+               await addProblemToList({ userId, listId, problemId }).then(
+                  () => {
+                     fetchLists();
+                  }
+               );
+            }
+         }
+      } catch (error) {
+         console.error(error);
+      }
+   };
+
+   useEffect(() => {
+      userId && fetchLists();
+   }, [userId, problemId]);
+
+   useEffect(() => {
+      problem &&
+         setReactions({
+            isLiked: problem?.isLiked,
+            totalDislikes: problem?.dislike,
+            totalLikes: problem?.like,
+         });
+   }, [problemId]);
    return (
       <tr
          className={` ${
@@ -169,10 +350,10 @@ const SingleProblem = ({
                      </pre>
                   </pre>
                </div>
-               <div className="absolute bottom-0 w-full h-[30px] flex text-prim2 p-1 bg-black bg-opacity-30 rounded-[5px] overflow-hidden ">
-                  <span className="flex h-full justify-center items-center mr-2 pl-2  bg-backg1 rounded-md overflow-hidden">
-                     {problem?.isLiked === null ||
-                     problem?.isLiked === undefined ? (
+               <div className="absolute bottom-0 w-full h-9 flex text-prim2 p-1 bg-black bg-opacity-30 rounded-[5px]  ">
+                  <span className="flex h-full justify-center items-center mr-2 pl-2  bg-backg1 rounded-[5px] overflow-hidden">
+                     {reactions?.isLiked === null ||
+                     reactions?.isLiked === undefined ? (
                         <BiLike
                            onClick={() => {
                               problem &&
@@ -181,10 +362,10 @@ const SingleProblem = ({
                                     isLiked: true,
                                  });
                            }}
-                           className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer"
+                           className="mr-2 hover:scale-125 transition-transform cursor-pointer"
                         />
-                     ) : problem?.isLiked ? (
-                        <BiSolidLike className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer" />
+                     ) : reactions?.isLiked ? (
+                        <BiSolidLike className="mr-2 cursor-pointer" />
                      ) : (
                         <BiLike
                            onClick={() => {
@@ -194,16 +375,16 @@ const SingleProblem = ({
                                     isLiked: true,
                                  });
                            }}
-                           className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer"
+                           className="mr-2 hover:scale-125 transition-transform cursor-pointer"
                         />
                      )}
-                     <span className="h-full  bg-opacity-10 bg-white px-2 ">
-                        {problem?.like}
+                     <span className="h-full flex items-center bg-opacity-10 bg-white px-2 ">
+                        {reactions?.totalLikes}
                      </span>
                   </span>
-                  <span className="flex h-full justify-center items-center mr-2 pl-2  bg-backg1 rounded-md overflow-hidden">
-                     {problem?.isLiked === null ||
-                     problem?.isLiked === undefined ? (
+                  <span className="flex h-full justify-center items-center mr-2 pl-2  bg-backg1 rounded-[5px] overflow-hidden">
+                     {reactions?.isLiked === null ||
+                     reactions?.isLiked === undefined ? (
                         <BiDislike
                            onClick={() => {
                               problem &&
@@ -212,10 +393,10 @@ const SingleProblem = ({
                                     isLiked: false,
                                  });
                            }}
-                           className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer"
+                           className="mr-2 hover:scale-125 transition-transform cursor-pointer"
                         />
-                     ) : !problem?.isLiked ? (
-                        <BiSolidDislike className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer" />
+                     ) : !reactions?.isLiked ? (
+                        <BiSolidDislike className="mr-2  transition-transform cursor-pointer" />
                      ) : (
                         <BiDislike
                            onClick={() => {
@@ -225,13 +406,96 @@ const SingleProblem = ({
                                     isLiked: false,
                                  });
                            }}
-                           className="mr-2 hover:scale-110 transition-transform duration-75 cursor-pointer"
+                           className="mr-2 hover:scale-125 transition-transform cursor-pointer"
                         />
                      )}
-                     <span className="h-full  bg-opacity-10 bg-white px-2 ">
-                        {problem?.dislike}
+                     <span className="h-full flex items-center bg-opacity-10 bg-white px-2 ">
+                        {reactions?.totalDislikes}
                      </span>
                   </span>
+                  {userId && (
+                     <div
+                        tabIndex={0}
+                        ref={listsDropDown}
+                        onBlur={(e) => {
+                           handelListDropDown(e);
+                        }}
+                        className="relative h-full bg-backg1 rounded-[5px] px-1  "
+                     >
+                        <span
+                           onClick={() => {
+                              handelListsCalls({ key: "toggleListBlock" });
+                           }}
+                           className="w-full h-full hover:scale-125 transition-transform flex items-center"
+                        >
+                           <LiaClipboardListSolid size={20} />
+                        </span>
+                        <div
+                           className={`${
+                              listsView.block ? "absolute" : "hidden"
+                           } bottom-9 w-[180px] p-1  max-h-[200px] bg-backg1 rounded-[5px] overflow-hidden`}
+                        >
+                           {listsView.lists ? (
+                              <ul className=" capitalize max-h-[150px] px-1 mb-1 bg-white bg-opacity-20 rounded-sm overflow-y-auto">
+                                 {lists?.map((list) => {
+                                    return (
+                                       <li
+                                          key={list.id}
+                                          onClick={() => {
+                                             handelListSelectionForProblem({
+                                                listId: list.id,
+                                             });
+                                          }}
+                                          className="flex items-center hover:text-prim1 cursor-default"
+                                       >
+                                          <span className="bg-black bg-opacity-50 w-4 h-4 mr-2 rounded-sm flex items-center justify-center cursor-pointer">
+                                             {selectedList[`${list.id}`] && (
+                                                <BsCheck2Circle className="text-sm text-easy font-extrabold" />
+                                             )}
+                                          </span>
+                                          {list.name}
+                                          {selectedList[`${list.id}`]}
+                                       </li>
+                                    );
+                                 })}
+                              </ul>
+                           ) : (
+                              <ul className="relative capitalize w-full max-h-[150px] p-1 mb-1 bg-white bg-opacity-20 rounded-sm overflow-y-auto">
+                                 <li
+                                    onClick={() => {
+                                       handelListsCalls({
+                                          key: "openAllListsView",
+                                       });
+                                    }}
+                                    className="w-full  flex items-center text-prim1 cursor-pointer"
+                                 >
+                                    <IoChevronBackSharp className="mr-2" /> Back
+                                    to lists
+                                 </li>
+                                 <input
+                                    type="text"
+                                    value={newListName}
+                                    placeholder="minimum 4 char.."
+                                    onChange={(e) =>
+                                       setNewListName(e.target.value)
+                                    }
+                                    className="relative outline-none h-7  text-prim2 w-full bg-backg2 rounded-sm !p-2"
+                                 />
+                              </ul>
+                           )}
+                           <span
+                              onClick={() => {
+                                 handelListsCalls({
+                                    key: "openCreateNewListBlock",
+                                 });
+                              }}
+                              className="inline-block text-center bg-white bg-opacity-10 w-full rounded-sm hover:text-prim1 cursor-pointer"
+                           >
+                              Create List
+                           </span>
+                        </div>
+                     </div>
+                  )}
                </div>
             </div>
             <div className="w-[55%] bg-secod1 rounded-md p-2">

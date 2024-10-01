@@ -108,6 +108,82 @@ const getUserProblemsStatus = async (
    }
 };
 
+const getReactionDetailsOfProblemForUser = async ({
+   userId,
+   status,
+   problemID,
+}: {
+   userId: string;
+   status: string;
+   problemID: number;
+}) => {
+   // Basic input validation
+   if (!userId || !status || !problemID) {
+      return NextResponse.json({
+         status: 400,
+         error: "User ID, Problem ID, and status are required",
+      });
+   }
+
+   try {
+      // Check if the user exists
+      const user = await prisma.user.findFirst({
+         where: { email: userId },
+      });
+      if (!user)
+         return NextResponse.json({ status: 404, message: "User not found" });
+
+      // Check if the problem exists
+      const problem = await prisma.problem.findUnique({
+         where: { id: problemID },
+      });
+      if (!problem)
+         return NextResponse.json({
+            status: 404,
+            error: "Problem not found",
+         });
+
+      // Check if the problem status already exists
+      const problemStatus = await prisma.problemStatus.findUnique({
+         where: {
+            UserProblemStatusUnique: {
+               problemId: problemID,
+               userId: user.id,
+            },
+         },
+      });
+
+      if (!problemStatus) {
+         // Create new problem status if it does not exist
+         await prisma.problemStatus.create({
+            data: {
+               status: status,
+               problemId: problemID,
+               userId: user.id,
+            },
+         });
+      } else {
+         // Update existing problem status
+         await prisma.problemStatus.update({
+            where: {
+               UserProblemStatusUnique: {
+                  problemId: problemID,
+                  userId: user.id,
+               },
+            },
+            data: { status: status },
+         });
+      }
+
+      return NextResponse.json({
+         status: 200,
+         message: "Problem status updated successfully",
+      });
+   } catch (error) {
+      console.error(error);
+      return NextResponse.json({ status: 500, error: "Internal server error" });
+   }
+};
 const updateUserProblemStatus = async ({
    userId,
    status,
@@ -278,6 +354,7 @@ const updateUserProblemLikeDislike = async ({
 
       return NextResponse.json({
          status: 200,
+         data: { isLiked, totalDislikes, totalLikes },
          message: "Problem status updated successfully",
       });
    } catch (error) {
