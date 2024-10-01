@@ -1,0 +1,750 @@
+[
+   {
+      "name": "Accenture",
+      "slug": "accenture"
+   },
+   {
+      "name": "Adobe",
+      "slug": "adobe"
+   },
+   {
+      "name": "Amazon",
+      "slug": "amazon"
+   },
+   {
+      "name": "Apple",
+      "slug": "apple"
+   },
+   {
+      "name": "Bloomberg",
+      "slug": "bloomberg"
+   },
+   {
+      "name": "Facebook",
+      "slug": "facebook"
+   },
+   {
+      "name": "Google",
+      "slug": "google"
+   },
+   {
+      "name": "Microsoft",
+      "slug": "microsoft"
+   },
+   {
+      "name": "Oracle",
+      "slug": "oracle"
+   },
+   {
+      "name": "Shopee",
+      "slug": "shopee"
+   },
+   {
+      "name": "Uber",
+      "slug": "uber"
+   },
+   {
+      "name": "Yahoo",
+      "slug": "yahoo"
+   },
+   {
+      "name": "American Express",
+      "slug": "american-express"
+   },
+   {
+      "name": "Dell",
+      "slug": "dell"
+   },
+   {
+      "name": "Expedia",
+      "slug": "expedia"
+   },
+   {
+      "name": "Goldman Sachs",
+      "slug": "goldman-sachs"
+   },
+   {
+      "name": "Ibm",
+      "slug": "ibm"
+   },
+   {
+      "name": "Intel",
+      "slug": "intel"
+   },
+   {
+      "name": "Intuit",
+      "slug": "intuit"
+   },
+   {
+      "name": "Jpmorgan",
+      "slug": "jpmorgan"
+   },
+   {
+      "name": "Morgan Stanley",
+      "slug": "morgan-stanley"
+   },
+   {
+      "name": "Paypal",
+      "slug": "paypal"
+   },
+   {
+      "name": "Salesforce",
+      "slug": "salesforce"
+   },
+   {
+      "name": "Samsung",
+      "slug": "samsung"
+   },
+   {
+      "name": "Spotify",
+      "slug": "spotify"
+   },
+   {
+      "name": "Visa",
+      "slug": "visa"
+   },
+   {
+      "name": "Walmart Global Tech",
+      "slug": "walmart-global-tech"
+   },
+   {
+      "name": "Zillow",
+      "slug": "zillow"
+   },
+   {
+      "name": "Zoho",
+      "slug": "zoho"
+   },
+   {
+      "name": "Zomato",
+      "slug": "zomato"
+   },
+   {
+      "name": "Zoom",
+      "slug": "zoom"
+   },
+   {
+      "name": "Activision",
+      "slug": "activision"
+   },
+   {
+      "name": "Triplebyte",
+      "slug": "triplebyte"
+   },
+   {
+      "name": "Robinhood",
+      "slug": "robinhood"
+   },
+   {
+      "name": "Arcesium",
+      "slug": "arcesium"
+   },
+   {
+      "name": "De Shaw",
+      "slug": "de-shaw"
+   },
+   {
+      "name": "Snapchat",
+      "slug": "snapchat"
+   },
+   {
+      "name": "Linkedin",
+      "slug": "linkedin"
+   },
+   {
+      "name": "Mindtickle",
+      "slug": "mindtickle"
+   },
+   {
+      "name": "Twitter",
+      "slug": "twitter"
+   },
+   {
+      "name": "Qualcomm",
+      "slug": "qualcomm"
+   },
+   {
+      "name": "Swiggy",
+      "slug": "swiggy"
+   },
+   {
+      "name": "Epic Systems",
+      "slug": "epic-systems"
+   },
+   {
+      "name": "Cisco",
+      "slug": "cisco"
+   },
+   {
+      "name": "Athenahealth",
+      "slug": "athenahealth"
+   },
+   {
+      "name": "Mathworks",
+      "slug": "mathworks"
+   },
+   {
+      "name": "Nvidia",
+      "slug": "nvidia"
+   },
+   {
+      "name": "Bolt",
+      "slug": "bolt"
+   },
+   {
+      "name": "Doordash",
+      "slug": "doordash"
+   },
+   {
+      "name": "Quora",
+      "slug": "quora"
+   },
+   {
+      "name": "Servicenow",
+      "slug": "servicenow"
+   },
+   {
+      "name": "Tiktok",
+      "slug": "tiktok"
+   },
+   {
+      "name": "Baidu",
+      "slug": "baidu"
+   },
+   {
+      "name": "Makemytrip",
+      "slug": "makemytrip"
+   },
+   {
+      "name": "Blackrock",
+      "slug": "blackrock"
+   },
+   {
+      "name": "Bytedance",
+      "slug": "bytedance"
+   },
+   {
+      "name": "Cruise Automation",
+      "slug": "cruise-automation"
+   },
+   {
+      "name": "Sumologic",
+      "slug": "sumologic"
+   },
+   {
+      "name": "Yandex",
+      "slug": "yandex"
+   },
+   {
+      "name": "Tcs",
+      "slug": "tcs"
+   },
+   {
+      "name": "Ebay",
+      "slug": "ebay"
+   },
+   {
+      "name": "Dropbox",
+      "slug": "dropbox"
+   },
+   {
+      "name": "Opendoor",
+      "slug": "opendoor"
+   },
+   {
+      "name": "Vmware",
+      "slug": "vmware"
+   },
+   {
+      "name": "Booking.com",
+      "slug": "booking.com"
+   },
+   {
+      "name": "Citadel",
+      "slug": "citadel"
+   },
+   {
+      "name": "Twilio",
+      "slug": "twilio"
+   },
+   {
+      "name": "Asana",
+      "slug": "asana"
+   },
+   {
+      "name": "Capital One",
+      "slug": "capital-one"
+   },
+   {
+      "name": "Sap",
+      "slug": "sap"
+   },
+   {
+      "name": "Docusign",
+      "slug": "docusign"
+   },
+   {
+      "name": "Karat",
+      "slug": "karat"
+   },
+   {
+      "name": "Qualtrics",
+      "slug": "qualtrics"
+   },
+   {
+      "name": "Square",
+      "slug": "square"
+   },
+   {
+      "name": "Twitch",
+      "slug": "twitch"
+   },
+   {
+      "name": "Rubrik",
+      "slug": "rubrik"
+   },
+   {
+      "name": "Airbnb",
+      "slug": "airbnb"
+   },
+   {
+      "name": "Infosys",
+      "slug": "infosys"
+   },
+   {
+      "name": "Godaddy",
+      "slug": "godaddy"
+   },
+   {
+      "name": "Atlassian",
+      "slug": "atlassian"
+   },
+   {
+      "name": "Lyft",
+      "slug": "lyft"
+   },
+   {
+      "name": "Wayfair",
+      "slug": "wayfair"
+   },
+   {
+      "name": "Sprinklr",
+      "slug": "sprinklr"
+   },
+   {
+      "name": "Tusimple",
+      "slug": "tusimple"
+   },
+   {
+      "name": "Alation",
+      "slug": "alation"
+   },
+   {
+      "name": "Netflix",
+      "slug": "netflix"
+   },
+   {
+      "name": "Reddit",
+      "slug": "reddit"
+   },
+   {
+      "name": "Grab",
+      "slug": "grab"
+   },
+   {
+      "name": "Liveramp",
+      "slug": "liveramp"
+   },
+   {
+      "name": "Paytm",
+      "slug": "paytm"
+   },
+   {
+      "name": "Affirm",
+      "slug": "affirm"
+   },
+   {
+      "name": "Payu",
+      "slug": "payu"
+   },
+   {
+      "name": "Tesla",
+      "slug": "tesla"
+   },
+   {
+      "name": "Two Sigma",
+      "slug": "two-sigma"
+   },
+   {
+      "name": "National Instruments",
+      "slug": "national-instruments"
+   },
+   {
+      "name": "Sapient",
+      "slug": "sapient"
+   },
+   {
+      "name": "Databricks",
+      "slug": "databricks"
+   },
+   {
+      "name": "Nutanix",
+      "slug": "nutanix"
+   },
+   {
+      "name": "Splunk",
+      "slug": "splunk"
+   },
+   {
+      "name": "Indeed",
+      "slug": "indeed"
+   },
+   {
+      "name": "C3 Iot",
+      "slug": "c3-iot"
+   },
+   {
+      "name": "Arista Networks",
+      "slug": "arista-networks"
+   },
+   {
+      "name": "Barclays",
+      "slug": "barclays"
+   },
+   {
+      "name": "Dataminr",
+      "slug": "dataminr"
+   },
+   {
+      "name": "Redfin",
+      "slug": "redfin"
+   },
+   {
+      "name": "Huawei",
+      "slug": "huawei"
+   },
+   {
+      "name": "Pinterest",
+      "slug": "pinterest"
+   },
+   {
+      "name": "Akamai",
+      "slug": "akamai"
+   },
+   {
+      "name": "Akuna Capital",
+      "slug": "akuna-capital"
+   },
+   {
+      "name": "Alibaba",
+      "slug": "alibaba"
+   },
+   {
+      "name": "Allincall",
+      "slug": "allincall"
+   },
+   {
+      "name": "Flipkart",
+      "slug": "flipkart"
+   },
+   {
+      "name": "Netsuite",
+      "slug": "netsuite"
+   },
+   {
+      "name": "Roblox",
+      "slug": "roblox"
+   },
+   {
+      "name": "Drw",
+      "slug": "drw"
+   },
+   {
+      "name": "Mercari",
+      "slug": "mercari"
+   },
+   {
+      "name": "Druva",
+      "slug": "druva"
+   },
+   {
+      "name": "Phonepe",
+      "slug": "phonepe"
+   },
+   {
+      "name": "Iit Bombay",
+      "slug": "iit-bombay"
+   },
+   {
+      "name": "Hotstar",
+      "slug": "hotstar"
+   },
+   {
+      "name": "Hbo",
+      "slug": "hbo"
+   },
+   {
+      "name": "Ixl",
+      "slug": "ixl"
+   },
+   {
+      "name": "Wish",
+      "slug": "wish"
+   },
+   {
+      "name": "Factset",
+      "slug": "factset"
+   },
+   {
+      "name": "Box",
+      "slug": "box"
+   },
+   {
+      "name": "Hrt",
+      "slug": "hrt"
+   },
+   {
+      "name": "Coursera",
+      "slug": "coursera"
+   },
+   {
+      "name": "Ot",
+      "slug": "ot"
+   },
+   {
+      "name": "Sony",
+      "slug": "sony"
+   },
+   {
+      "name": "Appdynamics",
+      "slug": "appdynamics"
+   },
+   {
+      "name": "Deutsche Bank",
+      "slug": "deutsche-bank"
+   },
+   {
+      "name": "United Health Group",
+      "slug": "united-health-group"
+   },
+   {
+      "name": "Yelp",
+      "slug": "yelp"
+   },
+   {
+      "name": "Maq Software",
+      "slug": "maq-software"
+   },
+   {
+      "name": "Apt Portfolio",
+      "slug": "apt-portfolio"
+   },
+   {
+      "name": "Works Applications",
+      "slug": "works-applications"
+   },
+   {
+      "name": "Hulu",
+      "slug": "hulu"
+   },
+   {
+      "name": "Zenefits",
+      "slug": "zenefits"
+   },
+   {
+      "name": "Canonical",
+      "slug": "canonical"
+   },
+   {
+      "name": "Cashfree",
+      "slug": "cashfree"
+   },
+   {
+      "name": "Citrix",
+      "slug": "citrix"
+   },
+   {
+      "name": "Cognizant",
+      "slug": "cognizant"
+   },
+   {
+      "name": "Cohesity",
+      "slug": "cohesity"
+   },
+   {
+      "name": "Commvault",
+      "slug": "commvault"
+   },
+   {
+      "name": "Directi",
+      "slug": "directi"
+   },
+   {
+      "name": "Dji",
+      "slug": "dji"
+   },
+   {
+      "name": "Drawbridge",
+      "slug": "drawbridge"
+   },
+   {
+      "name": "Dunzo",
+      "slug": "dunzo"
+   },
+   {
+      "name": "Duolingo",
+      "slug": "duolingo"
+   },
+   {
+      "name": "Edabit",
+      "slug": "edabit"
+   },
+   {
+      "name": "Palantir Technologies",
+      "slug": "palantir-technologies"
+   },
+   {
+      "name": "Fpt",
+      "slug": "fpt"
+   },
+   {
+      "name": "Gilt Groupe",
+      "slug": "gilt-groupe"
+   },
+   {
+      "name": "Pure Storage",
+      "slug": "pure-storage"
+   },
+   {
+      "name": "Honeywell",
+      "slug": "honeywell"
+   },
+   {
+      "name": "Imc",
+      "slug": "imc"
+   },
+   {
+      "name": "Info Edge",
+      "slug": "info-edge"
+   },
+   {
+      "name": "Instacart",
+      "slug": "instacart"
+   },
+   {
+      "name": "Jane Street",
+      "slug": "jane-street"
+   },
+   {
+      "name": "Jeavio",
+      "slug": "jeavio"
+   },
+   {
+      "name": "Jp Morgan",
+      "slug": "jp-morgan"
+   },
+   {
+      "name": "Leap Motion",
+      "slug": "leap-motion"
+   },
+   {
+      "name": "Postmates",
+      "slug": "postmates"
+   },
+   {
+      "name": "Mindtree",
+      "slug": "mindtree"
+   },
+   {
+      "name": "Moengage",
+      "slug": "moengage"
+   },
+   {
+      "name": "Nuro",
+      "slug": "nuro"
+   },
+   {
+      "name": "Optum",
+      "slug": "optum"
+   },
+   {
+      "name": "Peak6",
+      "slug": "peak6"
+   },
+   {
+      "name": "Persistent Systems",
+      "slug": "persistent-systems"
+   },
+   {
+      "name": "Pocket Gems",
+      "slug": "pocket-gems"
+   },
+   {
+      "name": "Rakuten",
+      "slug": "rakuten"
+   },
+   {
+      "name": "Razorpay",
+      "slug": "razorpay"
+   },
+   {
+      "name": "Riot Games",
+      "slug": "riot-games"
+   },
+   {
+      "name": "Rupeek",
+      "slug": "rupeek"
+   },
+   {
+      "name": "Softwire",
+      "slug": "softwire"
+   },
+   {
+      "name": "T System",
+      "slug": "t-system"
+   },
+   {
+      "name": "Tencent",
+      "slug": "tencent"
+   },
+   {
+      "name": "Thumbtack",
+      "slug": "thumbtack"
+   },
+   {
+      "name": "Tiaa",
+      "slug": "tiaa"
+   },
+   {
+      "name": "Tiger Analytics",
+      "slug": "tiger-analytics"
+   },
+   {
+      "name": "Toptal",
+      "slug": "toptal"
+   },
+   {
+      "name": "Valve",
+      "slug": "valve"
+   },
+   {
+      "name": "Virtu Financial",
+      "slug": "virtu-financial"
+   },
+   {
+      "name": "Wealthfront",
+      "slug": "wealthfront"
+   },
+   {
+      "name": "Zeta Suite",
+      "slug": "zeta-suite"
+   },
+   {
+      "name": "Zopsmart",
+      "slug": "zopsmart"
+   },
+   {
+      "name": "Zscaler",
+      "slug": "zscaler"
+   }
+]
