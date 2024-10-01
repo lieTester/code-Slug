@@ -136,10 +136,13 @@ export const fetchUserProblemStatuses = async ({
    month: number;
 }) => {
    try {
-      // Get the current client date and timezone offset
+      // Get the current client date and time
       const currentDate = new Date();
-      const clientDate = currentDate.toISOString(); // Format the date as ISO string
-      const timezoneOffset = currentDate.getTimezoneOffset(); // Get timezone offset in minutes
+
+      currentDate.setFullYear(year);
+      currentDate.setMonth(month - 1);
+      const clientDate = currentDate.toISOString();
+      const timezoneOffset = currentDate.getTimezoneOffset();
 
       // Send the request with the computed date and timezone
       const response = await axios.get(
