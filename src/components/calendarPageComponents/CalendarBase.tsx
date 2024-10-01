@@ -101,10 +101,17 @@ const CalendarBase: React.FC = () => {
       try {
          setproblemStatusesOfMonthLoader(true);
          setproblemStatusesOfMonth({});
+         // Get the current client date and time
+         const currentDate = new Date();
+         currentDate.setFullYear(currentMonth?.getFullYear());
+         currentDate.setMonth(currentMonth?.getMonth());
+         const clientDate = currentDate.toISOString();
+         const timezoneOffset = currentDate.getTimezoneOffset();
+
          await fetchUserProblemStatuses({
             userId: session?.user?.id,
-            month: currentMonth?.getMonth() + 1, //In JavaScript, Date.getMonth() returns a zero-based index for the month, meaning:
-            year: currentMonth?.getFullYear(),
+            clientDate,
+            timezoneOffset,
          }).then((res) => {
             setproblemStatusesOfMonth(res.monthStatus);
             setproblemStatusesOfMonthLoader(false);

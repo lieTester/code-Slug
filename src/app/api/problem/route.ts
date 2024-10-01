@@ -265,25 +265,15 @@ const updateUserProblemLikeDislike = async ({
 
 const fetchUserProblemStatusForMonth = async ({
    userId,
-   year,
-   month,
    clientDate,
    timezoneOffset,
 }: {
    userId: string;
-   year: number;
-   month: number;
    clientDate: string; // Date string from client (e.g., '2024-09-25')
    timezoneOffset: number; // Client's timezone offset in minutes (e.g., for GMT+3 it's -180)
 }) => {
    // Validate inputs
-   if (
-      !userId ||
-      !year ||
-      !month ||
-      !clientDate ||
-      timezoneOffset === undefined
-   ) {
+   if (!userId || !clientDate || timezoneOffset === undefined) {
       return NextResponse.json({
          status: 400,
          error: "User ID, year, month, date, and timezone offset are required",
@@ -417,8 +407,6 @@ const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {
          case "fetchUserProblemStatusForMonth":
             return await fetchUserProblemStatusForMonth({
                userId: data.userId,
-               year: Number(data.year),
-               month: Number(data.month),
                clientDate: data.clientDate,
                timezoneOffset: Number(data.timezoneOffset),
             });

@@ -128,22 +128,14 @@ export const updateUserProblemLikeDislike = async ({
 };
 export const fetchUserProblemStatuses = async ({
    userId,
-   year,
-   month,
+   clientDate,
+   timezoneOffset,
 }: {
    userId: string;
-   year: number;
-   month: number;
+   clientDate: string;
+   timezoneOffset: number;
 }) => {
    try {
-      // Get the current client date and time
-      const currentDate = new Date();
-
-      currentDate.setFullYear(year);
-      currentDate.setMonth(month - 1);
-      const clientDate = currentDate.toISOString();
-      const timezoneOffset = currentDate.getTimezoneOffset();
-
       // Send the request with the computed date and timezone
       const response = await axios.get(
          process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/`,
@@ -151,8 +143,6 @@ export const fetchUserProblemStatuses = async ({
             params: {
                type: "fetchUserProblemStatusForMonth",
                userId,
-               year,
-               month,
                clientDate, // Include the computed client date
                timezoneOffset, // Include the computed timezone offset
             },
