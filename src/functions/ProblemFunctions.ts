@@ -136,6 +136,12 @@ export const fetchUserProblemStatuses = async ({
    month: number;
 }) => {
    try {
+      // Get the current client date and timezone offset
+      const currentDate = new Date();
+      const clientDate = currentDate.toISOString(); // Format the date as ISO string
+      const timezoneOffset = currentDate.getTimezoneOffset(); // Get timezone offset in minutes
+
+      // Send the request with the computed date and timezone
       const response = await axios.get(
          process.env.NEXT_PUBLIC_API_BASE_URL + `/problem/`,
          {
@@ -144,6 +150,8 @@ export const fetchUserProblemStatuses = async ({
                userId,
                year,
                month,
+               clientDate, // Include the computed client date
+               timezoneOffset, // Include the computed timezone offset
             },
          }
       );

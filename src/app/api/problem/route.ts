@@ -267,24 +267,33 @@ const fetchUserProblemStatusForMonth = async ({
    userId,
    year,
    month,
+   clientDate,
+   timezoneOffset,
 }: {
    userId: string;
    year: number;
    month: number;
+   clientDate: string; // Date string from client (e.g., '2024-09-25')
+   timezoneOffset: number; // Client's timezone offset in minutes (e.g., for GMT+3 it's -180)
 }) => {
-   // Basic input validation
-   if (!userId || !year || !month) {
+   // Validate inputs
+   if (
+      !userId ||
+      !year ||
+      !month ||
+      !clientDate ||
+      timezoneOffset === undefined
+   ) {
       return NextResponse.json({
          status: 400,
-         error: "User ID, year, and month are required",
+         error: "User ID, year, month, date, and timezone offset are required",
       });
    }
+
    try {
       // Step 1: Check if the user exists
       const user = await prisma.user.findUnique({
-         where: {
-            id: userId,
-         },
+         where: { id: userId },
       });
 
       if (!user) {
@@ -294,17 +303,37 @@ const fetchUserProblemStatusForMonth = async ({
          });
       }
 
-      // Step 2: Set the date range for the given month and year
-      const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0)); // Start of the month
-      const endDate = new Date(year, month, 0, 23, 59, 59); // End of the month (last second)
+      // Step 2: Convert the client date to UTC based on their timezone
+      const clientDateObj = new Date(clientDate);
+      const userTimeInUTC = new Date(
+         clientDateObj.getTime() + timezoneOffset * 60000
+      );
 
-      // Step 3: Fetch the user's problem statuses for the given month, including topics
+      // Set the start and end dates for the user's month based on their timezone
+      const startDate = new Date(
+         userTimeInUTC.getUTCFullYear(),
+         userTimeInUTC.getUTCMonth(),
+         1,
+         0,
+         0,
+         0
+      );
+      const endDate = new Date(
+         userTimeInUTC.getUTCFullYear(),
+         userTimeInUTC.getUTCMonth() + 1,
+         0,
+         23,
+         59,
+         59
+      );
+
+      // Step 3: Fetch the user's problem statuses for the adjusted month
       const problemStatuses = await prisma.problemStatus.findMany({
          where: {
             userId: userId,
             updatedAt: {
-               gte: startDate, // Greater than or equal to start of the month
-               lte: endDate, // Less than or equal to the end of the month
+               gte: startDate, // Greater than or equal to the user's local start of the month
+               lte: endDate, // Less than or equal to the user's local end of the month
             },
          },
          include: {
@@ -323,30 +352,29 @@ const fetchUserProblemStatusForMonth = async ({
          },
       });
 
-      // Step 4: Format the data for the response
-
       type FormattedStatus = {
          problemId: number;
          problemTitle: string;
          status: string;
          updatedAt: Date;
-         topics: { id: number; name: string }[]; // Include topics
+         topics: { id: number; name: string }[];
       };
 
       type StatusByDate = {
-         [date: string]: { [status: string]: FormattedStatus[] };
+         [date: string]: { [status: string]: FormattedStatus[] }; // Allow string indexing
       };
 
       const formattedStatuses: StatusByDate =
          problemStatuses.reduce<StatusByDate>((acc, status) => {
-            const date = status.updatedAt.getDate(); // Extract the date part (YYYY-MM-DD)
+            const date = status.updatedAt.getDate();
 
             if (!acc[date]) {
-               acc[date] = {}; // Initialize the array for this date if it doesn't exist
+               acc[date] = {};
             }
             if (!acc[date][status.status]) {
-               acc[date][status.status] = []; // Initialize the array for this status if it doesn't exist
+               acc[date][status.status] = [];
             }
+
             acc[date][status.status].push({
                problemId: status.problem.id,
                problemTitle: status.problem.title,
@@ -355,13 +383,12 @@ const fetchUserProblemStatusForMonth = async ({
                topics: status.problem.topics.map((topic) => ({
                   id: topic.id,
                   name: topic.name,
-               })), // Include the topics for each problem
+               })),
             });
 
             return acc;
          }, {});
 
-      // Step 5: Return the data
       return NextResponse.json({
          status: 200,
          message: "User's problem statuses for the month",
@@ -369,7 +396,7 @@ const fetchUserProblemStatusForMonth = async ({
       });
    } catch (error) {
       console.log(error);
-      return NextResponse.json({ status: 500, error });
+      return NextResponse.json({ status: 500, error: "Internal Server Error" });
    }
 };
 
@@ -392,6 +419,8 @@ const getHandlerRequests = async (req: NextRequest, res: NextResponse) => {
                userId: data.userId,
                year: Number(data.year),
                month: Number(data.month),
+               clientDate: data.clientDate,
+               timezoneOffset: Number(data.timezoneOffset),
             });
          default:
             return NextResponse.json({

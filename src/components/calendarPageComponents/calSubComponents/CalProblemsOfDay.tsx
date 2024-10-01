@@ -54,13 +54,14 @@ const CalProblemsOfDay: React.FC<ProblemAndTopicsOfTheDay> = ({
                <div className="w-full  h-full flex justify-center items-center text-xl">
                   <span className="text-hard font-bold mx-1">No Data</span> for{" "}
                   <span className="text-medium font-bold mx-1">
-                     {daysOfWeek[dayProblems?.date?.getDay() || 0]}
+                     {dayProblems?.date &&
+                        daysOfWeek[dayProblems?.date?.getDay() - 1]}
                   </span>
                   <span className="text-easy font-bold mx-2">Date </span>
                   {"  "}
                   {dayProblems?.date?.getDate()}
                   {" : "}
-                  {dayProblems?.date?.getMonth()}
+                  {dayProblems?.date && dayProblems?.date?.getMonth() + 1}
                   {" : "}
                   {dayProblems?.date?.getFullYear()}
                </div>
