@@ -27,7 +27,7 @@ const getAllProblems = async () => {
             },
          },
       });
-
+      problems.sort((a, b) => a.id - b.id);
       const transformedProblems = problems?.map((problem) => {
          // Destructure the 'CompanyProblem' field to remove it
          const { CompanyProblem, ...rest } = problem;
@@ -252,6 +252,29 @@ const updateUserProblemLikeDislike = async ({
             data: { like: isLiked },
          });
       }
+      // Step 2: Calculate total likes and dislikes for the given problemId
+      const totalLikes = await prisma.problemStatus.count({
+         where: {
+            problemId: problemID,
+            like: true, // Count all the `like: true`
+         },
+      });
+
+      const totalDislikes = await prisma.problemStatus.count({
+         where: {
+            problemId: problemID,
+            like: false, // Count all the `like: false`
+         },
+      });
+
+      // Step 3: Update the problem table with the calculated like/dislike counts
+      await prisma.problem.update({
+         where: { id: problemID },
+         data: {
+            like: totalLikes, // Assuming `totalLikes` column exists in the `problem` table
+            dislike: totalDislikes, // Assuming `totalDislikes` column exists in the `problem` table
+         },
+      });
 
       return NextResponse.json({
          status: 200,

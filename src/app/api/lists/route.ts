@@ -92,6 +92,7 @@ const getProblemsInList = async ({ listId }: { listId: string }) => {
             },
          },
       });
+      currentList?.problems?.sort((a, b) => a.id - b.id);
       const transformedProblems = currentList?.problems?.map((problem) => {
          // Destructure the 'CompanyProblem' field to remove it
          const { CompanyProblem, ...rest } = problem;
