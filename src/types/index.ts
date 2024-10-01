@@ -12,6 +12,25 @@ export type AuthCredType = {
    clientSecret: string;
 };
 
+export interface CalFullViewProps {
+   color: string;
+   userId: string;
+   hoverColor: string;
+   weekCalendarId: string;
+   weekCalendarName: string;
+}
+
+export type StatusByDate = {
+   [date: string]: {
+      [status: string]: {
+         problemId: number; // or number
+         problemTitle: string;
+         status: string;
+         updatedAt: Date;
+         topics: { id: number; name: string }[];
+      }[];
+   };
+};
 export type filterProp = {
    list?: string;
    status?: string;
@@ -142,24 +161,4 @@ export type ProblemsProp = {
    topics?: string[];
    companies?: string[];
    PlatformLinks?: any[];
-};
-
-export interface CalFullViewProps {
-   color: string;
-   userId: string;
-   hoverColor: string;
-   weekCalendarId: string;
-   weekCalendarName: string;
-}
-
-export type StatusByDate = {
-   [date: string]: {
-      [status: string]: {
-         problemId: number; // or number
-         problemTitle: string;
-         status: string;
-         updatedAt: Date;
-         topics: { id: number; name: string }[];
-      }[];
-   };
 };
