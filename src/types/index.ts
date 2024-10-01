@@ -1,32 +1,15 @@
 import { Session } from "next-auth";
 import { ReactNode, SetStateAction } from "react";
 
-export type AuthCredType = {
-   clientId: string;
-   clientSecret: string;
-};
-
 export type SessionProp = {
    session: Session | null | undefined;
 };
 export type ChildrenProp = {
    children: ReactNode;
 };
-
-export type ProblemsProp = {
-   id: number;
-   title: string;
-   status?: string;
-   titleSlug: string;
-   frontEndId?: string;
-   difficulty: string;
-   like: number;
-   dislike: number;
-   isLiked?: boolean;
-   description: string | null;
-   topics?: string[];
-   companies?: string[];
-   PlatformLinks?: any[];
+export type AuthCredType = {
+   clientId: string;
+   clientSecret: string;
 };
 
 export type filterProp = {
@@ -145,6 +128,22 @@ export interface CalWeekBannerProps extends ChildrenProp {
       }>
    >;
 }
+export type ProblemsProp = {
+   id: number;
+   title: string;
+   status?: string;
+   titleSlug: string;
+   frontEndId?: string;
+   difficulty: string;
+   like: number;
+   dislike: number;
+   isLiked?: boolean;
+   description: string | null;
+   topics?: string[];
+   companies?: string[];
+   PlatformLinks?: any[];
+};
+
 export interface CalFullViewProps {
    color: string;
    userId: string;
