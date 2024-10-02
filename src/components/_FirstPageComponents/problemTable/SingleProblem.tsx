@@ -503,7 +503,7 @@ const SingleProblem = ({
                   title={problem?.id + ". " + problem?.title}
                   className="text-xl font-semibold mb-2 text-seco2 font-sofiaPro"
                >
-                  Notes :
+                  Notes : It is future feature if time permits or if I want to
                </h1>
                <div className=""> write notes here.....</div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 // icons
 import { IoMdArrowDropdown, IoMdSearch } from "react-icons/io"; // Import your desired filter icon
@@ -44,6 +44,11 @@ const ProblemFilters = () => {
 
    // filter context /////////////////////////////////////////////////////////
    const filtersContext = useContext(FiltersContext);
+   const tagsDropDown = useRef<HTMLLIElement>(null);
+   // filterd ones if user put search in specically for tag filter than
+   const [tagSearchString, setTagSearchString] = useState("");
+   const [filterdTopics, setFilterdTopics] = useState<topicProp[]>();
+   const [filterdCompanies, setFilterdCompanies] = useState<companieProp[]>();
 
    const searchParams = useSearchParams();
    const { setQueryParams, removeQueryParams, urlSearchParams } =
@@ -70,6 +75,19 @@ const ProblemFilters = () => {
    //////////////////////////////////// all functions /////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////////////////////
+   const removeFilterVisiblity = () => {
+      setFilterVisiblity && setFilterVisiblity(null);
+   };
+   const handelTagsDropDownVisiblity = (event: React.FocusEvent) => {
+      if (
+         tagsDropDown.current &&
+         !tagsDropDown.current.contains(event.relatedTarget)
+      ) {
+         console.log("calling");
+         removeFilterVisiblity();
+      }
+   };
+
    const performPageSetup = async ({
       currentList,
       pageNumber,
@@ -131,10 +149,6 @@ const ProblemFilters = () => {
          throw error;
       }
    }
-
-   const removeFilterVisiblity = () => {
-      setFilterVisiblity && setFilterVisiblity(null);
-   };
 
    const manageFiltersInUrl = ({
       type,
@@ -221,7 +235,11 @@ const ProblemFilters = () => {
                .catch((err) => {
                   throw err;
                }));
-         removeFilterVisiblity(); // becuse on click the filter data is
+         if (category !== "topics" && category !== "companies") {
+            removeFilterVisiblity();
+            // becuse on click the filter data is accepted
+            // filter should close but not if it is tags means topics or companies
+         }
       } catch (error) {
          console.error(error);
       }
@@ -275,14 +293,38 @@ const ProblemFilters = () => {
       }
    };
 
-   let debounceTimeout: any;
+   let debounceTimeoutForTitleSearch: any;
    const filterByTitle = async (value: string) => {
       // Clear the previous timeout
-      clearTimeout(debounceTimeout);
+      clearTimeout(debounceTimeoutForTitleSearch);
       // Set a new timeout to trigger the search after a delay
-      debounceTimeout = setTimeout(() => {
+      debounceTimeoutForTitleSearch = setTimeout(() => {
          catchFilter("search", value);
       }, 800);
+   };
+   let debounceTimeoutForTags: any;
+   const filterTags = async () => {
+      const processTagFilter = (value: string, list: any) => {
+         const sortedtags = list
+            .filter((item: any) =>
+               item.name.toLowerCase().includes(value.toLowerCase())
+            )
+            .sort((a: any, b: any) => a.name.localeCompare(b.name));
+         return sortedtags;
+      };
+      // Clear the previous timeout
+      clearTimeout(debounceTimeoutForTags);
+      // Set a new timeout to trigger the search after a delay
+      debounceTimeoutForTags = setTimeout(() => {
+         if (isTopic && topics) {
+            const result = processTagFilter(tagSearchString, topics);
+
+            setFilterdTopics(result);
+         } else if (companies) {
+            const result = processTagFilter(tagSearchString, companies);
+            setFilterdCompanies(result);
+         }
+      }, 200);
    };
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -300,6 +342,8 @@ const ProblemFilters = () => {
                topicsRes.data.topics.sort((a: topicProp, b: topicProp) =>
                   a.name.localeCompare(b.name)
                );
+
+            setFilterdTopics(topicsRes.data.topics);
             setTopics && setTopics(topicsRes.data.topics);
 
             const companiesRes = await getAllCompanylist().catch((error) => {
@@ -310,6 +354,8 @@ const ProblemFilters = () => {
                   (a: companieProp, b: companieProp) =>
                      a.name.localeCompare(b.name)
                );
+
+            setFilterdCompanies(companiesRes.data.companies);
             setCompanies && setCompanies(companiesRes.data.companies);
 
             if (session !== undefined && currentListProblems?.length === 0) {
@@ -395,6 +441,10 @@ const ProblemFilters = () => {
          performPageSetup({ pageNumber });
       }
    }, [searchParams?.get("pageno")]);
+   // on tag string searched
+   useEffect(() => {
+      filterTags();
+   }, [tagSearchString]);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -407,20 +457,24 @@ const ProblemFilters = () => {
             <li
                className="relative  flex justify-between cursor-pointer focus:z-[20]"
                tabIndex={0}
-               onClick={() => {
-                  setFilterVisiblity &&
-                     setFilterVisiblity((prev: any) => {
-                        return { list: prev?.list ? !prev?.list : true };
-                     });
-               }}
                onBlur={removeFilterVisiblity}
             >
-               Lists
-               <IoMdArrowDropdown
-                  className={`ml-3  hover:cursor-pointer ${
-                     filterVisiblity?.list && "rotate-180"
-                  } transition-[transform] ease-linear`}
-               />
+               <span
+                  onClick={() => {
+                     setFilterVisiblity &&
+                        setFilterVisiblity((prev: any) => {
+                           return { list: prev?.list ? !prev?.list : true };
+                        });
+                  }}
+                  className="w-full h-full flex justify-between items-center "
+               >
+                  Lists
+                  <IoMdArrowDropdown
+                     className={`ml-3  hover:cursor-pointer ${
+                        filterVisiblity?.list && "rotate-180"
+                     } transition-[transform] ease-linear`}
+                  />
+               </span>
                <ul
                   className={`${
                      filterVisiblity?.list
@@ -449,26 +503,30 @@ const ProblemFilters = () => {
                </ul>
             </li>
             <li
-               className="relative flex justify-between cursor-pointer focus:z-[20]"
+               className="relative cursor-pointer focus:z-[20]"
                tabIndex={0}
-               onClick={() => {
-                  setFilterVisiblity &&
-                     setFilterVisiblity((prev: any) => {
-                        return {
-                           difficulty: prev?.difficulty
-                              ? !prev?.difficulty
-                              : true,
-                        };
-                     });
-               }}
                onBlur={removeFilterVisiblity}
             >
-               Difficulty
-               <IoMdArrowDropdown
-                  className={`ml-3 hover:cursor-pointer ${
-                     filterVisiblity?.difficulty && "rotate-180"
-                  } transition-[transform] ease-linear`}
-               />
+               <span
+                  onClick={() => {
+                     setFilterVisiblity &&
+                        setFilterVisiblity((prev: any) => {
+                           return {
+                              difficulty: prev?.difficulty
+                                 ? !prev?.difficulty
+                                 : true,
+                           };
+                        });
+                  }}
+                  className="w-full h-full flex justify-between items-center "
+               >
+                  Difficulty
+                  <IoMdArrowDropdown
+                     className={`ml-3 hover:cursor-pointer ${
+                        filterVisiblity?.difficulty && "rotate-180"
+                     } transition-[transform] ease-linear`}
+                  />
+               </span>
                <ul
                   className={`${
                      filterVisiblity?.difficulty
@@ -497,22 +555,28 @@ const ProblemFilters = () => {
                </ul>
             </li>
             <li
-               className="relative flex justify-between cursor-pointer focus:z-[20]"
+               className="relative cursor-pointer focus:z-[20]"
                tabIndex={0}
-               onClick={() => {
-                  setFilterVisiblity &&
-                     setFilterVisiblity((prev: any) => {
-                        return { status: prev?.status ? !prev?.status : true };
-                     });
-               }}
                onBlur={removeFilterVisiblity}
             >
-               Status
-               <IoMdArrowDropdown
-                  className={`ml-3 hover:cursor-pointer ${
-                     filterVisiblity?.status && "rotate-180"
-                  } transition-[transform] ease-linear`}
-               />
+               <span
+                  onClick={() => {
+                     setFilterVisiblity &&
+                        setFilterVisiblity((prev: any) => {
+                           return {
+                              status: prev?.status ? !prev?.status : true,
+                           };
+                        });
+                  }}
+                  className="w-full h-full flex justify-between items-center "
+               >
+                  Status
+                  <IoMdArrowDropdown
+                     className={`ml-3 hover:cursor-pointer ${
+                        filterVisiblity?.status && "rotate-180"
+                     } transition-[transform] ease-linear`}
+                  />
+               </span>
                <ul
                   className={`${
                      filterVisiblity?.status
@@ -548,25 +612,42 @@ const ProblemFilters = () => {
             </li>
 
             <li
-               className="relative flex justify-between cursor-pointer group focus-within:z-[20]"
+               className="relative  cursor-pointer   focus-within:z-[20]"
                tabIndex={0}
-               onClick={() => {
-                  setFilterVisiblity &&
-                     setFilterVisiblity((prev: any) => {
-                        return { list: prev?.list ? !prev?.list : true };
-                     });
-               }}
-               onBlur={removeFilterVisiblity}
+               ref={tagsDropDown}
+               onBlur={(e) => handelTagsDropDownVisiblity(e)}
             >
-               Tags
-               <IoMdArrowDropdown className="ml-3 hover:cursor-pointer group-focus:rotate-180 transition-[transform] ease-linear" />
-               <ul className="absolute top-10 right-0 w-full md:w-[350px] max-w-xl h-[500px] overflow-hidden p-2 my-auto rounded-md -translate-y-2 invisible opacity-0 bg-front2 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform]">
+               <span
+                  onClick={() => {
+                     setFilterVisiblity &&
+                        setFilterVisiblity((prev: any) => ({
+                           tags: prev?.tags ? !prev.tags : true,
+                        }));
+                  }}
+                  className="w-full h-full flex justify-between items-center "
+               >
+                  Tags
+                  <IoMdArrowDropdown
+                     className={`ml-3 hover:cursor-pointer ${
+                        filterVisiblity?.tags && "rotate-180"
+                     } transition-[transform] ease-linear`}
+                  />
+               </span>
+               <ul
+                  className={`${
+                     filterVisiblity?.tags
+                        ? "visible opacity-100 translate-y-0"
+                        : "-translate-y-2 invisible opacity-0 "
+                  } absolute top-10 right-0 w-full md:w-[350px] max-w-xl h-[500px] overflow-hidden p-2 my-auto rounded-md bg-front2  transition-[opacity,transform]`}
+               >
                   <li className="h-[6%] flex items-center bg-secod2 rounded-sm mb-2">
                      <IoMdSearch className="m-2" />
                      <input
                         className="w-full bg-transparent outline-none"
                         placeholder="Search tags..."
                         type="text"
+                        value={tagSearchString}
+                        onChange={(e) => setTagSearchString(e.target.value)}
                      />
                   </li>
                   <div className="relative h-[92%] overflow-hidden ">
@@ -575,7 +656,10 @@ const ProblemFilters = () => {
                            className={`${
                               isTopic && "text-prim1 border-b-2"
                            } px-1 mr-1`}
-                           onClick={() => setIsTopic && setIsTopic(true)}
+                           onClick={() => {
+                              setTagSearchString("");
+                              setIsTopic && setIsTopic(true);
+                           }}
                         >
                            Topics
                         </li>
@@ -583,14 +667,17 @@ const ProblemFilters = () => {
                            className={`${
                               !isTopic && "text-prim1 border-b-2"
                            } px-1 mr-1`}
-                           onClick={() => setIsTopic && setIsTopic(false)}
+                           onClick={() => {
+                              setTagSearchString("");
+                              setIsTopic && setIsTopic(false);
+                           }}
                         >
                            Companies
                         </li>
                      </ul>
-                     <ul className="relative  !overflow-y-auto flex justify-between flex-wrap w-full h-[90%] py-2 [&>li]:opacity-70 [&>li:hover]:opacity-100 [&>li:hover]:text-prim1 ">
+                     <ul className="relative  !overflow-y-auto flex justify-between flex-wrap w-full max-h-[90%] py-2 [&>li]:opacity-70 [&>li:hover]:opacity-100 [&>li:hover]:text-prim1 ">
                         {isTopic
-                           ? topics?.map(({ name, slug }) => {
+                           ? filterdTopics?.map(({ name, slug }) => {
                                 return (
                                    <li
                                       key={slug}
@@ -603,7 +690,7 @@ const ProblemFilters = () => {
                                    </li>
                                 );
                              })
-                           : companies?.map(({ name, slug }) => {
+                           : filterdCompanies?.map(({ name, slug }) => {
                                 return (
                                    <li
                                       key={slug}
