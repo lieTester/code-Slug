@@ -63,7 +63,7 @@ const ListMaker: FC = () => {
 
    return (
       <section className="relative h-full w-[65%] lg:w-[70%] 2xl:w-[75%] font-baloo  ">
-         <div className="min-h-[250px] md:min-h-[160px] lg:md:min-h-[120px] xl:min-h-[14%]">
+         <div className="min-h-[250px] md:min-h-[160px] lg:md:min-h-[120px] xl:min-h-[14%] pl-2 md:pl-0">
             {/* because the sam filter is used in first page where height directly
                assign in problem filter component will affect page
             */}
@@ -73,7 +73,7 @@ const ListMaker: FC = () => {
          {problemSetLoading?.loading && problemSetLoading?.value === "list" ? (
             <ListLandingBodySkeleton />
          ) : (
-            <div className="relative h-[calc(100%-250px)] md:h-[calc(100%-160px)] lg:h-[calc(100%-120px)] xl:h-[86%] pl-2 ">
+            <div className="relative h-[calc(100%-255px)] md:h-[calc(100%-160px)] lg:h-[calc(100%-120px)] xl:h-[86%] pl-2 ">
                {filterdProblems &&
                   setFilterdProblems &&
                   (problemSetLoading?.loading ? (

@@ -254,21 +254,21 @@ const SingleProblem = ({
       <tr
          className={` ${
             open ? "fixed" : "hidden"
-         } flex justify-center items-center w-full h-full pt-[15%] lg:pt-20 lg:p-10  z-20 top-0 left-0 transition-opacity ease-in-out`}
+         } flex justify-center items-end md:items-center w-full h-full   md:p-10  z-50 top-0 left-0 `}
       >
          <td
             onClick={() => onClose(false)}
             className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-lg "
          ></td>
 
-         <td className="relative w-[100%] h-full  bg-backg2 p-4 lg:rounded-lg flex justify-between  z-10">
-            <div
-               onClick={() => onClose(false)}
-               className="absolute right-2 cursor-pointer top-0 lg:hidden text-white font-extrabold"
-            >
-               X
-            </div>
-            <div className="relative w-[40%] max-w-4xl flex flex-col">
+         <span
+            onClick={() => onClose(false)}
+            className="absolute top-2 right-2 md:top-4 md:right-4 cursor-pointer text-3xl text-white font-extrabold"
+         >
+            X
+         </span>
+         <td className="relative w-[100%] h-[calc(100%-50px)] bg-backg2 p-4 md:rounded-md md:flex md:justify-between  z-10">
+            <div className="relative w-full h-[50%] md:w-[45%] md:h-full flex flex-col pb-10 mb-3 md:mb-0">
                <h1
                   title={problem?.id + ". " + problem?.title}
                   className="text-2xl font-semibold mb-2 text-prim2 font-sofiaPro"
@@ -350,7 +350,7 @@ const SingleProblem = ({
                      </pre>
                   </pre>
                </div>
-               <div className="absolute bottom-0 w-full h-9 flex text-prim2 p-1 bg-black bg-opacity-30 rounded-[5px]  ">
+               <div className="absolute bottom-0 w-full h-9 flex text-prim2 p-1 bg-black bg-opacity-50 rounded-[5px]  ">
                   <span className="flex h-full justify-center items-center mr-2 pl-2  bg-backg1 rounded-[5px] overflow-hidden">
                      {reactions?.isLiked === null ||
                      reactions?.isLiked === undefined ? (
@@ -498,7 +498,7 @@ const SingleProblem = ({
                   )}
                </div>
             </div>
-            <div className="w-[55%] bg-secod1 rounded-md p-2">
+            <div className="relative w-full h-[calc(50%-12px)] md:w-[50%] md:h-full bg-secod1 rounded-md p-2">
                <h1
                   title={problem?.id + ". " + problem?.title}
                   className="text-xl font-semibold mb-2 text-seco2 font-sofiaPro"

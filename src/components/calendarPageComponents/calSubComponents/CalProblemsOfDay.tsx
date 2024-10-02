@@ -30,7 +30,7 @@ const CalProblemsOfDay: React.FC<ProblemAndTopicsOfTheDay> = ({
       <div
          className={`${
             dayProblems?.open ? "fixed" : "hidden"
-         }   top-0 left-0 inset-0 flex items-center justify-center z-[100]   `}
+         } flex justify-center items-end md:items-center w-full h-full   md:p-10  z-50 top-0 left-0 `}
       >
          <div
             onClick={() => {
@@ -45,11 +45,11 @@ const CalProblemsOfDay: React.FC<ProblemAndTopicsOfTheDay> = ({
                setDayProblems({ open: false });
                setCurrentProblem({});
             }}
-            className="absolute top-[2vh] right-4 text-hard text-2xl font-sofiaPro font-extrabold"
+            className="absolute font-baloo top-2 right-2 md:top-10 md:right-10 cursor-pointer text-3xl text-white font-extrabold"
          >
             X
          </span>
-         <div className="relative w-full h-full mt-20 md:mt-0 md:w-[80%] lg:w-[70%] md:h-[60%]  bg-backg2 p-4 lg:rounded-lg flex justify-between  z-10   [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg2 ">
+         <div className="relative bg-backg2 p-4 w-[100%] h-[calc(100%-50px)]   md:w-[80%] lg:w-[70%] md:h-[60%] md:rounded-md md:flex md:justify-between    z-10    ">
             {dayProblems?.problems?.length === 0 ? (
                <div className="w-full  h-full flex justify-center items-center text-xl">
                   <span className="text-hard font-bold mx-1">No Data</span> for{" "}
@@ -67,7 +67,7 @@ const CalProblemsOfDay: React.FC<ProblemAndTopicsOfTheDay> = ({
                </div>
             ) : (
                <>
-                  <div className=" w-[60%] max-w-4xl flex flex-col px-4">
+                  <div className="w-full h-[50%]  md:w-[60%] md:h-full max-w-4xl md:px-4 overflow-y-auto">
                      {currProblem?.problemId && (
                         <>
                            <h1
@@ -129,7 +129,7 @@ const CalProblemsOfDay: React.FC<ProblemAndTopicsOfTheDay> = ({
                         </>
                      )}
                   </div>
-                  <div className="w-[40%] overflow-y-auto">
+                  <div className="w-full h-[50%] pr-1  md:w-[40%] md:h-full overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-front1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-backg2">
                      {dayProblems?.problems?.map((problem) => {
                         return (
                            <div

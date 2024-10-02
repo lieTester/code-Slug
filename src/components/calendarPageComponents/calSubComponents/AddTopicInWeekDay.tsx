@@ -99,7 +99,7 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
       <div
          className={`${
             weekDaySettings?.open ? "fixed" : "hidden"
-         }   top-0 left-0 inset-0 flex items-center justify-center z-[100]  fade`}
+         } flex justify-center items-end md:items-center w-full h-full   md:p-10  z-50 top-0 left-0 `}
       >
          <div
             onClick={() => {
@@ -113,27 +113,27 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
                setWeekDaySettings({ open: false });
                setNewLinkedTopicsLoader(true);
             }}
-            className="absolute top-[2vh] right-4 text-hard text-2xl font-sofiaPro font-extrabold"
+            className="absolute font-baloo top-2 right-2 md:top-10 md:right-10 cursor-pointer text-3xl text-white font-extrabold"
          >
             X
          </span>
          <div
-            className={`absolute md:relative   bottom-0 w-full z-[100]  mx-auto md:w-[80%] lg:w-[70%] 2xl:w-[50%] h-[calc(100%-7%)] md:min-h-[500px] md:max-h-[75%] p-4  md:rounded-md    backdrop-brightness-[.4] backdrop-blur-3xl overflow-hidden`}
+            className={`relative p-4 mx-auto w-[100%] h-[calc(100%-50px)]   md:w-[90%] lg:w-[80%] md:h-[60%]  2xl:w-[50%] md:min-h-[500px] md:max-h-[75%] md:rounded-md z-10  backdrop-brightness-[.4] backdrop-blur-3xl overflow-hidden`}
          >
-            <div className="relative h-[30%] bg-transparent rounded-md font-sofiaPro flex justify-center items-center cursor-pointer  before:absolute before:w-full before:h-full before:bg-gray-300 before:bg-opacity-5 before:blur-xl group ">
+            <div className="relative h-[20%] md:h-[30%] bg-transparent rounded-md font-sofiaPro flex justify-center items-center cursor-pointer  before:absolute before:w-full before:h-full before:bg-gray-300 before:bg-opacity-5 before:blur-xl group ">
                <span
-                  className={`absolute inset-0 flex justify-center items-center text-9xl font-extrabold ${weekDaySettings?.color} opacity-30 transition-transform duration-300  group-hover:scale-0 group-hover:blur-sm`}
+                  className={`absolute inset-0 flex justify-center items-center text-7xl md:text-9xl font-extrabold ${weekDaySettings?.color} opacity-30 transition-transform duration-300  group-hover:scale-0 group-hover:blur-sm`}
                >
                   {weekDaySettings?.day}
                </span>
                <span
-                  className={`relative text-prim1 text-7xl  font-bold transition-transform duration-500 group-hover:text-8xl group-hover:scale-110 ${weekDaySettings?.hoverColor}`}
+                  className={`relative text-prim1 text-5xl md:text-7xl  font-bold transition-transform duration-500 group-hover:text-8xl group-hover:scale-110 ${weekDaySettings?.hoverColor}`}
                >
                   {weekDaySettings?.day}
                </span>
             </div>
-            <div className=" md:flex h-[70%]">
-               <div className="w-full h-full md:w-[40%] py-1 ">
+            <div className="w-full h-[80%] md:flex justify-between md:h-[70%]">
+               <div className="w-full h-[50%]  mb-2 md:h-full md:w-[40%] md:mb-0">
                   <span className="h-[40px] font-sofiaPro text-xl text-center block p-1 border-2 border-secod1 rounded-md">
                      Topics
                   </span>
@@ -166,20 +166,20 @@ const AddTopicInWeekDay: React.FC<AddTopicInWeekDay> = ({
                      )}
                   </ul>
                </div>
-               <div className=" px-2 w-full h-full md:w-[60%] py-1 ">
-                  <div className="h-[40px] flex justify-between font-sofiaPro  text-right px-2 ">
+               <div className="w-full h-[calc(50%-8px)] py-1 md:h-full md:w-[58%] md:px-2 border-[2px] border-bordr1 rounded-md">
+                  <div className="h-[35px] flex justify-between font-sofiaPro  text-right px-2 ">
+                     <span className="text-xl">Assigned Topics:</span>
                      <button
                         onClick={() => {
                            !newTopicsUploadLoader &&
                               applyTopicChangeToWeekDay();
                         }}
-                        className="bg-secod1 rounded-md px-5"
+                        className="bg-secod1 rounded-sm px-5"
                      >
                         {newTopicsUploadLoader ? <DotLoader /> : "Apply"}
                      </button>
-                     <span className="text-xl">Assigned Topics:</span>
                   </div>
-                  <ul className="max-h-[calc(100%-50px)] flex flex-wrap justify-evenly mt-2 overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-backg1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-front2">
+                  <ul className="max-h-[calc(100%-35px)] flex flex-wrap justify-evenly mt-2 overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:bg-backg1 [&::-webkit-scrollbar-track]:rounded-md [&::-webkit-scrollbar-track]:bg-front2">
                      {newLinkedTopicsLoader || topics.length === 0 ? (
                         <TopicsSkeleton count={14} />
                      ) : (

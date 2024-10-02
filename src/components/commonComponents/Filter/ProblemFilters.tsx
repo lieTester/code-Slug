@@ -20,7 +20,7 @@ import {
    applyFilter,
 } from "@/functions/FilterFunctions";
 //types
-import { ProblemsProp } from "@/types/index";
+import { companieProp, ProblemsProp, topicProp } from "@/types/index";
 // hooks
 import useQueryParams from "@/hook/useQueryParams";
 import { FiltersContext } from "@/context/FiltersContext";
@@ -296,11 +296,20 @@ const ProblemFilters = () => {
             const topicsRes = await getAllTopics().catch((error) => {
                throw error;
             });
+            topicsRes &&
+               topicsRes.data.topics.sort((a: topicProp, b: topicProp) =>
+                  a.name.localeCompare(b.name)
+               );
             setTopics && setTopics(topicsRes.data.topics);
 
             const companiesRes = await getAllCompanylist().catch((error) => {
                throw error;
             });
+            companiesRes &&
+               companiesRes.data.companies.sort(
+                  (a: companieProp, b: companieProp) =>
+                     a.name.localeCompare(b.name)
+               );
             setCompanies && setCompanies(companiesRes.data.companies);
 
             if (session !== undefined && currentListProblems?.length === 0) {
