@@ -261,12 +261,12 @@ const SingleProblem = ({
             className="absolute w-full h-full  bg-clip-padding backdrop-filter backdrop-blur-lg "
          ></td>
 
-         <span
+         <td
             onClick={() => onClose(false)}
             className="absolute top-2 right-2 md:top-4 md:right-4 cursor-pointer text-3xl text-white font-extrabold"
          >
             X
-         </span>
+         </td>
          <td className="relative w-[100%] h-[calc(100%-50px)] bg-backg2 p-4 md:rounded-md md:flex md:justify-between  z-10">
             <div className="relative w-full h-[50%] md:w-[45%] md:h-full flex flex-col pb-10 mb-3 md:mb-0">
                <h1
