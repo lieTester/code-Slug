@@ -1,6 +1,6 @@
 # [Code-Slug](https://code-slug.vercel.app/)
 
-<img src="docs/logo.png" alt="apply calendar" style="width: 48%; height: auto; object-fit: contain;" />
+<img src="docs/logo.png" alt="apply calendar" style="width: 20%; height: 200px; object-fit: contain;" />
 
 Code-Slug is a coding problem-solving platform built with Next.js, TypeScript, Tailwind CSS, and PostgreSQL (via Supabase). Designed for developers to focus on specific topics and improve their skills, Code-Slug offers a vast problem bank and a unique calendar-based practice feature.
 
@@ -70,10 +70,10 @@ Check out the live demo of Code-Slug [here](https://code-slug.vercel.app/).
 
    ![Calendar Management 1](./docs//cal1.png)
 
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 20px; flex-wrap: wrap;">
-         <img src="docs/cal2.png" alt="apply calendar" style="width: 48%; height: auto; object-fit: contain;" />
-         <img src="docs/cal3.png" alt="create-edit" style="width: 48%; height: auto; object-fit: contain;" />
-      </div>
+   <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 20px; flex-wrap: wrap;">
+      <img src="docs/cal2.png" alt="apply calendar" style="width: 48%; height: auto; object-fit: contain;" />
+      <img src="docs/cal3.png" alt="create-edit" style="width: 48%; height: auto; object-fit: contain;" />
+   </div>
 
 ## Contributing
 
