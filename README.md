@@ -1,4 +1,4 @@
-# [Code-Slug](https://code-slug.vercel.app/)
+# [Code-Slug](https://codeslug.vercel.app/)
 
 <img src="docs/logo.png" alt="apply calendar" style="width: 20%; height: 200px; object-fit: contain;" />
 
@@ -24,7 +24,7 @@ Code-Slug is a coding problem-solving platform built with Next.js, TypeScript, T
 
 ![Code-Slug Demo](./docs/demo.gif)
 
-Check out the live demo of Code-Slug [here](https://code-slug.vercel.app/).
+Check out the live demo of Code-Slug [here](https://codeslug.vercel.app//).
 
 ## Technologies Used
 
